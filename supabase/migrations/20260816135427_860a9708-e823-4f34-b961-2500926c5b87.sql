@@ -1,0 +1,1 @@
+ALTER TABLE public.priority_settings ADD COLUMN IF NOT EXISTS max_judge_workload integer NOT NULL DEFAULT 25;
