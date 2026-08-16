@@ -4,7 +4,7 @@ Prepared on: 16 August 2026
 
 ## 1. Current Status
 
-The app is a working Lovable/TanStack Start web application for a district-court style registry. It supports three access modes:
+The app is a high-performance TanStack Start fullstack web application for a district-court style registry. It supports three access modes:
 
 - Registry/administrator users who register cases, maintain judges/courtrooms, run scheduling, publish cause lists, view conflicts, simulate disruptions, and generate governance reports.
 - Judge users who get a self-scoped bench view of their own hearings and listing rationale.

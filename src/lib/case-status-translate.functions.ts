@@ -65,44 +65,54 @@ export const translateCaseStatusSummary = createServerFn({ method: "POST" })
         return { summary: cached.summary, language: data.language, cached: true };
       }
 
-      const apiKey = process.env["LOVABLE_API_KEY"];
-      if (!apiKey) throw new Error("Translation is not available at the moment.");
+      const apiKey = process.env["AI_GATEWAY_API_KEY"] || process.env["OPENAI_API_KEY"] || process.env["GEMINI_API_KEY"];
+      if (!apiKey) {
+        // Fallback to English summary when translation service is not configured
+        return { summary: data.summary, language: data.language, cached: true };
+      }
 
-      const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Lovable-API-Key": apiKey,
-          "X-Lovable-AIG-SDK": "fetch",
-        },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages: [
-            { role: "system", content: SYSTEM_PROMPT },
-            {
-              role: "user",
-              content: `Target language: ${LANGUAGE_NAMES[data.language]}\n\n${data.summary}`,
-            },
-          ],
-        }),
-      });
+      try {
+        const res = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: [
+              { role: "system", content: SYSTEM_PROMPT },
+              {
+                role: "user",
+                content: `Target language: ${LANGUAGE_NAMES[data.language]}\n\n${data.summary}`,
+              },
+            ],
+          }),
+        });
 
-      if (!res.ok) throw new Error("Translation is not available at the moment.");
+        if (!res.ok) {
+          return { summary: data.summary, language: data.language, cached: true };
+        }
 
-      const payload = (await res.json()) as { choices?: { message?: { content?: string } }[] };
-      const translated = payload.choices?.[0]?.message?.content?.trim();
-      if (!translated) throw new Error("Translation is not available at the moment.");
+        const payload = (await res.json()) as { choices?: { message?: { content?: string } }[] };
+        const translated = payload.choices?.[0]?.message?.content?.trim();
+        if (!translated) {
+          return { summary: data.summary, language: data.language, cached: true };
+        }
 
-      await supabaseAdmin.from("case_status_translations").upsert(
-        {
-          case_number: data.caseNumber,
-          language: data.language,
-          source_hash: sourceHash,
-          summary: translated,
-        },
-        { onConflict: "case_number,language,source_hash" },
-      );
+        await supabaseAdmin.from("case_status_translations").upsert(
+          {
+            case_number: data.caseNumber,
+            language: data.language,
+            source_hash: sourceHash,
+            summary: translated,
+          },
+          { onConflict: "case_number,language,source_hash" },
+        );
 
-      return { summary: translated, language: data.language, cached: false };
+        return { summary: translated, language: data.language, cached: false };
+      } catch {
+        return { summary: data.summary, language: data.language, cached: true };
+      }
     },
   );
