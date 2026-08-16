@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="12" fill="#0f2942"/>
+  <!-- Scales of Justice Emblem -->
+  <path d="M32 12v36M24 48h16M32 16l-14 8 14-8 14 8-14-8z" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Left Pan -->
+  <path d="M18 24l-6 12h12l-6-12z" stroke="#e2a738" stroke-width="2" fill="#e2a738" fill-opacity="0.2"/>
+  <!-- Right Pan -->
+  <path d="M46 24l-6 12h12l-6-12z" stroke="#e2a738" stroke-width="2" fill="#e2a738" fill-opacity="0.2"/>
+  <!-- Base -->
+  <circle cx="32" cy="14" r="3" fill="#e2a738"/>
+  <rect x="20" y="48" width="24" height="4" rx="2" fill="#e2a738"/>
+</svg>
