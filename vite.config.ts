@@ -1,9 +1,21 @@
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import tsconfigPaths from "vite-tsconfig-paths";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import { nitro } from "nitro/vite";
 
-// Fullstack SSR Vite Configuration for TanStack Start & Nitro Engine
+// NyaySetu - Fullstack SSR Vite Configuration
 export default defineConfig({
-  tanstackStart: {
-    // Redirect TanStack Start bundled server entry to src/server.ts for SSR error resilience
-    server: { entry: "server" },
-  },
+  plugins: [
+    tsconfigPaths(),
+    tailwindcss(),
+    tanstackStart({
+      server: { entry: "server" },
+    }),
+    react(),
+    nitro({
+      preset: "cloudflare-module",
+    }),
+  ],
 });
