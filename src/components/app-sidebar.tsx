@@ -1,4 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import { cn } from "@/lib/utils";
 
 import { BrandMark } from "@/components/brand-mark";
 import {
@@ -18,7 +19,7 @@ import { benchNavSections, navSections } from "@/lib/nav";
 import { useCurrentStaff } from "@/hooks/use-current-staff";
 
 export function AppSidebar() {
-  const { state } = useSidebar();
+  const { state, isMobile, setOpenMobile } = useSidebar();
   const collapsed = state === "collapsed";
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const staff = useCurrentStaff();
@@ -31,11 +32,22 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border">
-        <div className="flex items-center gap-3 px-1 py-2.5">
-          <BrandMark className="size-10 bg-sidebar-foreground p-1" showLabel />
+        <div
+          className={cn(
+            "flex items-center py-2.5",
+            collapsed ? "justify-center px-0" : "gap-3 px-1",
+          )}
+        >
+          <BrandMark
+            className={cn(
+              "bg-sidebar-foreground p-1 transition-all duration-200",
+              collapsed ? "size-8" : "size-10",
+            )}
+            showLabel
+          />
           {!collapsed && (
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-sidebar-foreground">NyaySetu</p>
+              <p className="truncate text-sm font-semibold text-sidebar-foreground">NyayaSetu</p>
               <p className="truncate text-[11px] tracking-wide text-sidebar-foreground/60 uppercase">
                 Court Scheduling
               </p>
@@ -55,7 +67,15 @@ export function AppSidebar() {
                 {section.items.map((item) => (
                   <SidebarMenuItem key={item.to}>
                     <SidebarMenuButton asChild tooltip={item.title} isActive={pathname === item.to}>
-                      <Link to={item.to} className="flex items-center gap-2">
+                      <Link
+                        to={item.to}
+                        className="flex items-center gap-2"
+                        onClick={() => {
+                          if (isMobile) {
+                            setOpenMobile(false);
+                          }
+                        }}
+                      >
                         <item.icon className="size-4" />
                         <span>{item.title}</span>
                       </Link>
@@ -71,7 +91,7 @@ export function AppSidebar() {
       <SidebarFooter className="border-t border-sidebar-border">
         {!collapsed && (
           <p className="px-2 py-1 text-[11px] text-sidebar-foreground/50">
-            Internal NyaySetu workspace
+            Internal NyayaSetu workspace
           </p>
         )}
       </SidebarFooter>

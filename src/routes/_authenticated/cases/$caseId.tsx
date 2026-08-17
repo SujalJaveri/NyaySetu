@@ -52,12 +52,12 @@ import {
 export const Route = createFileRoute("/_authenticated/cases/$caseId")({
   head: () => ({
     meta: [
-      { title: "Case detail — NyaySetu" },
+      { title: "Case detail — NyayaSetu" },
       {
         name: "description",
         content: "Full case particulars, adjournment history and current hearing schedule.",
       },
-      { property: "og:title", content: "Case detail — NyaySetu" },
+      { property: "og:title", content: "Case detail — NyayaSetu" },
       {
         property: "og:description",
         content: "Full case particulars, adjournment history and current hearing schedule.",

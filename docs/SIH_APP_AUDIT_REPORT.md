@@ -1,4 +1,4 @@
-# NyaySetu - SIH App Audit Report
+# NyayaSetu - SIH App Audit Report
 
 Prepared on: 16 August 2026
 

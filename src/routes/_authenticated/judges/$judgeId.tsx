@@ -25,12 +25,12 @@ import { AvailabilityPanel } from "@/components/availability-panel";
 export const Route = createFileRoute("/_authenticated/judges/$judgeId")({
   head: () => ({
     meta: [
-      { title: "Judge profile — NyaySetu" },
+      { title: "Judge profile — NyayaSetu" },
       {
         name: "description",
         content: "Assigned cases, sitting workload and availability for a judicial officer.",
       },
-      { property: "og:title", content: "Judge profile — NyaySetu" },
+      { property: "og:title", content: "Judge profile — NyayaSetu" },
       {
         property: "og:description",
         content: "Assigned cases, sitting workload and availability for a judicial officer.",

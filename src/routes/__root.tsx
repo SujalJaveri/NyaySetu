@@ -79,7 +79,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "NyaySetu" },
+      { title: "NyayaSetu" },
       {
         name: "description",
         content: "Internal scheduling workspace for court administrators and registrar staff.",
@@ -96,8 +96,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap",
       },
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/nyaysetu-logo.png", type: "image/png" },
-      { rel: "apple-touch-icon", href: "/nyaysetu-logo.png" },
+      { rel: "icon", href: "/nyayasetu-logo.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/nyayasetu-logo.png" },
     ],
   }),
   shellComponent: RootShell,

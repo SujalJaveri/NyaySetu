@@ -46,7 +46,7 @@ export function TopBar() {
       <div className="hidden min-w-0 items-center gap-2 sm:flex">
         <BrandMark className="size-8 p-0.5" />
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-foreground">NyaySetu Registry</p>
+          <p className="truncate text-sm font-semibold text-foreground">NyayaSetu Registry</p>
           <p className="text-[11px] text-muted-foreground">AI powered court scheduling control</p>
         </div>
       </div>

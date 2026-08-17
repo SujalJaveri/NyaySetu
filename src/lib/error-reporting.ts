@@ -6,8 +6,8 @@ export function reportClientError(error: unknown, context: Record<string, unknow
       : error instanceof Error
         ? error.message
         : String(error);
-  
-  if (process.env.NODE_ENV !== "production") {
+
+  if (process.env["NODE_ENV"] !== "production") {
     console.warn("[App Error Captured]", { message, context, error });
   }
 }

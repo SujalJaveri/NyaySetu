@@ -29,13 +29,13 @@ import {
 export const Route = createFileRoute("/_authenticated/activity-log")({
   head: () => ({
     meta: [
-      { title: "Activity Log — NyaySetu" },
+      { title: "Activity Log — NyayaSetu" },
       {
         name: "description",
         content:
           "Reverse-chronological accountability trail of every recorded registry action: who acted, what they did, which record it affected and when.",
       },
-      { property: "og:title", content: "Activity Log — NyaySetu" },
+      { property: "og:title", content: "Activity Log — NyayaSetu" },
       {
         property: "og:description",
         content:

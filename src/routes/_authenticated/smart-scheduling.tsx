@@ -34,13 +34,13 @@ import {
 export const Route = createFileRoute("/_authenticated/smart-scheduling")({
   head: () => ({
     meta: [
-      { title: "Smart Scheduling — NyaySetu" },
+      { title: "Smart Scheduling — NyayaSetu" },
       {
         name: "description",
         content:
           "Run the deterministic scheduling engine to find valid judge, courtroom and slot combinations.",
       },
-      { property: "og:title", content: "Smart Scheduling — NyaySetu" },
+      { property: "og:title", content: "Smart Scheduling — NyayaSetu" },
       {
         property: "og:description",
         content:

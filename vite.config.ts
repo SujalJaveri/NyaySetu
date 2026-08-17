@@ -5,7 +5,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { nitro } from "nitro/vite";
 
-// NyaySetu - Fullstack SSR Vite Configuration
+// NyayaSetu - Fullstack SSR Vite Configuration
 export default defineConfig({
   plugins: [
     tsconfigPaths(),

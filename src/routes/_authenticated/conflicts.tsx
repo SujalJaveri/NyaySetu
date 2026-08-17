@@ -28,13 +28,13 @@ import {
 export const Route = createFileRoute("/_authenticated/conflicts")({
   head: () => ({
     meta: [
-      { title: "Conflicts — NyaySetu" },
+      { title: "Conflicts — NyayaSetu" },
       {
         name: "description",
         content:
           "Every double-booking, unavailability clash and workload breach currently flagged across the registry.",
       },
-      { property: "og:title", content: "Conflicts — NyaySetu" },
+      { property: "og:title", content: "Conflicts — NyayaSetu" },
       {
         property: "og:description",
         content:

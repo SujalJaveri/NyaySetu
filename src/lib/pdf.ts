@@ -20,7 +20,7 @@ function header(doc: jsPDF, title: string, subtitle: string) {
   doc.setFont("helvetica", "bold");
   doc.setFontSize(14);
   doc.setTextColor(...NAVY);
-  doc.text("NyaySetu", MARGIN, 52);
+  doc.text("NyayaSetu", MARGIN, 52);
   doc.setFontSize(11);
   doc.text(title, MARGIN, 72);
   doc.setFont("helvetica", "normal");

@@ -35,13 +35,13 @@ import {
 export const Route = createFileRoute("/_authenticated/cause-list")({
   head: () => ({
     meta: [
-      { title: "Cause List — NyaySetu" },
+      { title: "Cause List — NyayaSetu" },
       {
         name: "description",
         content:
           "The proposed hearing order for a chosen judge or courtroom, ranked by priority tier and manually re-orderable by a registrar.",
       },
-      { property: "og:title", content: "Cause List — NyaySetu" },
+      { property: "og:title", content: "Cause List — NyayaSetu" },
       {
         property: "og:description",
         content:

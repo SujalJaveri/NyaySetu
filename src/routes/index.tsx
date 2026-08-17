@@ -18,13 +18,13 @@ export const Route = createFileRoute("/")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "NyaySetu — Choose How You Sign In" },
+      { title: "NyayaSetu — Choose How You Sign In" },
       {
         name: "description",
         content:
-          "Entry portal for NyaySetu: bench access for judges, registry access for administrators, and public case status lookup for litigants.",
+          "Entry portal for NyayaSetu: bench access for judges, registry access for administrators, and public case status lookup for litigants.",
       },
-      { property: "og:title", content: "NyaySetu — Choose How You Sign In" },
+      { property: "og:title", content: "NyayaSetu — Choose How You Sign In" },
       {
         property: "og:description",
         content:
@@ -116,7 +116,7 @@ function PortalPage() {
           <div className="flex min-w-0 items-center gap-3">
             <BrandMark className="size-11 bg-primary-foreground p-1" showLabel />
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold">NyaySetu</p>
+              <p className="truncate text-sm font-semibold">NyayaSetu</p>
               <p className="text-xs text-primary-foreground/70">AI powered court scheduling</p>
             </div>
           </div>
@@ -130,7 +130,7 @@ function PortalPage() {
       <section className="registry-enter border-b border-border bg-card">
         <div className="mx-auto grid max-w-6xl gap-8 px-5 py-10 sm:px-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
           <div>
-            <p className="text-eyebrow">NyaySetu digital registry portal</p>
+            <p className="text-eyebrow">NyayaSetu digital registry portal</p>
             <h1 className="mt-3 max-w-3xl text-3xl leading-tight font-semibold text-foreground sm:text-5xl">
               Schedule hearings with clear priority, capacity and audit control.
             </h1>

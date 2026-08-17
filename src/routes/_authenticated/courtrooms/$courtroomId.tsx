@@ -25,12 +25,12 @@ import { AvailabilityPanel } from "@/components/availability-panel";
 export const Route = createFileRoute("/_authenticated/courtrooms/$courtroomId")({
   head: () => ({
     meta: [
-      { title: "Courtroom detail — NyaySetu" },
+      { title: "Courtroom detail — NyayaSetu" },
       {
         name: "description",
         content: "Capacity, type and current hearing bookings for a courtroom.",
       },
-      { property: "og:title", content: "Courtroom detail — NyaySetu" },
+      { property: "og:title", content: "Courtroom detail — NyayaSetu" },
       {
         property: "og:description",
         content: "Capacity, type and current hearing bookings for a courtroom.",

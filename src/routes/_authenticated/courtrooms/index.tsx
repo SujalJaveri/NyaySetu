@@ -45,12 +45,12 @@ import { countBy, courtroomsQuery, isActive, schedulesQuery, type Courtroom } fr
 export const Route = createFileRoute("/_authenticated/courtrooms/")({
   head: () => ({
     meta: [
-      { title: "Courtrooms — NyaySetu" },
+      { title: "Courtrooms — NyayaSetu" },
       {
         name: "description",
         content: "Courtroom inventory with capacity, type and current allocation status.",
       },
-      { property: "og:title", content: "Courtrooms — NyaySetu" },
+      { property: "og:title", content: "Courtrooms — NyayaSetu" },
       {
         property: "og:description",
         content: "Courtroom inventory with capacity, type and current allocation status.",

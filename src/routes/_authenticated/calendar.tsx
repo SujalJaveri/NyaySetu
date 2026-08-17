@@ -47,13 +47,13 @@ import {
 export const Route = createFileRoute("/_authenticated/calendar")({
   head: () => ({
     meta: [
-      { title: "Calendar — NyaySetu" },
+      { title: "Calendar — NyayaSetu" },
       {
         name: "description",
         content:
           "Daily, judge-wise, courtroom-wise and case-wise views of every scheduled hearing.",
       },
-      { property: "og:title", content: "Calendar — NyaySetu" },
+      { property: "og:title", content: "Calendar — NyayaSetu" },
       {
         property: "og:description",
         content:

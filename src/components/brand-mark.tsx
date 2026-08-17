@@ -10,14 +10,14 @@ export function BrandMark({ className, imageClassName, showLabel = false }: Bran
   return (
     <span
       className={cn(
-        "nyaysetu-mark flex shrink-0 items-center justify-center overflow-hidden rounded-sm bg-card ring-1 ring-border",
+        "nyayasetu-mark flex shrink-0 items-center justify-center overflow-hidden rounded-sm bg-card ring-1 ring-border",
         className,
       )}
-      aria-label="NyaySetu"
+      aria-label="NyayaSetu"
     >
       <img
-        src="/nyaysetu-logo.png"
-        alt={showLabel ? "NyaySetu logo" : ""}
+        src="/nyayasetu-logo.png"
+        alt={showLabel ? "NyayaSetu logo" : ""}
         className={cn("h-full w-full object-contain", imageClassName)}
       />
     </span>

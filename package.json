@@ -1,7 +1,7 @@
 {
-  "name": "nyaysetu",
+  "name": "nyayasetu",
   "version": "1.0.0",
-  "description": "NyaySetu - AI-Assisted Smart Court Case Scheduling and Cause-List Optimisation System",
+  "description": "NyayaSetu - AI-Assisted Smart Court Case Scheduling and Cause-List Optimisation System",
   "author": "Sujal Javeri",
   "packageManager": "npm@10.9.2",
   "private": true,

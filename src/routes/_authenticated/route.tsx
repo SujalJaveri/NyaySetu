@@ -24,6 +24,7 @@ export const Route = createFileRoute("/_authenticated")({
 });
 
 function AuthenticatedLayout() {
+  const pathname = useRouterState({ select: (r) => r.location.pathname });
   // Tablet widths start with the rail collapsed so content keeps a usable measure.
   const defaultOpen = typeof window === "undefined" ? true : window.innerWidth >= 1024;
   return (
@@ -34,7 +35,9 @@ function AuthenticatedLayout() {
         <div className="flex min-w-0 flex-1 flex-col">
           <TopBar />
           <main className="flex-1">
-            <Outlet />
+            <div key={pathname} className="registry-enter">
+              <Outlet />
+            </div>
           </main>
         </div>
       </div>

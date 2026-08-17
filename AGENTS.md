@@ -1,6 +1,6 @@
-# NyaySetu Developer & Contributor Guidelines
+# NyayaSetu Developer & Contributor Guidelines
 
-NyaySetu is an AI-assisted smart court case scheduling and cause-list optimisation platform built for Indian district and taluka courts.
+NyayaSetu is an AI-assisted smart court case scheduling and cause-list optimisation platform built for Indian district and taluka courts.
 
 ## Architecture Overview
 

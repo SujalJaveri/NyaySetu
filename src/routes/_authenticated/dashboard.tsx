@@ -28,6 +28,7 @@ import {
 import { PageHeader } from "@/components/page-shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ErrorState } from "@/components/states";
@@ -38,13 +39,13 @@ import { buildBriefingInput, composeBriefingSentences } from "@/lib/briefing";
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard — NyaySetu" },
+      { title: "Dashboard — NyayaSetu" },
       {
         name: "description",
         content:
           "Live registry snapshot: pending cases, high-priority listings, scheduled hearings, conflicts and utilisation.",
       },
-      { property: "og:title", content: "Dashboard — NyaySetu" },
+      { property: "og:title", content: "Dashboard — NyayaSetu" },
       {
         property: "og:description",
         content:
@@ -79,6 +80,7 @@ function StatCard({
   icon: Icon,
   tone = "default",
   to,
+  className,
 }: {
   label: string;
   value: string | number;
@@ -86,9 +88,10 @@ function StatCard({
   icon: React.ComponentType<{ className?: string }>;
   tone?: "default" | "gold" | "alert";
   to?: string;
+  className?: string;
 }) {
   const body = (
-    <Card className="registry-interactive h-full">
+    <Card className={cn("registry-interactive h-full", className)}>
       <CardContent className="flex items-start justify-between gap-4 p-5">
         <div className="min-w-0">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
@@ -319,6 +322,7 @@ function Page() {
 
           <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
+              className="registry-enter stagger-1"
               label="Pending cases"
               value={metrics.pendingCases}
               hint={`${metrics.totalCases} cases on file`}
@@ -326,6 +330,7 @@ function Page() {
               to="/cases"
             />
             <StatCard
+              className="registry-enter stagger-2"
               label="Tier 1 cases"
               value={metrics.highPriorityCases}
               hint={`Tier 2: ${metrics.tierCounts["Tier 2"]} · Tier 3: ${metrics.tierCounts["Tier 3"]}`}
@@ -334,6 +339,7 @@ function Page() {
               to="/cases"
             />
             <StatCard
+              className="registry-enter stagger-3"
               label="Scheduled hearings"
               value={metrics.scheduledHearings}
               hint="Proposed or confirmed listings"
@@ -341,6 +347,7 @@ function Page() {
               to="/calendar"
             />
             <StatCard
+              className="registry-enter stagger-4"
               label="Conflicts detected"
               value={conflictData.isLoading ? "—" : conflicts.length}
               hint="Hard-constraint violations"
@@ -349,6 +356,7 @@ function Page() {
               to="/conflicts"
             />
             <StatCard
+              className="registry-enter stagger-5"
               label="Judge utilisation"
               value={`${metrics.judgeUtilisation}%`}
               hint={`Against ${metrics.judgeWorkload.length} judges × ${data.data?.maxJudgeWorkload} hearing threshold`}
@@ -356,6 +364,7 @@ function Page() {
               to="/judges"
             />
             <StatCard
+              className="registry-enter stagger-1"
               label="Courtroom utilisation"
               value={`${metrics.courtroomUtilisation}%`}
               hint="Booked courtroom-slot pairs of all published slots"
@@ -363,6 +372,7 @@ function Page() {
               to="/courtrooms"
             />
             <StatCard
+              className="registry-enter stagger-2"
               label="Awaiting scheduling"
               value={metrics.awaitingScheduling}
               hint="Open cases with no active listing"

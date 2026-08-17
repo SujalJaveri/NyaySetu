@@ -13,15 +13,15 @@ export const Route = createFileRoute("/setup-admin")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Initial admin setup — NyaySetu" },
+      { title: "Initial admin setup — NyayaSetu" },
       {
         name: "description",
-        content: "Create the first administrator account for NyaySetu.",
+        content: "Create the first administrator account for NyayaSetu.",
       },
-      { property: "og:title", content: "Initial admin setup — NyaySetu" },
+      { property: "og:title", content: "Initial admin setup — NyayaSetu" },
       {
         property: "og:description",
-        content: "Create the first administrator account for NyaySetu.",
+        content: "Create the first administrator account for NyayaSetu.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -60,7 +60,7 @@ function SetupAdminPage() {
       <section className="hidden flex-col justify-between bg-primary px-12 py-14 text-primary-foreground lg:flex">
         <div className="flex items-center gap-3">
           <BrandMark className="size-12 bg-primary-foreground p-1" showLabel />
-          <span className="text-sm font-semibold tracking-wide">NyaySetu</span>
+          <span className="text-sm font-semibold tracking-wide">NyayaSetu</span>
         </div>
         <div className="max-w-md">
           <h2 className="text-3xl leading-snug font-semibold">Initial administrator setup</h2>
@@ -78,7 +78,7 @@ function SetupAdminPage() {
         <div className="w-full max-w-sm">
           <div className="mb-8 flex items-center gap-3 lg:hidden">
             <BrandMark className="size-12 p-1" showLabel />
-            <span className="text-sm font-semibold">NyaySetu</span>
+            <span className="text-sm font-semibold">NyayaSetu</span>
           </div>
 
           <Link

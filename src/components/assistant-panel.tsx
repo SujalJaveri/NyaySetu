@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { FileSearch, Loader2, MessageSquareText, SendHorizonal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -16,12 +17,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import {
-  answerQuestion,
-  EXAMPLE_QUESTIONS,
-  type AssistantAnswer,
-  type AssistantRow,
-} from "@/lib/assistant";
+import { EXAMPLE_QUESTIONS, type AssistantAnswer, type AssistantRow } from "@/lib/assistant";
+import { askRegistryAssistant } from "@/lib/assistant.functions";
 
 type Turn =
   | { role: "user"; id: string; text: string }
@@ -35,6 +32,7 @@ type Turn =
  */
 export function AssistantPanel() {
   const navigate = useNavigate();
+  const askFn = useServerFn(askRegistryAssistant);
   const [open, setOpen] = useState(false);
   const [turns, setTurns] = useState<Turn[]>([]);
   const [value, setValue] = useState("");
@@ -57,7 +55,7 @@ export function AssistantPanel() {
     setTurns((prev) => [...prev, { role: "user", id: `u-${Date.now()}`, text: q }]);
     setBusy(true);
     try {
-      const answer = await answerQuestion(q);
+      const answer = await askFn({ data: { question: q } });
       setTurns((prev) => [...prev, { role: "assistant", id: `a-${Date.now()}`, answer }]);
     } catch (error) {
       setTurns((prev) => [

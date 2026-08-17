@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { AlertTriangle, Check, Loader2, Pencil, UserCheck, X } from "lucide-react";
+import { AlertTriangle, Check, Loader2, Pencil, Sparkles, UserCheck, X } from "lucide-react";
+import { explainSchedulingRecommendation } from "@/lib/explain-candidate.functions";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,6 +34,7 @@ export function RecommendationPanel({
 }) {
   const staff = useCurrentStaff();
   const queryClient = useQueryClient();
+  const explainFn = useServerFn(explainSchedulingRecommendation);
   const [picking, setPicking] = useState(false);
   const [pickedKey, setPickedKey] = useState(alternatives[0]?.key ?? "");
   const [busy, setBusy] = useState<DecisionAction | null>(null);
@@ -42,6 +45,31 @@ export function RecommendationPanel({
 
   const permissions = permissionsFor(staff.data?.role);
   const canDecide = permissions.canSchedule;
+
+  const [aiExplanation, setAiExplanation] = useState<string | null>(null);
+  const [loadingAi, setLoadingAi] = useState(false);
+
+  async function handleAiExplain() {
+    setLoadingAi(true);
+    setAiExplanation(null);
+    try {
+      const res = await explainFn({
+        data: {
+          caseNumber: caseRow.case_number,
+          parties: caseRow.parties,
+          estimatedDuration: caseRow.estimated_duration_minutes,
+          priorityScore: caseRow.priority_score,
+          topCandidate: top,
+          alternatives: alternatives,
+        },
+      });
+      setAiExplanation(res.explanation);
+    } catch (e) {
+      toast.error("Could not fetch AI explanation.");
+    } finally {
+      setLoadingAi(false);
+    }
+  }
 
   async function decide(action: DecisionAction, candidate: Candidate) {
     if (!staff.data) {
@@ -110,6 +138,44 @@ export function RecommendationPanel({
       </CardHeader>
 
       <CardContent className="space-y-5">
+        {/* AI Explain Recommendation */}
+        <div className="rounded-md border border-border bg-muted/30 p-3 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+              <Sparkles className="size-3.5 text-gold animate-pulse" />
+              AI Decision Support
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-7 text-[11px] px-2.5"
+              onClick={handleAiExplain}
+              disabled={loadingAi}
+            >
+              {loadingAi ? (
+                <>
+                  <Loader2 className="size-3 animate-spin mr-1" />
+                  Analyzing...
+                </>
+              ) : aiExplanation ? (
+                "Refresh analysis"
+              ) : (
+                "Explain recommendation"
+              )}
+            </Button>
+          </div>
+          {aiExplanation ? (
+            <p className="text-xs leading-relaxed text-muted-foreground whitespace-pre-line">
+              {aiExplanation}
+            </p>
+          ) : (
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Generate an LLM explanation comparing this recommendation against the alternative
+              options.
+            </p>
+          )}
+        </div>
+
         <ConfidenceBar
           value={top.confidence}
           label="Confidence in this recommendation"

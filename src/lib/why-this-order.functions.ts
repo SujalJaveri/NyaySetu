@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { queryLLM } from "@/lib/ai.server";
 
 const Input = z.object({ breakdownText: z.string().min(1).max(4000) });
 
@@ -21,42 +22,19 @@ export const summarisePriorityOrder = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => Input.parse(data))
   .handler(async ({ data }) => {
-    const apiKey = process.env["AI_GATEWAY_API_KEY"] || process.env["OPENAI_API_KEY"] || process.env["GEMINI_API_KEY"];
-    if (!apiKey) {
-      // Deterministic clean fallback if no external LLM gateway is configured
-      return { 
-        summary: `Prioritised based on statutory urgency criteria, limitation period, and listing constraints as detailed in the official breakdown.`
-      };
-    }
-
     try {
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [
-            { role: "system", content: SYSTEM_PROMPT },
-            { role: "user", content: data.breakdownText },
-          ],
-        }),
-      });
-
-      if (!res.ok) {
-        return { 
-          summary: `Prioritised based on statutory urgency criteria, limitation period, and listing constraints as detailed in the official breakdown.`
-        };
-      }
-
-      const payload = (await res.json()) as { choices?: { message?: { content?: string } }[] };
-      const summary = payload.choices?.[0]?.message?.content?.trim();
-      return { summary: summary || `Prioritised according to registry rules.` };
+      const summary = await queryLLM([
+        { role: "system", content: SYSTEM_PROMPT },
+        { role: "user", content: data.breakdownText },
+      ]);
+      return {
+        summary:
+          summary ||
+          `Prioritised based on statutory urgency criteria, limitation period, and listing constraints as detailed in the official breakdown.`,
+      };
     } catch {
-      return { 
-        summary: `Prioritised based on statutory urgency criteria, limitation period, and listing constraints as detailed in the official breakdown.`
+      return {
+        summary: `Prioritised based on statutory urgency criteria, limitation period, and listing constraints as detailed in the official breakdown.`,
       };
     }
   });

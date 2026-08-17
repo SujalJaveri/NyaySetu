@@ -11,13 +11,13 @@ import { PublicCaseSummary } from "@/components/public-case-summary";
 export const Route = createFileRoute("/case-status")({
   head: () => ({
     meta: [
-      { title: "Check Case Status — NyaySetu Public Portal" },
+      { title: "Check Case Status — NyayaSetu Public Portal" },
       {
         name: "description",
         content:
           "Enter your case number to see the current status, category, next hearing date, judge, courtroom and cause list position. No login required.",
       },
-      { property: "og:title", content: "Check Case Status — NyaySetu Public Portal" },
+      { property: "og:title", content: "Check Case Status — NyayaSetu Public Portal" },
       {
         property: "og:description",
         content:
@@ -81,7 +81,7 @@ function CaseStatusPage() {
           <BrandMark className="size-14 bg-primary-foreground p-1" showLabel />
           <div className="min-w-0">
             <p className="text-xs tracking-[0.14em] text-primary-foreground/70 uppercase">
-              NyaySetu public portal
+              NyayaSetu public portal
             </p>
             <h1 className="text-2xl font-semibold sm:text-3xl">Check Case Status</h1>
             <p className="text-sm text-primary-foreground/80">

@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { queryLLM } from "@/lib/ai.server";
 
 export const PUBLIC_LANGUAGES = [
   { code: "en", label: "English", native: "English" },
@@ -65,37 +66,15 @@ export const translateCaseStatusSummary = createServerFn({ method: "POST" })
         return { summary: cached.summary, language: data.language, cached: true };
       }
 
-      const apiKey = process.env["AI_GATEWAY_API_KEY"] || process.env["OPENAI_API_KEY"] || process.env["GEMINI_API_KEY"];
-      if (!apiKey) {
-        // Fallback to English summary when translation service is not configured
-        return { summary: data.summary, language: data.language, cached: true };
-      }
-
       try {
-        const res = await fetch("https://api.openai.com/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
+        const translated = await queryLLM([
+          { role: "system", content: SYSTEM_PROMPT },
+          {
+            role: "user",
+            content: `Target language: ${LANGUAGE_NAMES[data.language]}\n\n${data.summary}`,
           },
-          body: JSON.stringify({
-            model: "gpt-4o-mini",
-            messages: [
-              { role: "system", content: SYSTEM_PROMPT },
-              {
-                role: "user",
-                content: `Target language: ${LANGUAGE_NAMES[data.language]}\n\n${data.summary}`,
-              },
-            ],
-          }),
-        });
+        ]);
 
-        if (!res.ok) {
-          return { summary: data.summary, language: data.language, cached: true };
-        }
-
-        const payload = (await res.json()) as { choices?: { message?: { content?: string } }[] };
-        const translated = payload.choices?.[0]?.message?.content?.trim();
         if (!translated) {
           return { summary: data.summary, language: data.language, cached: true };
         }

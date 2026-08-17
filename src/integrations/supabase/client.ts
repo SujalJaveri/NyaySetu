@@ -38,7 +38,9 @@ function createSupabaseClient() {
   if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
     const missing = [
       ...(!SUPABASE_URL ? ["SUPABASE_URL / VITE_SUPABASE_URL"] : []),
-      ...(!SUPABASE_PUBLISHABLE_KEY ? ["SUPABASE_PUBLISHABLE_KEY / VITE_SUPABASE_PUBLISHABLE_KEY"] : []),
+      ...(!SUPABASE_PUBLISHABLE_KEY
+        ? ["SUPABASE_PUBLISHABLE_KEY / VITE_SUPABASE_PUBLISHABLE_KEY"]
+        : []),
     ];
     const message = `Missing Supabase configuration: ${missing.join(", ")}. Please define them in your environment variables.`;
     console.error(`[Supabase] ${message}`);

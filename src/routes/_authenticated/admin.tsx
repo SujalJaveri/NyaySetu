@@ -77,16 +77,16 @@ import { useCurrentStaff } from "@/hooks/use-current-staff";
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
-      { title: "Admin panel — NyaySetu" },
+      { title: "Admin panel — NyayaSetu" },
       {
         name: "description",
         content:
           "Administrator control panel for registry logins: create registrar and bench accounts, change roles, reset passwords and revoke access.",
       },
-      { property: "og:title", content: "Admin panel — NyaySetu" },
+      { property: "og:title", content: "Admin panel — NyayaSetu" },
       {
         property: "og:description",
-        content: "Manage registrars, administrators and judicial bench logins for NyaySetu.",
+        content: "Manage registrars, administrators and judicial bench logins for NyayaSetu.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

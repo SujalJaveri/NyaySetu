@@ -18,13 +18,13 @@ import { formatSlot, isActive, schedulesQuery, MAX_JUDGE_WORKLOAD } from "@/lib/
 export const Route = createFileRoute("/_authenticated/bench")({
   head: () => ({
     meta: [
-      { title: "My Bench — NyaySetu" },
+      { title: "My Bench — NyayaSetu" },
       {
         name: "description",
         content:
           "A judge's own hearing calendar, daily cause list and workload summary, with the recorded reasoning behind each listing.",
       },
-      { property: "og:title", content: "My Bench — NyaySetu" },
+      { property: "og:title", content: "My Bench — NyayaSetu" },
       {
         property: "og:description",
         content:

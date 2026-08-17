@@ -26,12 +26,12 @@ import { recomputeCasePriority } from "@/lib/priority";
 export const Route = createFileRoute("/_authenticated/cases/new")({
   head: () => ({
     meta: [
-      { title: "Register a case — NyaySetu" },
+      { title: "Register a case — NyayaSetu" },
       {
         name: "description",
         content: "Register a new case with category, parties and estimated hearing duration.",
       },
-      { property: "og:title", content: "Register a case — NyaySetu" },
+      { property: "og:title", content: "Register a case — NyayaSetu" },
       {
         property: "og:description",
         content: "Register a new case with category, parties and estimated hearing duration.",

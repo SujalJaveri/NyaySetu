@@ -26,13 +26,13 @@ type ChartTipProps = {
 export const Route = createFileRoute("/_authenticated/reports")({
   head: () => ({
     meta: [
-      { title: "Reports — NyaySetu" },
+      { title: "Reports — NyayaSetu" },
       {
         name: "description",
         content:
           "Impact metrics for the scheduling engine — conflicts avoided, decision outcomes and scheduling turnaround, based on current demo data.",
       },
-      { property: "og:title", content: "Reports — NyaySetu" },
+      { property: "og:title", content: "Reports — NyayaSetu" },
       {
         property: "og:description",
         content:

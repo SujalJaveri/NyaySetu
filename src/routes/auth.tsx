@@ -38,12 +38,12 @@ export const Route = createFileRoute("/auth")({
 
   head: () => ({
     meta: [
-      { title: "Staff Sign In — NyaySetu" },
+      { title: "Staff Sign In — NyayaSetu" },
       {
         name: "description",
         content: "Secure sign-in for judges, court administrators and registrar staff.",
       },
-      { property: "og:title", content: "Staff Sign In — NyaySetu" },
+      { property: "og:title", content: "Staff Sign In — NyayaSetu" },
       {
         property: "og:description",
         content: "Secure sign-in for judges, court administrators and registrar staff.",
@@ -92,7 +92,7 @@ function AuthPage() {
       <section className="hidden flex-col justify-between bg-primary px-12 py-14 text-primary-foreground lg:flex">
         <div className="flex items-center gap-3">
           <BrandMark className="size-12 bg-primary-foreground p-1" showLabel />
-          <span className="text-sm font-semibold tracking-wide">NyaySetu</span>
+          <span className="text-sm font-semibold tracking-wide">NyayaSetu</span>
         </div>
         <div className="max-w-md">
           <h2 className="text-3xl leading-snug font-semibold">
@@ -112,7 +112,7 @@ function AuthPage() {
         <div className="w-full max-w-sm">
           <div className="mb-8 flex items-center gap-3 lg:hidden">
             <BrandMark className="size-12 p-1" showLabel />
-            <span className="text-sm font-semibold">NyaySetu</span>
+            <span className="text-sm font-semibold">NyayaSetu</span>
           </div>
 
           <Link

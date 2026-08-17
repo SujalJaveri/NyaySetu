@@ -40,13 +40,13 @@ type ChartTipProps = {
 export const Route = createFileRoute("/_authenticated/backlog-simulator")({
   head: () => ({
     meta: [
-      { title: "Backlog Simulator — NyaySetu" },
+      { title: "Backlog Simulator — NyayaSetu" },
       {
         name: "description",
         content:
           "Simulated pendency projections over 6 and 12 months comparing filing-date order with the proposed priority order, using the demo dataset.",
       },
-      { property: "og:title", content: "Backlog Simulator — NyaySetu" },
+      { property: "og:title", content: "Backlog Simulator — NyayaSetu" },
       {
         property: "og:description",
         content:

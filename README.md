@@ -1,5 +1,7 @@
-# ⚖️ NyaySetu (न्यायसेतु)
+# ⚖️ NyayaSetu (न्यायसेतु)
+
 ### AI-Assisted Smart Court Case Scheduling & Cause-List Optimisation System
+
 **Smart India Hackathon (SIH) 2026 Prototype**
 
 ---
@@ -8,7 +10,7 @@
 
 India's judicial system faces an immense pendency burden across district and taluka courts. A significant operational bottleneck in daily court administration is **manual cause-list scheduling and resource allocation**, which frequently leads to double-booked judges/courtrooms, avoidable adjournments, sub-optimal workload distribution, and delay in urgent matters.
 
-**NyaySetu** is a cloud-native, explainable decision-support platform designed for court registries, judges, and citizens. It optimizes hearing schedules using a deterministic constraint solver and multi-factor statutory priority scoring, while keeping judicial administration strictly **human-in-the-loop**.
+**NyayaSetu** is a cloud-native, explainable decision-support platform designed for court registries, judges, and citizens. It optimizes hearing schedules using a deterministic constraint solver and multi-factor statutory priority scoring, while keeping judicial administration strictly **human-in-the-loop**.
 
 ---
 
@@ -49,14 +51,16 @@ India's judicial system faces an immense pendency burden across district and tal
 ## 🚀 Quick Start (Local Development)
 
 ### 1. Prerequisites
+
 - **Node.js**: v20 or higher
 - **npm** or **bun**
 
 ### 2. Installation & Setup
+
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd nyaysetu-court-scheduler
+cd nyayasetu-court-scheduler
 
 # Install dependencies
 npm install
@@ -66,6 +70,7 @@ cp .env.example .env
 ```
 
 Edit `.env` with your Supabase credentials:
+
 ```env
 VITE_SUPABASE_URL="https://your-project.supabase.co"
 VITE_SUPABASE_PUBLISHABLE_KEY="your-anon-key"
@@ -75,6 +80,7 @@ SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
 ```
 
 ### 3. Run Locally
+
 ```bash
 # Start local development server
 npm run dev
@@ -95,4 +101,5 @@ This application is ready for 100% free deployment to **Cloudflare Pages**, **Ve
 ---
 
 ## 📄 License
+
 Developed for Smart India Hackathon (SIH) 2026.

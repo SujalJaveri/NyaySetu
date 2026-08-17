@@ -33,13 +33,13 @@ import {
 export const Route = createFileRoute("/_authenticated/priority-settings")({
   head: () => ({
     meta: [
-      { title: "Priority scoring settings — NyaySetu" },
+      { title: "Priority scoring settings — NyayaSetu" },
       {
         name: "description",
         content:
           "Adjust category urgency weights and the factor weights used to score case priority.",
       },
-      { property: "og:title", content: "Priority scoring settings — NyaySetu" },
+      { property: "og:title", content: "Priority scoring settings — NyayaSetu" },
       {
         property: "og:description",
         content:

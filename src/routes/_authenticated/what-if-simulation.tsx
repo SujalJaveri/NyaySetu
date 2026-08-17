@@ -43,13 +43,13 @@ import { applySimulation, simulateJudgeUnavailable, type SimulationResult } from
 export const Route = createFileRoute("/_authenticated/what-if-simulation")({
   head: () => ({
     meta: [
-      { title: "What-If Simulation — NyaySetu" },
+      { title: "What-If Simulation — NyayaSetu" },
       {
         name: "description",
         content:
           "Model a judge's unavailability and preview every affected hearing before committing any change.",
       },
-      { property: "og:title", content: "What-If Simulation — NyaySetu" },
+      { property: "og:title", content: "What-If Simulation — NyayaSetu" },
       {
         property: "og:description",
         content:

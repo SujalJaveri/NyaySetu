@@ -60,12 +60,12 @@ import {
 export const Route = createFileRoute("/_authenticated/judges/")({
   head: () => ({
     meta: [
-      { title: "Judges — NyaySetu" },
+      { title: "Judges — NyayaSetu" },
       {
         name: "description",
         content: "Judicial officers, their specialisations, sitting workload and assigned cases.",
       },
-      { property: "og:title", content: "Judges — NyaySetu" },
+      { property: "og:title", content: "Judges — NyayaSetu" },
       {
         property: "og:description",
         content: "Judicial officers, their specialisations, sitting workload and assigned cases.",

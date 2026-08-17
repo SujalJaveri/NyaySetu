@@ -22,13 +22,13 @@ import { downloadCompliancePdf } from "@/lib/pdf";
 export const Route = createFileRoute("/_authenticated/governance")({
   head: () => ({
     meta: [
-      { title: "Governance & Compliance — NyaySetu" },
+      { title: "Governance & Compliance — NyayaSetu" },
       {
         name: "description",
         content:
           "Audit evidence for Regulation 9: recommendation acceptance and override rates, manual cause list overrides, priority tier distribution and Tier 1 listing turnaround.",
       },
-      { property: "og:title", content: "Governance & Compliance — NyaySetu" },
+      { property: "og:title", content: "Governance & Compliance — NyayaSetu" },
       {
         property: "og:description",
         content:
