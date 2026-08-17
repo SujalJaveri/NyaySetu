@@ -84,7 +84,7 @@ function Page() {
   const [focus, setFocus] = useState("all");
 
   const rangeEnd = addDays(anchor, 6);
-  const all = entries.data ?? [];
+  const all = useMemo(() => entries.data ?? [], [entries.data]);
 
   const focusOptions = useMemo(() => {
     if (view === "judge") return Array.from(new Set(all.map((e) => e.judgeName))).sort();

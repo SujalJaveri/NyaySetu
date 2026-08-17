@@ -44,7 +44,7 @@ async function hashText(value: string) {
  * summary content, so a re-listing produces a fresh translation but repeat visits do not.
  */
 export const translateCaseStatusSummary = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => Input.parse(data))
+  .validator((data: unknown) => Input.parse(data))
   .handler(
     async ({ data }): Promise<{ summary: string; language: PublicLanguage; cached: boolean }> => {
       if (data.language === "en") {

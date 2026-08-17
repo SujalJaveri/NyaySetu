@@ -228,7 +228,7 @@ function AdminPanelPage() {
     onError: (error: Error) => toast.error(error.message),
   });
 
-  const rows = accounts.data ?? [];
+  const rows = useMemo(() => accounts.data ?? [], [accounts.data]);
   const counts = useMemo(
     () => ({
       admins: rows.filter((a) => a.role === "admin").length,

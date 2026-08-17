@@ -10,7 +10,7 @@ type Input = { judgeId: string; email: string; password: string; fullName: strin
  */
 export const createBenchLogin = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: Input) => {
+  .validator((input: Input) => {
     const email = input.email.trim().toLowerCase();
     if (!email.includes("@")) throw new Error("A valid official email is required.");
     if (input.password.length < 8) throw new Error("Password must be at least 8 characters.");

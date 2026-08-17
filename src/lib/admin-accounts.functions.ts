@@ -65,7 +65,7 @@ export const listRegistryAccounts = createServerFn({ method: "POST" })
 /** Administrator-only: creates a registrar, administrator or bench login. */
 export const createRegistryAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(
+  .validator(
     (input: {
       email: string;
       password: string;
@@ -129,7 +129,7 @@ export const createRegistryAccount = createServerFn({ method: "POST" })
 /** Administrator-only: changes the role carried by an existing login. */
 export const updateRegistryAccountRole = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { userId: string; role: RegistryRole; judgeId?: string | null }) => {
+  .validator((input: { userId: string; role: RegistryRole; judgeId?: string | null }) => {
     if (!input.userId) throw new Error("An account is required.");
     return input;
   })
@@ -175,7 +175,7 @@ export const updateRegistryAccountRole = createServerFn({ method: "POST" })
 /** Administrator-only: issues a new password for an existing login. */
 export const resetRegistryAccountPassword = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { userId: string; password: string }) => {
+  .validator((input: { userId: string; password: string }) => {
     if (!input.userId) throw new Error("An account is required.");
     if (input.password.length < 8) throw new Error("Password must be at least 8 characters.");
     return input;
@@ -206,7 +206,7 @@ export const resetRegistryAccountPassword = createServerFn({ method: "POST" })
 /** Administrator-only: revokes a login. Judge records themselves are never deleted. */
 export const deleteRegistryAccount = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { userId: string }) => {
+  .validator((input: { userId: string }) => {
     if (!input.userId) throw new Error("An account is required.");
     return input;
   })
@@ -299,7 +299,7 @@ export const getAdminOverview = createServerFn({ method: "POST" })
 /** Administrator-only: renames the person behind a login. */
 export const updateRegistryAccountName = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { userId: string; fullName: string }) => {
+  .validator((input: { userId: string; fullName: string }) => {
     const fullName = input.fullName.trim();
     if (!input.userId) throw new Error("An account is required.");
     if (!fullName) throw new Error("A full name is required.");

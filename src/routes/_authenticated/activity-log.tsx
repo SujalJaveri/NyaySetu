@@ -67,7 +67,7 @@ function Page() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
 
-  const entries = logs.data ?? [];
+  const entries = useMemo(() => logs.data ?? [], [logs.data]);
 
   const users = useMemo(() => {
     const map = new Map<string, string>();

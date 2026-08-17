@@ -25,6 +25,7 @@ import {
   casesQuery,
   formatDate,
   statusLabel,
+  SCHEDULABLE_STATUSES,
   type CaseStatus,
 } from "@/lib/cases";
 import { formatSlot, isActive, schedulesQuery } from "@/lib/registry";
@@ -38,7 +39,7 @@ import { WhyThisOrderPanel } from "@/components/why-this-order";
 import { CaseTimeline } from "@/components/case-timeline";
 import { buildCaseTimeline } from "@/lib/case-timeline";
 import { StoredReasoning } from "@/components/reasoning-list";
-import { CaseSchedulingPanel, SCHEDULABLE_STATUSES } from "@/components/case-scheduling-panel";
+import { CaseSchedulingPanel } from "@/components/case-scheduling-panel";
 
 import { ErrorState } from "@/components/states";
 import { scheduleRecommendationQuery } from "@/lib/recommendations";

@@ -11,7 +11,7 @@ export type SetupAdminInput = {
  * admin role exists yet. After this, the route redirects to /auth.
  */
 export const createFirstAdmin = createServerFn({ method: "POST" })
-  .inputValidator((input: SetupAdminInput) => {
+  .validator((input: SetupAdminInput) => {
     const email = input.email.trim().toLowerCase();
     const fullName = input.fullName.trim();
     if (!email.includes("@")) throw new Error("A valid official email is required.");

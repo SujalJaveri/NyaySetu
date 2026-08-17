@@ -20,7 +20,7 @@ const SYSTEM_PROMPT = [
  */
 export const summarisePriorityOrder = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data: unknown) => Input.parse(data))
+  .validator((data: unknown) => Input.parse(data))
   .handler(async ({ data }) => {
     try {
       const summary = await queryLLM([

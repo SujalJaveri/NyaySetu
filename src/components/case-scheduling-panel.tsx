@@ -32,9 +32,6 @@ import {
 } from "@/lib/scheduling";
 import { conflictDataQuery, detectAssignmentConflicts, type Conflict } from "@/lib/conflicts";
 
-/** Statuses where a registrar would still be looking to list the case. */
-export const SCHEDULABLE_STATUSES = ["filed", "adjourned"];
-
 const STEPS = [
   { key: "priority", label: "Checking Priority Score", icon: ShieldCheck },
   { key: "availability", label: "Checking judge & courtroom availability", icon: Gavel },

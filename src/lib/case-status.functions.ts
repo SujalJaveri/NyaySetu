@@ -25,7 +25,7 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 export const lookupCaseStatus = createServerFn({ method: "POST" })
-  .inputValidator((input: { caseNumber: string }) => {
+  .validator((input: { caseNumber: string }) => {
     const raw = (input?.caseNumber ?? "").trim().toUpperCase();
     if (raw.length < 4 || raw.length > 40 || !/^[A-Z0-9/\-\s]+$/.test(raw)) {
       throw new Error("Please enter a valid case number, for example CASE-2026-0012.");

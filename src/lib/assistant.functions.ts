@@ -8,7 +8,7 @@ import { queryLLM } from "@/lib/ai.server";
 const Input = z.object({ question: z.string().min(1).max(500) });
 
 export const askRegistryAssistant = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => Input.parse(data))
+  .validator((data: unknown) => Input.parse(data))
   .handler(async ({ data }): Promise<AssistantAnswer> => {
     // 1. Run the deterministic query handler first
     const deterministicAnswer = await answerQuestion(data.question);
