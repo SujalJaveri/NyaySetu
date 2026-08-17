@@ -194,76 +194,77 @@
     }
   }
 }
+@keyframes registry-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 
-@layer utilities {
-  @keyframes registry-enter {
-    from {
-      opacity: 0;
-      transform: translateY(12px) scale(0.995);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
+@keyframes registry-rule {
+  from {
+    transform: scaleX(0);
   }
+  to {
+    transform: scaleX(1);
+  }
+}
 
-  @keyframes registry-rule {
-    from {
-      transform: scaleX(0);
-    }
-    to {
-      transform: scaleX(1);
-    }
+@keyframes nyayasetu-mark-enter {
+  from {
+    opacity: 0;
+    filter: saturate(0.8);
+    transform: translateY(6px) scale(0.96);
   }
+  to {
+    opacity: 1;
+    filter: saturate(1);
+    transform: translateY(0) scale(1);
+  }
+}
 
-  @keyframes nyayasetu-mark-enter {
-    from {
-      opacity: 0;
-      filter: saturate(0.8);
-      transform: translateY(6px) scale(0.96);
-    }
-    to {
-      opacity: 1;
-      filter: saturate(1);
-      transform: translateY(0) scale(1);
-    }
+@keyframes nyayasetu-scan {
+  from {
+    transform: translateX(-110%) skewX(-16deg);
   }
+  to {
+    transform: translateX(150%) skewX(-16deg);
+  }
+}
 
-  @keyframes nyayasetu-scan {
-    from {
-      transform: translateX(-110%) skewX(-16deg);
-    }
-    to {
-      transform: translateX(150%) skewX(-16deg);
-    }
-  }
+@utility registry-enter {
+  animation: registry-enter 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
 
-  .registry-enter {
-    animation: registry-enter 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
   }
+}
 
-  .stagger-1 {
-    animation-delay: 50ms;
-  }
-  .stagger-2 {
-    animation-delay: 100ms;
-  }
-  .stagger-3 {
-    animation-delay: 150ms;
-  }
-  .stagger-4 {
-    animation-delay: 200ms;
-  }
-  .stagger-5 {
-    animation-delay: 250ms;
-  }
+@utility stagger-1 {
+  animation-delay: 50ms;
+}
+@utility stagger-2 {
+  animation-delay: 100ms;
+}
+@utility stagger-3 {
+  animation-delay: 150ms;
+}
+@utility stagger-4 {
+  animation-delay: 200ms;
+}
+@utility stagger-5 {
+  animation-delay: 250ms;
+}
 
-  .nyayasetu-mark {
-    position: relative;
-    animation: nyayasetu-mark-enter 420ms ease-out both;
-  }
+@utility nyayasetu-mark {
+  position: relative;
+  animation: nyayasetu-mark-enter 420ms ease-out both;
 
-  .nyayasetu-mark::after {
+  &::after {
     position: absolute;
     inset: 0;
     content: "";
@@ -279,11 +280,19 @@
     pointer-events: none;
   }
 
-  .registry-rule {
-    position: relative;
-  }
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
 
-  .registry-rule::after {
+    &::after {
+      animation: none;
+    }
+  }
+}
+
+@utility registry-rule {
+  position: relative;
+
+  &::after {
     position: absolute;
     right: 0;
     bottom: -1px;
@@ -295,30 +304,30 @@
     animation: registry-rule 460ms ease-out both;
   }
 
-  .registry-interactive {
-    transition:
-      border-color 180ms ease,
-      box-shadow 180ms ease,
-      transform 180ms ease,
-      background-color 180ms ease;
+  @media (prefers-reduced-motion: reduce) {
+    &::after {
+      animation: none;
+    }
   }
+}
 
-  .registry-interactive:hover {
+@utility registry-interactive {
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease,
+    background-color 180ms ease;
+
+  &:hover {
     border-color: color-mix(in oklch, var(--color-primary) 38%, var(--color-border));
     box-shadow: 0 6px 18px -16px oklch(0.2 0.04 255 / 0.28);
     transform: translateY(-1px);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .registry-enter,
-    .registry-rule::after,
-    .nyayasetu-mark,
-    .nyayasetu-mark::after {
-      animation: none;
-    }
+    transition: none;
 
-    .registry-interactive,
-    .registry-interactive:hover {
+    &:hover {
       transition: none;
       transform: none;
     }
