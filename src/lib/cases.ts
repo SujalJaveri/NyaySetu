@@ -10,7 +10,7 @@ export const CASE_STATUSES = [
 export type CaseStatus = (typeof CASE_STATUSES)[number];
 
 /** Statuses where a registrar would still be looking to list the case. */
-export const SCHEDULABLE_STATUSES = ["filed", "adjourned"] as const;
+export const SCHEDULABLE_STATUSES: readonly CaseStatus[] = ["filed", "adjourned"];
 
 export const statusLabel: Record<CaseStatus, string> = {
   filed: "Filed",
