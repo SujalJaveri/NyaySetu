@@ -14,7 +14,6 @@
 
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
-import { globSync } from "glob";
 
 const SSR_DIRS = [
   "dist/_worker.js/_ssr",
