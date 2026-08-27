@@ -7,6 +7,34 @@ export function getEnvVar(key: string): string | undefined {
   const g = globalThis as Record<string, unknown>;
   const envObj = g["__env__"] as Record<string, string> | undefined;
   const procEnv = (g["process"] as { env?: Record<string, string> } | undefined)?.env;
+
+  if (key === "GEMINI_API_KEY") {
+    return (
+      envObj?.["GEMINI_API_KEY"] ||
+      procEnv?.["GEMINI_API_KEY"] ||
+      process.env.GEMINI_API_KEY ||
+      process.env["GEMINI_API_KEY"]
+    );
+  }
+
+  if (key === "OPENAI_API_KEY") {
+    return (
+      envObj?.["OPENAI_API_KEY"] ||
+      procEnv?.["OPENAI_API_KEY"] ||
+      process.env.OPENAI_API_KEY ||
+      process.env["OPENAI_API_KEY"]
+    );
+  }
+
+  if (key === "CUSTOM_LLM_URL") {
+    return (
+      envObj?.["CUSTOM_LLM_URL"] ||
+      procEnv?.["CUSTOM_LLM_URL"] ||
+      process.env.CUSTOM_LLM_URL ||
+      process.env["CUSTOM_LLM_URL"]
+    );
+  }
+
   return (
     process.env[key] ||
     envObj?.[key] ||
