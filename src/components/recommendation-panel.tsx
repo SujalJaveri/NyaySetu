@@ -36,6 +36,7 @@ export function RecommendationPanel({
   const queryClient = useQueryClient();
   const explainFn = useServerFn(explainSchedulingRecommendation);
   const [picking, setPicking] = useState(false);
+  const [rejectFlow, setRejectFlow] = useState(false);
   const [pickedKey, setPickedKey] = useState(alternatives[0]?.key ?? "");
   const [busy, setBusy] = useState<DecisionAction | null>(null);
   const [outcome, setOutcome] = useState<{ action: DecisionAction; candidate: Candidate } | null>(
@@ -86,6 +87,7 @@ export function RecommendationPanel({
       await recordDecision({ caseRow, candidate, action, userId: staff.data.id });
       setOutcome({ action, candidate });
       setPicking(false);
+      setRejectFlow(false);
       toast.success(
         action === "accepted"
           ? "Recommendation accepted and scheduled."
@@ -105,6 +107,15 @@ export function RecommendationPanel({
       }
     } finally {
       setBusy(null);
+    }
+  }
+
+  function handleRejectClick() {
+    if (alternatives.length > 0) {
+      setRejectFlow(true);
+      setPicking(false);
+    } else {
+      decide("rejected", top);
     }
   }
 
@@ -214,9 +225,25 @@ export function RecommendationPanel({
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
                 {outcome.action === "rejected"
-                  ? "No hearing was scheduled. The reasoning and your decision were stored for audit."
+                  ? "Top recommendation was rejected. No hearing is scheduled for this case."
                   : `Scheduled with ${outcome.candidate.judge.name} in ${outcome.candidate.courtroom.name} · ${formatSlotLabel(outcome.candidate.slot)}. Recorded in the audit log.`}
               </p>
+              {outcome.action === "rejected" && alternatives.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-border/60">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs"
+                    onClick={() => {
+                      setOutcome(null);
+                      setRejectFlow(true);
+                    }}
+                  >
+                    <Pencil className="mr-1.5 size-3.5" />
+                    Select an alternative option instead
+                  </Button>
+                </div>
+              )}
             </div>
             {outcome.action !== "rejected" && (
               <NotifyPartiesPanel caseRow={caseRow} candidate={outcome.candidate} />
@@ -260,7 +287,10 @@ export function RecommendationPanel({
               </Button>
               <Button
                 variant="outline"
-                onClick={() => setPicking((v) => !v)}
+                onClick={() => {
+                  setPicking((v) => !v);
+                  setRejectFlow(false);
+                }}
                 disabled={busy !== null || !canDecide || alternatives.length === 0}
               >
                 <Pencil className="size-4" />
@@ -268,7 +298,8 @@ export function RecommendationPanel({
               </Button>
               <Button
                 variant="outline"
-                onClick={() => decide("rejected", top)}
+                className={cn(rejectFlow && "border-destructive/60 bg-destructive/10 text-destructive")}
+                onClick={handleRejectClick}
                 disabled={busy !== null || !canDecide}
               >
                 {busy === "rejected" ? (
@@ -280,29 +311,127 @@ export function RecommendationPanel({
               </Button>
             </div>
 
-            {picking && alternatives.length > 0 && (
-              <div className="rounded-md border border-border p-3">
-                <p className="mb-2 text-sm font-medium text-foreground">
+            {/* Rejection Flow: Pick alternative OR confirm full rejection */}
+            {rejectFlow && alternatives.length > 0 && (
+              <div className="rounded-md border border-destructive/30 bg-destructive/5 p-4 space-y-3">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+                      <X className="size-4 text-destructive" />
+                      Top suggestion rejected — Choose alternative option
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Select one of the {alternatives.length} valid alternative options below, or confirm full rejection to leave this case unscheduled.
+                    </p>
+                  </div>
+                </div>
+
+                <RadioGroup value={pickedKey} onValueChange={setPickedKey} className="gap-2 pt-1">
+                  {alternatives.map((c) => (
+                    <div
+                      key={c.key}
+                      className={cn(
+                        "flex items-start gap-2.5 rounded-md border p-2.5 transition-colors cursor-pointer",
+                        pickedKey === c.key
+                          ? "border-primary bg-primary/5"
+                          : "border-border bg-background hover:bg-muted/40",
+                      )}
+                      onClick={() => setPickedKey(c.key)}
+                    >
+                      <RadioGroupItem value={c.key} id={`reject-${c.key}`} className="mt-0.5" />
+                      <Label
+                        htmlFor={`reject-${c.key}`}
+                        className="cursor-pointer text-sm font-normal leading-snug w-full"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium text-foreground">{c.judge.name}</span>
+                          <span className="text-xs font-semibold text-primary">fit score {c.score}/100</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {c.courtroom.name} · {formatSlotLabel(c.slot)}
+                        </p>
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+
+                <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border">
+                  <Button
+                    size="sm"
+                    disabled={busy !== null || !canDecide || !pickedKey}
+                    onClick={() => {
+                      const chosen = alternatives.find((c) => c.key === pickedKey);
+                      if (chosen) decide("modified", chosen);
+                    }}
+                  >
+                    {busy === "modified" ? (
+                      <Loader2 className="size-4 animate-spin mr-1.5" />
+                    ) : (
+                      <Check className="size-4 mr-1.5" />
+                    )}
+                    Schedule Selected Option
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                    disabled={busy !== null || !canDecide}
+                    onClick={() => decide("rejected", top)}
+                  >
+                    {busy === "rejected" ? (
+                      <Loader2 className="size-4 animate-spin mr-1.5" />
+                    ) : (
+                      <X className="size-4 mr-1.5" />
+                    )}
+                    Confirm Rejection (Leave Unscheduled)
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setRejectFlow(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Standard Modify Flow */}
+            {picking && !rejectFlow && alternatives.length > 0 && (
+              <div className="rounded-md border border-border p-3 space-y-3">
+                <p className="text-sm font-medium text-foreground">
                   Choose a different valid option
                 </p>
                 <RadioGroup value={pickedKey} onValueChange={setPickedKey} className="gap-2">
                   {alternatives.map((c) => (
-                    <div key={c.key} className="flex items-start gap-2">
-                      <RadioGroupItem value={c.key} id={c.key} className="mt-1" />
+                    <div
+                      key={c.key}
+                      className={cn(
+                        "flex items-start gap-2.5 rounded-md border p-2.5 transition-colors cursor-pointer",
+                        pickedKey === c.key
+                          ? "border-primary bg-primary/5"
+                          : "border-border bg-background hover:bg-muted/40",
+                      )}
+                      onClick={() => setPickedKey(c.key)}
+                    >
+                      <RadioGroupItem value={c.key} id={`modify-${c.key}`} className="mt-0.5" />
                       <Label
-                        htmlFor={c.key}
-                        className="cursor-pointer text-sm font-normal leading-snug"
+                        htmlFor={`modify-${c.key}`}
+                        className="cursor-pointer text-sm font-normal leading-snug w-full"
                       >
-                        <span className="text-foreground">{c.judge.name}</span>{" "}
-                        <span className="text-muted-foreground">
-                          · {c.courtroom.name} · {formatSlotLabel(c.slot)} · fit {c.score}
-                        </span>
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium text-foreground">{c.judge.name}</span>
+                          <span className="text-xs font-semibold text-primary">fit score {c.score}/100</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {c.courtroom.name} · {formatSlotLabel(c.slot)}
+                        </p>
                       </Label>
                     </div>
                   ))}
                 </RadioGroup>
                 <Button
-                  className="mt-3"
+                  className="mt-1"
                   size="sm"
                   disabled={busy !== null || !canDecide || !pickedKey}
                   onClick={() => {
@@ -311,9 +440,9 @@ export function RecommendationPanel({
                   }}
                 >
                   {busy === "modified" ? (
-                    <Loader2 className="size-4 animate-spin" />
+                    <Loader2 className="size-4 animate-spin mr-1.5" />
                   ) : (
-                    <Check className="size-4" />
+                    <Check className="size-4 mr-1.5" />
                   )}
                   Confirm this option
                 </Button>
