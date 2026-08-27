@@ -64,9 +64,14 @@ export function RecommendationPanel({
           alternatives: alternatives,
         },
       });
-      setAiExplanation(res.explanation);
+      if (res?.explanation) {
+        setAiExplanation(res.explanation);
+      } else {
+        toast.error("Could not fetch AI explanation.");
+      }
     } catch (e) {
-      toast.error("Could not fetch AI explanation.");
+      console.error("AI explanation error:", e);
+      toast.error(e instanceof Error ? e.message : "Could not fetch AI explanation.");
     } finally {
       setLoadingAi(false);
     }

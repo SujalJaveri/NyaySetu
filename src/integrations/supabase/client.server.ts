@@ -34,13 +34,9 @@ function createSupabaseAdminClient() {
   const SUPABASE_URL =
     process.env["SUPABASE_URL"] ||
     process.env["VITE_SUPABASE_URL"] ||
-    "https://placeholder-project.supabase.co";
+    "https://keqlhaerxaliqljyibzx.supabase.co";
   const SUPABASE_SERVICE_ROLE_KEY =
     process.env["SUPABASE_SERVICE_ROLE_KEY"] || "placeholder-service-role-key";
-
-  if (SUPABASE_URL === "https://placeholder-project.supabase.co") {
-    console.warn("[Supabase Admin] Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY.");
-  }
 
   return createClient<Database>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
     global: {

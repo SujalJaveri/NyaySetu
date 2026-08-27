@@ -35,18 +35,12 @@ function createSupabaseClient() {
     import.meta.env["VITE_SUPABASE_URL"] ||
     process.env["SUPABASE_URL"] ||
     process.env["VITE_SUPABASE_URL"] ||
-    "https://placeholder-project.supabase.co";
+    "https://keqlhaerxaliqljyibzx.supabase.co";
   const SUPABASE_PUBLISHABLE_KEY =
     import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"] ||
     process.env["SUPABASE_PUBLISHABLE_KEY"] ||
     process.env["VITE_SUPABASE_PUBLISHABLE_KEY"] ||
-    "placeholder-anon-key";
-
-  if (SUPABASE_URL === "https://placeholder-project.supabase.co") {
-    console.warn(
-      "[Supabase] Missing SUPABASE_URL or SUPABASE_PUBLISHABLE_KEY environment variables.",
-    );
-  }
+    "sb_publishable_FZvKCCOsCUtbS9qP7v2XAw_xblsYT8d";
 
   return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
     global: {

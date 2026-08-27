@@ -81,7 +81,8 @@ export async function queryLLM(messages: ChatMessage[]): Promise<string | null> 
           parts: [{ text: m.content }],
         }));
 
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
+      const model = process.env["GEMINI_MODEL"] || "gemini-3.6-flash";
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
 
       const body: {
         contents: typeof contents;
@@ -102,7 +103,13 @@ export async function queryLLM(messages: ChatMessage[]): Promise<string | null> 
         const payload = (await res.json()) as {
           candidates?: { content?: { parts?: { text?: string }[] } }[];
         };
-        return payload.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || null;
+        const parts = payload.candidates?.[0]?.content?.parts ?? [];
+        const text = parts
+          .map((p) => p.text)
+          .filter(Boolean)
+          .join("\n")
+          .trim();
+        return text || null;
       }
       console.error(`Gemini API returned status ${res.status}: ${res.statusText}`);
     } catch (e) {
