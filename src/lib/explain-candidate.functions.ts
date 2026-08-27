@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { queryLLM } from "@/lib/ai.server";
+import { queryLLM, getEnvVar } from "@/lib/ai.server";
 
 const CandidateSchema = z.object({
   key: z.string(),
@@ -54,10 +54,10 @@ export const explainSchedulingRecommendation = createServerFn({ method: "POST" }
   .validator((data: unknown) => Input.parse(data))
   .handler(async ({ data }) => {
     const hasAI =
-      process.env["CUSTOM_LLM_URL"] ||
-      process.env["OPENAI_API_KEY"] ||
-      process.env["AI_GATEWAY_API_KEY"] ||
-      process.env["GEMINI_API_KEY"];
+      getEnvVar("CUSTOM_LLM_URL") ||
+      getEnvVar("OPENAI_API_KEY") ||
+      getEnvVar("AI_GATEWAY_API_KEY") ||
+      getEnvVar("GEMINI_API_KEY");
 
     if (!hasAI) {
       return {

@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { supabase } from "@/integrations/supabase/client";
 import { answerQuestion, type AssistantAnswer } from "@/lib/assistant";
-import { queryLLM } from "@/lib/ai.server";
+import { queryLLM, getEnvVar } from "@/lib/ai.server";
 
 const Input = z.object({ question: z.string().min(1).max(500) });
 
@@ -21,10 +21,10 @@ export const askRegistryAssistant = createServerFn({ method: "POST" })
     // 2. Otherwise, check if an AI provider is configured.
     // If not, return the default deterministic fallback response.
     const hasAI =
-      process.env["CUSTOM_LLM_URL"] ||
-      process.env["OPENAI_API_KEY"] ||
-      process.env["AI_GATEWAY_API_KEY"] ||
-      process.env["GEMINI_API_KEY"];
+      getEnvVar("CUSTOM_LLM_URL") ||
+      getEnvVar("OPENAI_API_KEY") ||
+      getEnvVar("AI_GATEWAY_API_KEY") ||
+      getEnvVar("GEMINI_API_KEY");
 
     if (!hasAI) {
       return deterministicAnswer;

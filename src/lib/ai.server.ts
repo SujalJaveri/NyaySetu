@@ -3,16 +3,28 @@ export type ChatMessage = {
   content: string;
 };
 
+export function getEnvVar(key: string): string | undefined {
+  const g = globalThis as Record<string, unknown>;
+  const envObj = g["__env__"] as Record<string, string> | undefined;
+  const procEnv = (g["process"] as { env?: Record<string, string> } | undefined)?.env;
+  return (
+    process.env[key] ||
+    envObj?.[key] ||
+    procEnv?.[key] ||
+    (typeof import.meta !== "undefined" ? (import.meta as unknown as { env?: Record<string, string> }).env?.[key] : undefined)
+  );
+}
+
 /**
  * Universal utility to query the active LLM based on environment configuration.
  * Prioritises CUSTOM_LLM_URL, falls back to OpenAI/AI Gateway, and then Gemini.
  */
 export async function queryLLM(messages: ChatMessage[]): Promise<string | null> {
-  const customUrl = process.env["CUSTOM_LLM_URL"];
-  const customKey = process.env["CUSTOM_LLM_KEY"];
-  const customModel = process.env["CUSTOM_LLM_MODEL"];
-  const openaiKey = process.env["OPENAI_API_KEY"] || process.env["AI_GATEWAY_API_KEY"];
-  const geminiKey = process.env["GEMINI_API_KEY"];
+  const customUrl = getEnvVar("CUSTOM_LLM_URL");
+  const customKey = getEnvVar("CUSTOM_LLM_KEY");
+  const customModel = getEnvVar("CUSTOM_LLM_MODEL");
+  const openaiKey = getEnvVar("OPENAI_API_KEY") || getEnvVar("AI_GATEWAY_API_KEY");
+  const geminiKey = getEnvVar("GEMINI_API_KEY");
 
   // 1. Custom / Local LLM (e.g. Ollama, LM Studio, vLLM, custom proxy)
   if (customUrl) {
