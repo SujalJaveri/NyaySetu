@@ -68,3 +68,27 @@ function patch(ssrDir) {
 for (const dir of SSR_DIRS) {
   patch(dir);
 }
+
+function patchServerIndex(serverDir) {
+  const indexMjs = join(serverDir, "index.mjs");
+  try {
+    let content = readFileSync(indexMjs, "utf8");
+    if (!content.includes("globalThis.__cf_env_synced__")) {
+      content = content.replace(
+        /globalThis\.__env__ = env;/g,
+        `globalThis.__env__ = env; globalThis.__cf_env_synced__ = true; if (env && typeof env === 'object') { try { for (const [k, v] of Object.entries(env)) { if (typeof v === 'string') { process.env[k] = v; } } } catch {} }`
+      );
+      content = content.replace(
+        /mod\.fetch\(req\)/g,
+        `mod.fetch(req, globalThis.__env__ || env)`
+      );
+      writeFileSync(indexMjs, content);
+      console.log(`[patch] ✅ Patched ${indexMjs} for Cloudflare Worker env propagation`);
+    }
+  } catch (err) {
+    // ignore if not present
+  }
+}
+
+patchServerIndex(".output/server");
+patchServerIndex("dist/_worker.js");
