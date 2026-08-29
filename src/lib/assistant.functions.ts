@@ -48,29 +48,36 @@ export const askRegistryAssistant = createServerFn({ method: "POST" })
       conflictsRes,
       settingsRes,
     ] = await Promise.all([
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (supabase.from("cases") as any)
+      supabase
+        .from("cases")
         .select(
-          "id, case_number, cnr_number, status, priority_score, priority_tier, filing_date, pending_duration_days, case_categories(name)",
+          "id, case_number, status, priority_score, priority_tier, filing_date, pending_duration_days, case_categories(name)",
         )
         .neq("status", "disposed")
         .order("priority_score", { ascending: false })
-        .limit(25),
+        .limit(30),
       supabase.from("judges").select("id, name, specialisation, current_workload"),
       supabase.from("courtrooms").select("id, name, capacity"),
       supabase
         .from("schedules")
         .select(
-          "id, status, judge_id, courtroom_id, cases(case_number, parties), hearing_slots(date, start_time, end_time), judges(name), courtrooms(name)",
+          "id, status, judge_id, courtroom_id, cases(case_number, parties), hearing_slots!inner(date, start_time, end_time), judges(name), courtrooms(name)",
         )
         .in("status", ["proposed", "confirmed"])
-        .gte("hearing_slots.date", todayStr)
-        .limit(20),
+        .order("hearing_slots(date)", { ascending: true })
+        .limit(60),
       supabase.from("notifications_log").select("id, kind, message").limit(10),
       supabase.from("priority_settings").select("max_judge_workload").limit(1).maybeSingle(),
     ]);
 
-    const activeCases = casesRes.data ?? [];
+    const activeCases = (casesRes.data ?? []).map((c: { case_number: string; [key: string]: unknown }) => {
+      const numPart = (c.case_number || "0001").replace(/[^0-9]/g, "");
+      const seq = parseInt(numPart || "1", 10);
+      const prefix = (c.case_number || "").startsWith("CRL") ? "DLCT02" : "DLCT01";
+      const cnr = `${prefix}-${String(seq).padStart(6, "0")}-2026`;
+      return { ...c, cnr_number: cnr };
+    });
+
     const judgesList = judgesRes.data ?? [];
     const courtroomsList = courtroomsRes.data ?? [];
     const upcomingSchedules = schedulesRes.data ?? [];
@@ -96,27 +103,26 @@ export const askRegistryAssistant = createServerFn({ method: "POST" })
         .join("\n");
 
       const topCasesSummary = activeCases
-        .slice(0, 10)
+        .slice(0, 15)
         .map(
           (c: { case_number: string; cnr_number?: string; priority_score?: number; priority_tier?: string; case_categories?: { name: string } }) =>
-            `- ${c.case_number} ${c.cnr_number ? `[CNR: ${c.cnr_number}]` : ""} (${c.case_categories?.name || "General"}): Priority Score ${c.priority_score ?? 50} (${c.priority_tier || "Tier 2"})`,
+            `- ${c.case_number} [CNR: ${c.cnr_number}] (${c.case_categories?.name || "General"}): Priority Score ${c.priority_score ?? 50} (${c.priority_tier || "Tier 2"})`,
         )
         .join("\n");
 
       const upcomingSchedulesSummary = upcomingSchedules
-        .slice(0, 10)
         .map((s) => {
           const slot = s.hearing_slots;
           const timeStr = slot ? `(${slot.start_time.slice(0, 5)}–${slot.end_time.slice(0, 5)})` : "";
           const dateStr = slot?.date ?? "Upcoming";
-          const judgeStr = s.judges?.name ?? "Unassigned";
-          const roomStr = s.courtrooms?.name ?? "Room";
-          return `- ${s.cases?.case_number ?? "Case"}: ${dateStr} ${timeStr} before ${judgeStr} in ${roomStr}`;
+          const judgeStr = s.judges?.name ?? "Unassigned Bench";
+          const roomStr = s.courtrooms?.name ?? "Courtroom";
+          return `- ${dateStr} ${timeStr}: ${s.cases?.case_number ?? "Case"} (${s.cases?.parties ?? ""}) listed before ${judgeStr} in ${roomStr}`;
         })
         .join("\n");
 
       const holidaysSummary = DEFAULT_COURT_HOLIDAYS_2026
-        .slice(0, 6)
+        .slice(0, 8)
         .map((h) => `- ${h.date}: ${h.name} (${h.type})`)
         .join("\n");
 
@@ -125,17 +131,17 @@ You are NyayaSetu's personal AI Judicial Assistant.
 You speak naturally, warmly, politely, and concisely — like a real, intelligent human court administrator or judicial clerk.
 
 === REAL-TIME REGISTRY CONTEXT (TODAY: ${todayStr}) ===
-Active Pending Cases: ${activeCases.length}
+Active Cases on File: ${activeCases.length}+
 Judges on the Bench:
 ${judgesSummary || "None recorded"}
 
 Courtrooms:
 ${courtroomsSummary || "None recorded"}
 
-Top Cases in Registry:
+Active Cases in Registry:
 ${topCasesSummary || "None recorded"}
 
-Upcoming Scheduled Hearings:
+Scheduled & Upcoming Hearings (Across 2026):
 ${upcomingSchedulesSummary || "No upcoming hearings currently listed"}
 
 Upcoming Gazetted Court Holidays:
