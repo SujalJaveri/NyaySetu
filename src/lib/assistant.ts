@@ -224,9 +224,9 @@ async function answerCases(
   };
 }
 
-async function answerConflicts(): Promise<AssistantAnswer> {
-  const { conflictDataQuery } = await import("@/lib/conflicts");
-  const data = await conflictDataQuery.queryFn();
+async function answerConflicts(db: any = supabase): Promise<AssistantAnswer> {
+  const { fetchConflictData, scanSystemConflicts } = await import("@/lib/conflicts");
+  const data = await fetchConflictData(db);
   const conflicts = scanSystemConflicts(data);
   const blocking = conflicts.filter((c) => c.severity === "blocking").length;
 
@@ -363,7 +363,7 @@ export async function answerQuestion(question: string, db: any = supabase): Prom
     case "availability":
       return answerAvailability(question, db);
     case "conflict_count":
-      return answerConflicts();
+      return answerConflicts(db);
     case "judge_workload":
       return answerWorkload(db);
     case "unscheduled_cases":

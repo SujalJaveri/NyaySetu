@@ -338,15 +338,14 @@ type OccupancyRaw = {
   hearing_slots: Slot | null;
 };
 
-export async function fetchConflictData() {
+export async function fetchConflictData(db: any = supabase) {
   const [schedulesRes, availabilityRes, judgesRes, settingsRes, holidaysRes] =
     await Promise.all([
-      supabase.from("schedules").select(OCCUPANCY_SELECT),
-      supabase.from("availability").select("entity_type, entity_id, date, slot_id, status"),
-      supabase.from("judges").select("*").order("name"),
-      supabase.from("priority_settings").select("max_judge_workload").limit(1).maybeSingle(),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (supabase as any)
+      db.from("schedules").select(OCCUPANCY_SELECT),
+      db.from("availability").select("entity_type, entity_id, date, slot_id, status"),
+      db.from("judges").select("*").order("name"),
+      db.from("priority_settings").select("max_judge_workload").limit(1).maybeSingle(),
+      (db as any)
         .from("court_holidays")
         .select("id, date, name, type, jurisdiction")
         .order("date"),
