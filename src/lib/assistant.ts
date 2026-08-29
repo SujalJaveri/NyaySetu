@@ -92,9 +92,8 @@ export function classifyQuestion(question: string): AssistantIntent {
   if (/(workload|capacity|busiest|overloaded|load)/.test(q)) return "judge_workload";
   if (/(unscheduled|awaiting scheduling|not scheduled|no listing)/.test(q))
     return "unscheduled_cases";
-  if (/(high[- ]?priority|priority)/.test(q) && /case/.test(q)) return "high_priority_cases";
-  if (/(hearing|listing|listed|schedule[sd]?)/.test(q)) return "hearings_on_date";
-  if (/case/.test(q)) return "high_priority_cases";
+  if (/(high[- ]?priority|tier\s*1|top priority)/.test(q)) return "high_priority_cases";
+  if (/(hearing|listing|listed|scheduled|schedule)/.test(q)) return "hearings_on_date";
   return "unknown";
 }
 
@@ -111,26 +110,26 @@ const prettyDate = (d: string) =>
 
 /* --------------------------------------------------------------- handlers */
 
-async function answerAvailability(question: string): Promise<AssistantAnswer> {
+async function answerAvailability(question: string, db = supabase): Promise<AssistantAnswer> {
   const { date, label } = parseDate(question);
   const part = parsePartOfDay(question);
   const wantsCourtrooms = /courtroom|room|court hall/i.test(question) && !/judge/i.test(question);
   const entityType = wantsCourtrooms ? "courtroom" : "judge";
 
   const [slotsRes, entitiesRes, availRes, schedulesRes] = await Promise.all([
-    supabase
+    db
       .from("hearing_slots")
       .select("id, date, start_time, end_time")
       .eq("date", date)
       .order("start_time"),
     wantsCourtrooms
-      ? supabase.from("courtrooms").select("*").order("name")
-      : supabase.from("judges").select("*").order("name"),
-    supabase
+      ? db.from("courtrooms").select("*").order("name")
+      : db.from("judges").select("*").order("name"),
+    db
       .from("availability")
       .select("entity_type, entity_id, slot_id, status")
       .eq("date", date),
-    supabase.from("schedules").select("id, status, judge_id, courtroom_id, slot_id"),
+    db.from("schedules").select("id, status, judge_id, courtroom_id, slot_id"),
   ]);
   if (slotsRes.error) throw slotsRes.error;
   if (entitiesRes.error) throw entitiesRes.error;
@@ -186,14 +185,15 @@ async function answerAvailability(question: string): Promise<AssistantAnswer> {
 async function answerCases(
   highPriorityOnly: boolean,
   unscheduledOnly: boolean,
+  db = supabase,
 ): Promise<AssistantAnswer> {
   const [casesRes, schedulesRes] = await Promise.all([
-    supabase
+    db
       .from("cases")
       .select("id, case_number, status, priority_score, filing_date, parties")
       .neq("status", "disposed")
       .order("priority_score", { ascending: false, nullsFirst: false }),
-    supabase.from("schedules").select("case_id, status"),
+    db.from("schedules").select("case_id, status"),
   ]);
   if (casesRes.error) throw casesRes.error;
 
@@ -248,11 +248,11 @@ async function answerConflicts(): Promise<AssistantAnswer> {
   };
 }
 
-async function answerWorkload(): Promise<AssistantAnswer> {
+async function answerWorkload(db = supabase): Promise<AssistantAnswer> {
   const [judgesRes, schedulesRes, settingsRes] = await Promise.all([
-    supabase.from("judges").select("*").order("name"),
-    supabase.from("schedules").select("id, status, judge_id"),
-    supabase.from("priority_settings").select("max_judge_workload").limit(1).maybeSingle(),
+    db.from("judges").select("*").order("name"),
+    db.from("schedules").select("id, status, judge_id"),
+    db.from("priority_settings").select("max_judge_workload").limit(1).maybeSingle(),
   ]);
   if (judgesRes.error) throw judgesRes.error;
 
@@ -287,25 +287,54 @@ async function answerWorkload(): Promise<AssistantAnswer> {
   };
 }
 
-async function answerHearings(question: string): Promise<AssistantAnswer> {
+async function answerHearings(question: string, db = supabase): Promise<AssistantAnswer> {
   const { date, label } = parseDate(question);
   const part = parsePartOfDay(question);
 
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from("schedules")
     .select(
       "id, status, cases(id, case_number, priority_score), judges(name), courtrooms(name), hearing_slots(date, start_time, end_time)",
     );
   if (error) throw error;
 
-  const listed = (data ?? [])
-    .filter((s) => isActiveSchedule(s.status))
+  const activeSchedules = (data ?? []).filter((s) => isActiveSchedule(s.status));
+  const listed = activeSchedules
     .filter(
       (s) => s.hearing_slots?.date === date && inPart(s.hearing_slots?.start_time ?? "", part),
     )
     .sort((a, b) =>
       (a.hearing_slots?.start_time ?? "").localeCompare(b.hearing_slots?.start_time ?? ""),
     );
+
+  if (listed.length === 0) {
+    const futureHearings = activeSchedules
+      .filter((s) => (s.hearing_slots?.date ?? "") >= date)
+      .sort((a, b) => (a.hearing_slots?.date ?? "").localeCompare(b.hearing_slots?.date ?? ""));
+
+    const firstUpcoming = futureHearings[0];
+    if (firstUpcoming?.hearing_slots?.date) {
+      const nextDate = firstUpcoming.hearing_slots.date;
+      const dateHearings = futureHearings.filter((s) => s.hearing_slots?.date === nextDate);
+      return {
+        intent: "hearings_on_date",
+        summary: `No hearings listed for ${label} (${prettyDate(date)}). Next scheduled hearings are on ${prettyDate(nextDate)} (${dateHearings.length} listing${dateHearings.length !== 1 ? "s" : ""}).`,
+        source: `schedules joined to hearing_slots`,
+        rows: dateHearings.slice(0, 15).map((s) => ({
+          id: s.id,
+          label: s.cases?.case_number ?? "Case",
+          detail: `${timeLabel(s.hearing_slots?.start_time ?? "")}–${timeLabel(s.hearing_slots?.end_time ?? "")} · ${s.judges?.name ?? "Judge unassigned"} · ${s.courtrooms?.name ?? "Courtroom unassigned"}`,
+          badge:
+            s.cases?.priority_score == null
+              ? "Priority pending"
+              : `Priority ${Math.round(s.cases.priority_score)}`,
+          target: s.cases
+            ? ({ route: "/cases/$caseId", caseId: s.cases.id } as const)
+            : { route: "/calendar" as const },
+        })),
+      };
+    }
+  }
 
   return {
     intent: "hearings_on_date",
@@ -328,21 +357,21 @@ async function answerHearings(question: string): Promise<AssistantAnswer> {
 
 /* ------------------------------------------------------------------ entry */
 
-export async function answerQuestion(question: string): Promise<AssistantAnswer> {
+export async function answerQuestion(question: string, db: any = supabase): Promise<AssistantAnswer> {
   const intent = classifyQuestion(question);
   switch (intent) {
     case "availability":
-      return answerAvailability(question);
+      return answerAvailability(question, db);
     case "conflict_count":
       return answerConflicts();
     case "judge_workload":
-      return answerWorkload();
+      return answerWorkload(db);
     case "unscheduled_cases":
-      return answerCases(/high[- ]?priority/i.test(question), true);
+      return answerCases(false, true, db);
     case "high_priority_cases":
-      return answerCases(true, /unscheduled|pending scheduling/i.test(question));
+      return answerCases(true, false, db);
     case "hearings_on_date":
-      return answerHearings(question);
+      return answerHearings(question, db);
     default:
       return {
         intent: "unknown",

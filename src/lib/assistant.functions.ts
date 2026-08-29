@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { answerQuestion, type AssistantAnswer } from "@/lib/assistant";
 import { queryLLM, getEnvVar } from "@/lib/ai.server";
 import { DEFAULT_COURT_HOLIDAYS_2026 } from "@/lib/holidays";
@@ -48,7 +48,7 @@ export const askRegistryAssistant = createServerFn({ method: "POST" })
       conflictsRes,
       settingsRes,
     ] = await Promise.all([
-      supabase
+      supabaseAdmin
         .from("cases")
         .select(
           "id, case_number, status, priority_score, priority_tier, filing_date, pending_duration_days, case_categories(name)",
@@ -56,18 +56,19 @@ export const askRegistryAssistant = createServerFn({ method: "POST" })
         .neq("status", "disposed")
         .order("priority_score", { ascending: false })
         .limit(30),
-      supabase.from("judges").select("id, name, specialisation, current_workload"),
-      supabase.from("courtrooms").select("id, name, capacity"),
-      supabase
+      supabaseAdmin.from("judges").select("id, name, specialisation, current_workload"),
+      supabaseAdmin.from("courtrooms").select("id, name, capacity"),
+      supabaseAdmin
         .from("schedules")
         .select(
           "id, status, judge_id, courtroom_id, cases(case_number, parties), hearing_slots!inner(date, start_time, end_time), judges(name), courtrooms(name)",
         )
         .in("status", ["proposed", "confirmed"])
+        .gte("hearing_slots.date", todayStr)
         .order("hearing_slots(date)", { ascending: true })
         .limit(60),
-      supabase.from("notifications_log").select("id, kind, message").limit(10),
-      supabase.from("priority_settings").select("max_judge_workload").limit(1).maybeSingle(),
+      supabaseAdmin.from("notifications_log").select("id, kind, message").limit(10),
+      supabaseAdmin.from("priority_settings").select("max_judge_workload").limit(1).maybeSingle(),
     ]);
 
     const activeCases = (casesRes.data ?? []).map((c: { case_number: string; [key: string]: unknown }) => {
@@ -84,7 +85,7 @@ export const askRegistryAssistant = createServerFn({ method: "POST" })
     const maxWorkload = settingsRes.data?.max_judge_workload ?? 25;
 
     // Check if deterministic handler gives a quick high-confidence answer with interactive row buttons
-    const deterministicAnswer = await answerQuestion(data.question);
+    const deterministicAnswer = await answerQuestion(data.question, supabaseAdmin);
 
     if (!hasAI) {
       return deterministicAnswer;
