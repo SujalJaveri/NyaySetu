@@ -303,7 +303,9 @@ export function RecommendationPanel({
               </Button>
               <Button
                 variant="outline"
-                className={cn(rejectFlow && "border-destructive/60 bg-destructive/10 text-destructive")}
+                className={cn(
+                  rejectFlow && "border-destructive/60 bg-destructive/10 text-destructive",
+                )}
                 onClick={handleRejectClick}
                 disabled={busy !== null || !canDecide}
               >
@@ -326,7 +328,8 @@ export function RecommendationPanel({
                       Top suggestion rejected — Choose alternative option
                     </p>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      Select one of the {alternatives.length} valid alternative options below, or confirm full rejection to leave this case unscheduled.
+                      Select one of the {alternatives.length} valid alternative options below, or
+                      confirm full rejection to leave this case unscheduled.
                     </p>
                   </div>
                 </div>
@@ -350,7 +353,9 @@ export function RecommendationPanel({
                       >
                         <div className="flex items-center justify-between">
                           <span className="font-medium text-foreground">{c.judge.name}</span>
-                          <span className="text-xs font-semibold text-primary">fit score {c.score}/100</span>
+                          <span className="text-xs font-semibold text-primary">
+                            fit score {c.score}/100
+                          </span>
                         </div>
                         <p className="text-xs text-muted-foreground mt-0.5">
                           {c.courtroom.name} · {formatSlotLabel(c.slot)}
@@ -390,11 +395,7 @@ export function RecommendationPanel({
                     )}
                     Confirm Rejection (Leave Unscheduled)
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setRejectFlow(false)}
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => setRejectFlow(false)}>
                     Cancel
                   </Button>
                 </div>
@@ -426,7 +427,9 @@ export function RecommendationPanel({
                       >
                         <div className="flex items-center justify-between">
                           <span className="font-medium text-foreground">{c.judge.name}</span>
-                          <span className="text-xs font-semibold text-primary">fit score {c.score}/100</span>
+                          <span className="text-xs font-semibold text-primary">
+                            fit score {c.score}/100
+                          </span>
                         </div>
                         <p className="text-xs text-muted-foreground mt-0.5">
                           {c.courtroom.name} · {formatSlotLabel(c.slot)}

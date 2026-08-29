@@ -10,28 +10,19 @@ export function getEnvVar(key: string): string | undefined {
 
   if (key === "GEMINI_API_KEY") {
     return (
-      envObj?.["GEMINI_API_KEY"] ||
-      procEnv?.["GEMINI_API_KEY"] ||
-      process.env.GEMINI_API_KEY ||
-      process.env["GEMINI_API_KEY"]
+      envObj?.["GEMINI_API_KEY"] || procEnv?.["GEMINI_API_KEY"] || process.env["GEMINI_API_KEY"]
     );
   }
 
   if (key === "OPENAI_API_KEY") {
     return (
-      envObj?.["OPENAI_API_KEY"] ||
-      procEnv?.["OPENAI_API_KEY"] ||
-      process.env.OPENAI_API_KEY ||
-      process.env["OPENAI_API_KEY"]
+      envObj?.["OPENAI_API_KEY"] || procEnv?.["OPENAI_API_KEY"] || process.env["OPENAI_API_KEY"]
     );
   }
 
   if (key === "CUSTOM_LLM_URL") {
     return (
-      envObj?.["CUSTOM_LLM_URL"] ||
-      procEnv?.["CUSTOM_LLM_URL"] ||
-      process.env.CUSTOM_LLM_URL ||
-      process.env["CUSTOM_LLM_URL"]
+      envObj?.["CUSTOM_LLM_URL"] || procEnv?.["CUSTOM_LLM_URL"] || process.env["CUSTOM_LLM_URL"]
     );
   }
 
@@ -39,7 +30,9 @@ export function getEnvVar(key: string): string | undefined {
     process.env[key] ||
     envObj?.[key] ||
     procEnv?.[key] ||
-    (typeof import.meta !== "undefined" ? (import.meta as unknown as { env?: Record<string, string> }).env?.[key] : undefined)
+    (typeof import.meta !== "undefined"
+      ? (import.meta as unknown as { env?: Record<string, string> }).env?.[key]
+      : undefined)
   );
 }
 

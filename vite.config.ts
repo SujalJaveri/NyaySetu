@@ -11,11 +11,15 @@ export default defineConfig(({ mode }) => {
 
   return {
     define: {
-      "process.env.GEMINI_API_KEY": JSON.stringify(env.GEMINI_API_KEY || ""),
-      "process.env.SUPABASE_URL": JSON.stringify(env.SUPABASE_URL || "https://keqlhaerxaliqljyibzx.supabase.co"),
-      "process.env.SUPABASE_PUBLISHABLE_KEY": JSON.stringify(env.SUPABASE_PUBLISHABLE_KEY || "sb_publishable_FZvKCCOsCUtbS9qP7v2XAw_xblsYT8d"),
-      "process.env.CUSTOM_LLM_URL": JSON.stringify(env.CUSTOM_LLM_URL || ""),
-      "process.env.OPENAI_API_KEY": JSON.stringify(env.OPENAI_API_KEY || ""),
+      "process.env.GEMINI_API_KEY": JSON.stringify(env["GEMINI_API_KEY"] || ""),
+      "process.env.SUPABASE_URL": JSON.stringify(
+        env["SUPABASE_URL"] || "https://keqlhaerxaliqljyibzx.supabase.co",
+      ),
+      "process.env.SUPABASE_PUBLISHABLE_KEY": JSON.stringify(
+        env["SUPABASE_PUBLISHABLE_KEY"] || "sb_publishable_FZvKCCOsCUtbS9qP7v2XAw_xblsYT8d",
+      ),
+      "process.env.CUSTOM_LLM_URL": JSON.stringify(env["CUSTOM_LLM_URL"] || ""),
+      "process.env.OPENAI_API_KEY": JSON.stringify(env["OPENAI_API_KEY"] || ""),
     },
     plugins: [
       tsconfigPaths(),

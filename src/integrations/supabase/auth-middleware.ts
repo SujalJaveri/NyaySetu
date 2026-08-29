@@ -73,10 +73,12 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
 
     try {
       const payloadBase64 = parts[1];
-      const payloadJson = atob(payloadBase64.replace(/-/g, "+").replace(/_/g, "/"));
-      claims = JSON.parse(payloadJson);
-      if (typeof claims["sub"] === "string") userId = claims["sub"];
-      else if (typeof claims["id"] === "string") userId = claims["id"];
+      if (payloadBase64) {
+        const payloadJson = atob(payloadBase64.replace(/-/g, "+").replace(/_/g, "/"));
+        claims = JSON.parse(payloadJson);
+        if (typeof claims["sub"] === "string") userId = claims["sub"];
+        else if (typeof claims["id"] === "string") userId = claims["id"];
+      }
     } catch {
       // ignore
     }

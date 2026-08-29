@@ -15,10 +15,7 @@
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 
-const SSR_DIRS = [
-  "dist/_worker.js/_ssr",
-  ".output/server/_ssr",
-];
+const SSR_DIRS = ["dist/_worker.js/_ssr", ".output/server/_ssr"];
 
 function patch(ssrDir) {
   const ssrMjs = join(ssrDir, "ssr.mjs");
@@ -31,7 +28,7 @@ function patch(ssrDir) {
 
   // Find the dynamic import: import("./server-XXXX.mjs").then((n) => n.t)
   const dynamicImportMatch = ssrContent.match(
-    /import\("\.\/server-([^"]+?)\.mjs"\)\.then\(\(n\) => n\.t\)/
+    /import\("\.\/server-([^"]+?)\.mjs"\)\.then\(\(n\) => n\.t\)/,
   );
   if (!dynamicImportMatch) {
     console.log(`[patch] No dynamic import pattern found in ${ssrMjs}`);
@@ -43,9 +40,7 @@ function patch(ssrDir) {
 
   // Read SMALL file to find the LARGE file it imports from
   const smallContent = readFileSync(smallFilePath, "utf8");
-  const largeImportMatch = smallContent.match(
-    /import \{[^}]+\} from "\.\/(server-[^"]+2\.mjs)"/
-  );
+  const largeImportMatch = smallContent.match(/import \{[^}]+\} from "\.\/(server-[^"]+2\.mjs)"/);
   if (!largeImportMatch) {
     console.log(`[patch] No large file import found in ${smallFilePath}`);
     return;
@@ -62,7 +57,9 @@ function patch(ssrDir) {
   // Prepend the side-effect import to ssr.mjs
   const patched = sideEffectImport + ssrContent;
   writeFileSync(ssrMjs, patched);
-  console.log(`[patch] ✅ Patched ${ssrMjs}: added "import ./${largeFileName}" to force correct eval order`);
+  console.log(
+    `[patch] ✅ Patched ${ssrMjs}: added "import ./${largeFileName}" to force correct eval order`,
+  );
 }
 
 for (const dir of SSR_DIRS) {
@@ -76,12 +73,9 @@ function patchServerIndex(serverDir) {
     if (!content.includes("globalThis.__cf_env_synced__")) {
       content = content.replace(
         /globalThis\.__env__ = env;/g,
-        `globalThis.__env__ = env; globalThis.__cf_env_synced__ = true; if (env && typeof env === 'object') { try { for (const [k, v] of Object.entries(env)) { if (typeof v === 'string') { process.env[k] = v; } } } catch {} }`
+        `globalThis.__env__ = env; globalThis.__cf_env_synced__ = true; if (env && typeof env === 'object') { try { for (const [k, v] of Object.entries(env)) { if (typeof v === 'string') { process.env[k] = v; } } } catch {} }`,
       );
-      content = content.replace(
-        /mod\.fetch\(req\)/g,
-        `mod.fetch(req, globalThis.__env__ || env)`
-      );
+      content = content.replace(/mod\.fetch\(req\)/g, `mod.fetch(req, globalThis.__env__ || env)`);
       writeFileSync(indexMjs, content);
       console.log(`[patch] ✅ Patched ${indexMjs} for Cloudflare Worker env propagation`);
     }
