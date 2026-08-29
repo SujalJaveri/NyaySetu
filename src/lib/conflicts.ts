@@ -9,10 +9,12 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Courtroom, Judge } from "@/lib/registry";
 import type { AvailabilityRecord, Slot } from "@/lib/scheduling";
 import { formatSlotLabel, slotMinutes } from "@/lib/scheduling";
+import { checkCourtHoliday, DEFAULT_COURT_HOLIDAYS_2026, type CourtHoliday } from "@/lib/holidays";
 
 export const DEFAULT_MAX_JUDGE_WORKLOAD = 25;
 
 export type ConflictKind =
+  | "holiday_closure"
   | "judge_booked"
   | "courtroom_booked"
   | "judge_unavailable"
@@ -31,6 +33,7 @@ export type Conflict = {
 };
 
 export const conflictLabel: Record<ConflictKind, string> = {
+  holiday_closure: "Gazetted holiday / non-sitting day",
   judge_booked: "Judge double-booked",
   courtroom_booked: "Courtroom double-booked",
   judge_unavailable: "Judge marked unavailable",
@@ -89,13 +92,25 @@ export function detectAssignmentConflicts(params: {
   schedules: ScheduleOccupancy[];
   availability: AvailabilityRecord[];
   maxJudgeWorkload: number;
+  courtHolidays?: CourtHoliday[];
 }): Conflict[] {
-  const { caseNumber, judge, courtroom, slot, availability, maxJudgeWorkload } = params;
+  const { caseNumber, judge, courtroom, slot, availability, maxJudgeWorkload, courtHolidays } =
+    params;
   const active = params.schedules.filter(
     (s) => isActiveSchedule(s.status) && s.case_number !== caseNumber,
   );
   const conflicts: Conflict[] = [];
   const when = formatSlotLabel(slot);
+
+  const holidayCheck = checkCourtHoliday(slot.date, courtHolidays);
+  if (holidayCheck.isHoliday) {
+    conflicts.push({
+      kind: "holiday_closure",
+      title: conflictLabel.holiday_closure,
+      message: `Conflict: ${slot.date} is a court closure day (${holidayCheck.holidayName || "Gazetted Holiday"}). No hearings may be listed.`,
+      severity: "blocking",
+    });
+  }
 
   if (unavailable(availability, "judge", judge.id, slot.id)) {
     conflicts.push({
@@ -185,6 +200,7 @@ export type ConflictScanInput = {
   judges: Judge[];
   durations: Record<string, number>;
   maxJudgeWorkload: number;
+  courtHolidays?: CourtHoliday[];
 };
 
 /** Scans every active schedule in the system and returns all currently flagged conflicts. */
@@ -201,6 +217,20 @@ export function scanSystemConflicts(input: ConflictScanInput): FlaggedConflict[]
       courtroomName: s.courtroom_name,
       slotLabel: s.slot ? formatSlotLabel(s.slot) : "Unscheduled",
     });
+
+  // 1. Check for schedules falling on court holidays or closed sitting days
+  for (const s of active) {
+    if (!s.slot) continue;
+    const holidayCheck = checkCourtHoliday(s.slot.date, input.courtHolidays);
+    if (holidayCheck.isHoliday) {
+      push(s, {
+        kind: "holiday_closure",
+        title: conflictLabel.holiday_closure,
+        message: `Conflict: Case ${s.case_number} is scheduled on ${s.slot.date}, which is a non-sitting court day (${holidayCheck.holidayName || "Gazetted Holiday"}).`,
+        severity: "blocking",
+      });
+    }
+  }
 
   for (let i = 0; i < active.length; i += 1) {
     const a = active[i]!;
@@ -275,15 +305,15 @@ export function scanSystemConflicts(input: ConflictScanInput): FlaggedConflict[]
     const count = Math.max(load.get(judge.id) ?? 0, judge.current_workload);
     if (count > input.maxJudgeWorkload) {
       found.push({
-        kind: "workload_exceeded",
-        title: conflictLabel.workload_exceeded,
-        message: `Conflict: Judge ${judge.name} carries ${count} active hearings, above the configured threshold of ${input.maxJudgeWorkload}.`,
-        severity: "warning",
-        scheduleId: `judge-${judge.id}`,
+        scheduleId: "system",
         caseNumber: "—",
         judgeName: judge.name,
         courtroomName: null,
-        slotLabel: "Across all sittings",
+        slotLabel: "Active workload",
+        kind: "workload_exceeded",
+        title: conflictLabel.workload_exceeded,
+        message: `Conflict: Judge ${judge.name} carries ${count} active hearings, above the configured threshold of ${input.maxJudgeWorkload}.`,
+        severity: "blocking",
       });
     }
   }
@@ -309,12 +339,18 @@ type OccupancyRaw = {
 };
 
 export async function fetchConflictData() {
-  const [schedulesRes, availabilityRes, judgesRes, settingsRes] = await Promise.all([
-    supabase.from("schedules").select(OCCUPANCY_SELECT),
-    supabase.from("availability").select("entity_type, entity_id, date, slot_id, status"),
-    supabase.from("judges").select("*").order("name"),
-    supabase.from("priority_settings").select("max_judge_workload").limit(1).maybeSingle(),
-  ]);
+  const [schedulesRes, availabilityRes, judgesRes, settingsRes, holidaysRes] =
+    await Promise.all([
+      supabase.from("schedules").select(OCCUPANCY_SELECT),
+      supabase.from("availability").select("entity_type, entity_id, date, slot_id, status"),
+      supabase.from("judges").select("*").order("name"),
+      supabase.from("priority_settings").select("max_judge_workload").limit(1).maybeSingle(),
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (supabase as any)
+        .from("court_holidays")
+        .select("id, date, name, type, jurisdiction")
+        .order("date"),
+    ]);
   if (schedulesRes.error) throw schedulesRes.error;
   if (availabilityRes.error) throw availabilityRes.error;
   if (judgesRes.error) throw judgesRes.error;
@@ -335,12 +371,18 @@ export async function fetchConflictData() {
   for (const r of raw)
     if (r.cases) durations[r.cases.case_number] = r.cases.estimated_duration_minutes;
 
+  const courtHolidays =
+    holidaysRes?.data && holidaysRes.data.length > 0
+      ? (holidaysRes.data as unknown as CourtHoliday[])
+      : DEFAULT_COURT_HOLIDAYS_2026;
+
   return {
     schedules,
     durations,
     availability: (availabilityRes.data ?? []) as AvailabilityRecord[],
     judges: (judgesRes.data ?? []) as Judge[],
     maxJudgeWorkload: settingsRes.data?.max_judge_workload ?? DEFAULT_MAX_JUDGE_WORKLOAD,
+    courtHolidays,
   };
 }
 

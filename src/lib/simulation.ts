@@ -126,23 +126,139 @@ export function simulateJudgeUnavailable(params: {
       ];
     }
 
-    affected.push({
-      scheduleId: schedule.id,
-      caseRow,
-      slot,
-      judge,
-      courtroom: data.courtrooms.find((r) => r.id === schedule.courtroom_id) ?? null,
-      alternatives,
-    });
+    const courtroom = data.courtrooms.find((c) => c.id === schedule.courtroom_id) ?? null;
+    affected.push({ scheduleId: schedule.id, caseRow, slot, judge, courtroom, alternatives });
   }
 
-  return {
-    judge,
-    date,
-    affected,
-    totalAlternatives: affected.reduce((sum, a) => sum + a.alternatives.length, 0),
-    unresolved: affected.filter((a) => a.alternatives.length === 0).length,
-  };
+  const totalAlternatives = affected.reduce((sum, a) => sum + a.alternatives.length, 0);
+  const unresolved = affected.filter((a) => a.alternatives.length === 0).length;
+
+  return { judge, date, affected, totalAlternatives, unresolved };
+}
+
+/* ------------------------------------------------- courtroom closure scenario */
+
+export type CourtroomSimulationResult = {
+  courtroom: Courtroom;
+  date: string;
+  affected: AffectedHearing[];
+  totalAlternatives: number;
+  unresolved: number;
+};
+
+/** Builds synthetic `unavailable` rows for a courtroom across every slot on a date. */
+export function simulatedCourtroomUnavailability(
+  courtroomId: string,
+  date: string,
+  slots: Slot[],
+): AvailabilityRecord[] {
+  return slots
+    .filter((slot) => slot.date === date)
+    .map((slot) => ({
+      entity_type: "courtroom" as const,
+      entity_id: courtroomId,
+      date,
+      slot_id: slot.id,
+      status: "unavailable" as const,
+    }));
+}
+
+/**
+ * Runs the courtroom emergency infrastructure closure scenario.
+ */
+export function simulateCourtroomClosure(params: {
+  courtroomId: string;
+  date: string;
+  data: EngineData;
+  cases: CaseRow[];
+  maxAlternatives?: number;
+}): CourtroomSimulationResult | null {
+  const { courtroomId, date, data, cases, maxAlternatives = 3 } = params;
+  const courtroom = data.courtrooms.find((c) => c.id === courtroomId);
+  if (!courtroom) return null;
+
+  const affectedSchedules = data.schedules.filter(
+    (s) => isActive(s.status) && s.courtroom_id === courtroomId && s.hearing_slots?.date === date,
+  );
+
+  const availability = [
+    ...data.availability,
+    ...simulatedCourtroomUnavailability(courtroomId, date, data.slots),
+  ];
+  const affectedIds = new Set(affectedSchedules.map((s) => s.id));
+  let schedules: OccupiedSchedule[] = data.schedules.filter((s) => !affectedIds.has(s.id));
+
+  const affected: AffectedHearing[] = [];
+  const ordered = [...affectedSchedules].sort((a, b) =>
+    (a.hearing_slots?.start_time ?? "").localeCompare(b.hearing_slots?.start_time ?? ""),
+  );
+
+  for (const schedule of ordered) {
+    const caseRow = cases.find((c) => c.id === schedule.cases?.id);
+    const slot = schedule.hearing_slots;
+    const judge = data.judges.find((j) => j.id === schedule.judge_id);
+    if (!caseRow || !slot || !judge) continue;
+
+    const result = runSchedulingEngine(caseRow, {
+      ...data,
+      availability,
+      schedules,
+    });
+    const alternatives = result.candidates
+      .filter((c) => c.courtroom.id !== courtroomId)
+      .slice(0, maxAlternatives);
+
+    const top = alternatives[0];
+    if (top) {
+      schedules = [
+        ...schedules,
+        {
+          id: `sim:room:${schedule.id}`,
+          status: "proposed",
+          judge_id: top.judge.id,
+          courtroom_id: top.courtroom.id,
+          slot_id: top.slot.id,
+          cases: { id: caseRow.id },
+          hearing_slots: top.slot,
+        },
+      ];
+    }
+
+    affected.push({ scheduleId: schedule.id, caseRow, slot, judge, courtroom, alternatives });
+  }
+
+  const totalAlternatives = affected.reduce((sum, a) => sum + a.alternatives.length, 0);
+  const unresolved = affected.filter((a) => a.alternatives.length === 0).length;
+
+  return { courtroom, date, affected, totalAlternatives, unresolved };
+}
+
+/* ---------------------------------------------------- apply transactional commit */
+
+/**
+ * Persists a simulation choice into the live database.
+ */
+export async function applySimulationChoice(
+  scheduleId: string,
+  choice: Candidate,
+  reason: string,
+): Promise<void> {
+  const { error: schedError } = await supabase
+    .from("schedules")
+    .update({
+      judge_id: choice.judge.id,
+      courtroom_id: choice.courtroom.id,
+      slot_id: choice.slot.id,
+      status: "confirmed",
+    })
+    .eq("id", scheduleId);
+  if (schedError) throw schedError;
+
+  await supabase.from("ai_recommendations").insert({
+    schedule_id: scheduleId,
+    reasoning: `What-If simulation reassignment: ${reason} (Fit score ${choice.score}/100, Confidence ${choice.confidence}%)`,
+    status: "accepted",
+  });
 }
 
 /**
@@ -183,6 +299,49 @@ export async function applySimulation(params: {
     user_id: userId,
     action: `Applied what-if simulation — ${result.judge.name} marked unavailable on ${result.date}; ${reassigned} hearing(s) reassigned`,
     entity_affected: `judge:${result.judge.id} date:${result.date}`,
+  });
+  if (auditError) throw auditError;
+
+  return { reassigned };
+}
+
+/**
+ * Persists the simulated courtroom closure and reassigns each affected hearing.
+ */
+export async function applyCourtroomSimulation(params: {
+  result: CourtroomSimulationResult;
+  choices: Record<string, string>;
+  slots: Slot[];
+  userId: string;
+}) {
+  const { result, choices, slots, userId } = params;
+  const rows = simulatedCourtroomUnavailability(result.courtroom.id, result.date, slots);
+
+  if (rows.length > 0) {
+    const { error } = await supabase.from("availability").insert(rows);
+    if (error) throw error;
+  }
+
+  let reassigned = 0;
+  for (const hearing of result.affected) {
+    const candidate = hearing.alternatives.find((c) => c.key === choices[hearing.scheduleId]);
+    if (!candidate) continue;
+    const { error } = await supabase
+      .from("schedules")
+      .update({
+        judge_id: candidate.judge.id,
+        courtroom_id: candidate.courtroom.id,
+        slot_id: candidate.slot.id,
+      })
+      .eq("id", hearing.scheduleId);
+    if (error) throw error;
+    reassigned += 1;
+  }
+
+  const { error: auditError } = await supabase.from("audit_logs").insert({
+    user_id: userId,
+    action: `Applied what-if simulation — ${result.courtroom.name} marked closed on ${result.date}; ${reassigned} hearing(s) reassigned`,
+    entity_affected: `courtroom:${result.courtroom.id} date:${result.date}`,
   });
   if (auditError) throw auditError;
 

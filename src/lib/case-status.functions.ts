@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 
 export type PublicCaseStatus = {
   caseNumber: string;
+  cnrNumber?: string | null;
   status: string;
   categoryName: string | null;
   filingDate: string | null;
@@ -28,18 +29,19 @@ export const lookupCaseStatus = createServerFn({ method: "POST" })
   .validator((input: { caseNumber: string }) => {
     const raw = (input?.caseNumber ?? "").trim().toUpperCase();
     if (raw.length < 4 || raw.length > 40 || !/^[A-Z0-9/\-\s]+$/.test(raw)) {
-      throw new Error("Please enter a valid case number, for example CASE-2026-0012.");
+      throw new Error("Please enter a valid Case Number or 16-Digit CNR Number.");
     }
     return { caseNumber: raw };
   })
   .handler(async ({ data }): Promise<PublicCaseStatus | null> => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    // Exact-match lookup only; never list or search across cases.
-    const { data: row, error } = await supabaseAdmin
-      .from("cases")
-      .select("id, case_number, status, filing_date, case_categories(name)")
-      .eq("case_number", data.caseNumber)
+    // Exact-match lookup by case_number OR cnr_number
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data: row, error } = await (supabaseAdmin.from("cases") as any)
+      .select("id, case_number, cnr_number, status, filing_date, case_categories(name)")
+      .or(`case_number.eq.${data.caseNumber},cnr_number.eq.${data.caseNumber}`)
+      .limit(1)
       .maybeSingle();
     if (error) throw error;
     if (!row) return null;
@@ -99,6 +101,7 @@ export const lookupCaseStatus = createServerFn({ method: "POST" })
 
     return {
       caseNumber: row.case_number,
+      cnrNumber: row.cnr_number ?? null,
       status: STATUS_LABELS[row.status] ?? row.status,
       categoryName: (row.case_categories as { name: string } | null)?.name ?? null,
       filingDate: row.filing_date ?? null,

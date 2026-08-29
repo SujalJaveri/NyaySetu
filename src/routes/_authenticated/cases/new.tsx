@@ -44,7 +44,14 @@ import {
 } from "@/components/ui/select";
 import { recordAudit } from "@/lib/audit";
 import { supabase } from "@/integrations/supabase/client";
-import { caseCategoriesQuery, generateCaseNumber, pendingDays, type CaseRow } from "@/lib/cases";
+import {
+  caseCategoriesQuery,
+  generateCaseNumber,
+  generateCnrNumber,
+  pendingDays,
+  type CaseRow,
+} from "@/lib/cases";
+import { predictHearingDuration, computeAdjournmentRisk } from "@/lib/predictions";
 import { recomputeCasePriority } from "@/lib/priority";
 import { CaseSchedulingPanel } from "@/components/case-scheduling-panel";
 
@@ -81,6 +88,39 @@ type CategoryConfig = {
 };
 
 const CASE_CATEGORIES_CONFIG: Record<string, CategoryConfig> = {
+  "BNS Criminal Trial (Bharatiya Nyaya Sanhita)": {
+    code: "BNS",
+    defaultDuration: 90,
+    subcategories: [
+      "BNS Serious Offence",
+      "BNS Summary Trial",
+      "BNS Warrant Case",
+      "BNS Summons Case",
+      "Other",
+    ],
+  },
+  "BNSS Bail & Inquiry (Bharatiya Nagarik Suraksha)": {
+    code: "BNSS",
+    defaultDuration: 45,
+    subcategories: [
+      "Section 480 Regular Bail",
+      "Section 482 Anticipatory Bail",
+      "Section 479 Default Bail",
+      "Inquiry / Remand",
+      "Other",
+    ],
+  },
+  "BSA Evidentiary Matter (Bharatiya Sakshya Adhiniyam)": {
+    code: "BSA",
+    defaultDuration: 60,
+    subcategories: [
+      "Electronic Evidence Verification",
+      "Witness Examination",
+      "Expert Testimony",
+      "Documentary Proof",
+      "Other",
+    ],
+  },
   "Civil Suit": {
     code: "CIV",
     defaultDuration: 60,
@@ -359,6 +399,9 @@ function RegisterCasePage() {
 
   // Section 1: Identification
   const [caseNumber, setCaseNumber] = useState("Generating…");
+  const [cnrNumber, setCnrNumber] = useState(() =>
+    generateCnrNumber("DL", "CT", "01", Math.floor(Math.random() * 89999 + 10000)),
+  );
   const [filingDate, setFilingDate] = useState(today());
   const [registrationDate] = useState(today());
   const [categoryName, setCategoryName] = useState("Civil Suit");
@@ -396,7 +439,10 @@ function RegisterCasePage() {
   const [jurisdiction, setJurisdiction] = useState<string>(JURISDICTION_OPTIONS[0] ?? "");
 
   // Section 4: Legal Information
-  const [applicableLaws, setApplicableLaws] = useState<string[]>(["Code of Civil Procedure"]);
+  const [applicableLaws, setApplicableLaws] = useState<string[]>([
+    "Bharatiya Nyaya Sanhita",
+    "Code of Civil Procedure",
+  ]);
   const [sections, setSections] = useState<string[]>(["Section 9"]);
   const [newSectionInput, setNewSectionInput] = useState("");
   const [caseNature, setCaseNature] = useState("Original");
@@ -415,6 +461,40 @@ function RegisterCasePage() {
   const [seniorCitizen, setSeniorCitizen] = useState(false);
   const [propertyDispute5yr, setPropertyDispute5yr] = useState(false);
   const [limitationDeadline, setLimitationDeadline] = useState("");
+
+  // Predictive Intelligence Live Memos
+  const livePrediction = useMemo(() => {
+    return predictHearingDuration({
+      categoryName,
+      baseDuration: Number(duration) || 60,
+      pendingDays: pendingDays(filingDate),
+      previousAdjournments: Number(adjournments) || 0,
+      isFtscPocso: ftscPocso,
+      isSeniorCitizen: seniorCitizen,
+      isPropertyDispute5yr: propertyDispute5yr,
+      partiesCount: parties.filter((p) => p.name.trim()).length,
+    });
+  }, [
+    categoryName,
+    duration,
+    filingDate,
+    adjournments,
+    ftscPocso,
+    seniorCitizen,
+    propertyDispute5yr,
+    parties,
+  ]);
+
+  const liveRisk = useMemo(() => {
+    return computeAdjournmentRisk({
+      categoryName,
+      baseDuration: Number(duration) || 60,
+      pendingDays: pendingDays(filingDate),
+      previousAdjournments: Number(adjournments) || 0,
+      isFtscPocso: ftscPocso,
+      partiesCount: parties.filter((p) => p.name.trim()).length,
+    });
+  }, [categoryName, duration, filingDate, adjournments, ftscPocso, parties]);
 
   // Section 6: Judge & Courtroom
   const [preferredJudge, setPreferredJudge] = useState("auto");
@@ -448,7 +528,9 @@ function RegisterCasePage() {
   // Section 9: Administrative
   const [registrar, setRegistrar] = useState("auto");
   const [filingLocation, setFilingLocation] = useState("Civil Registry");
-  const [initialStatus, setInitialStatus] = useState<"Filed" | "Under Scrutiny" | "Registered" | "Pending">("Filed");
+  const [initialStatus, setInitialStatus] = useState<
+    "Filed" | "Under Scrutiny" | "Registered" | "Pending"
+  >("Filed");
 
   // Success State & Smart Scheduling Handoff
   const [registeredCase, setRegisteredCase] = useState<CaseRow | null>(null);
@@ -459,7 +541,11 @@ function RegisterCasePage() {
 
   // 1. Regenerate case number when category changes
   useEffect(() => {
-    const config = CASE_CATEGORIES_CONFIG[categoryName] ?? { code: "CIV", defaultDuration: 60, subcategories: ["Other"] };
+    const config = CASE_CATEGORIES_CONFIG[categoryName] ?? {
+      code: "CIV",
+      defaultDuration: 60,
+      subcategories: ["Other"],
+    };
     generateCaseNumber(config.code)
       .then(setCaseNumber)
       .catch(() => setCaseNumber(`${config.code}-${new Date().getFullYear()}-0001`));
@@ -647,7 +733,9 @@ function RegisterCasePage() {
       if (!validateForm()) {
         const errorKeys = Object.keys(validationErrors);
         const firstKey = errorKeys[0];
-        const errorMsg = firstKey ? validationErrors[firstKey] : "Please fill in all required fields accurately.";
+        const errorMsg = firstKey
+          ? validationErrors[firstKey]
+          : "Please fill in all required fields accurately.";
         throw new Error(errorMsg);
       }
 
@@ -665,10 +753,13 @@ function RegisterCasePage() {
 
       const payload = {
         case_number: number,
+        cnr_number: cnrNumber.trim() || null,
         category_id: matchedCategory?.id || null,
         filing_date: filingDate,
         parties: partiesSummary,
         estimated_duration_minutes: Number(duration) || 60,
+        predicted_duration_minutes: livePrediction.predictedMinutes,
+        adjournment_risk_score: liveRisk.riskPercentage,
         previous_adjournments: Number(adjournments) || 0,
         pending_duration_days: pendingDays(filingDate),
         status: "filed" as const,
@@ -679,11 +770,11 @@ function RegisterCasePage() {
         priority_tier: priority === "Critical" || priority === "High" ? "Tier 1" : "Tier 2",
       };
 
-      const { data, error } = await supabase
-        .from("cases")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (supabase.from("cases") as any)
         .insert(payload)
         .select(
-          "id, case_number, category_id, filing_date, status, parties, estimated_duration_minutes, pending_duration_days, previous_adjournments, priority_score, priority_tier, legal_priority_flag, is_ftsc_pocso, senior_citizen_litigant, property_dispute_5yr_plus, statutory_limitation_deadline, created_at, is_example, example_order, example_label, example_note, case_categories(id, name, urgency_weight)",
+          "id, case_number, cnr_number, category_id, filing_date, status, parties, estimated_duration_minutes, predicted_duration_minutes, adjournment_risk_score, pending_duration_days, previous_adjournments, priority_score, priority_tier, legal_priority_flag, is_ftsc_pocso, senior_citizen_litigant, property_dispute_5yr_plus, statutory_limitation_deadline, created_at, is_example, example_order, example_label, example_note, case_categories(id, name, urgency_weight)",
         )
         .single();
 
@@ -692,7 +783,7 @@ function RegisterCasePage() {
       // Recompute deterministic priority score in DB
       await recomputeCasePriority(data.id);
       await recordAudit(
-        `Registered case ${number} (${categoryName} - ${subCategory}) with ${parties.length} parties`,
+        `Registered case ${number} (CNR: ${cnrNumber || "—"}) [${categoryName} - ${subCategory}] with ${parties.length} parties`,
         `case:${number}`,
       );
 
@@ -950,6 +1041,35 @@ function RegisterCasePage() {
               />
               <p className="text-[11px] text-muted-foreground">
                 Generated from category code ({CASE_CATEGORIES_CONFIG[categoryName]?.code || "CIV"}) and year.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="cnr-number" className="text-foreground">
+                  16-Digit CNR Number <span className="text-xs text-primary font-semibold">(Indian Standard)</span>
+                </Label>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setCnrNumber(
+                      generateCnrNumber("DL", "CT", "01", Math.floor(Math.random() * 89999 + 10000)),
+                    )
+                  }
+                  className="text-[11px] text-primary hover:underline font-medium"
+                >
+                  Generate New
+                </button>
+              </div>
+              <Input
+                id="cnr-number"
+                value={cnrNumber}
+                onChange={(e) => setCnrNumber(e.target.value)}
+                placeholder="e.g. DLCT01-002415-2026"
+                className="font-mono tracking-wider"
+              />
+              <p className="text-[11px] text-muted-foreground">
+                National Case Number Record format across all eCourts registries.
               </p>
             </div>
 
@@ -1521,6 +1641,51 @@ function RegisterCasePage() {
                   value={adjournments}
                   onChange={(e) => setAdjournments(e.target.value)}
                 />
+              </div>
+            </div>
+
+            {/* Predictive Intelligence Live Forecast */}
+            <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="border-primary/40 text-primary font-semibold text-xs">
+                    Predictive Intelligence Model
+                  </Badge>
+                  <span className="text-xs text-muted-foreground">Live duration & risk estimation</span>
+                </div>
+                <div className="flex items-center gap-3 text-xs">
+                  <span className="text-muted-foreground">Model Confidence:</span>
+                  <span className="font-semibold text-foreground">{livePrediction.confidence}%</span>
+                </div>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2 pt-1">
+                <div className="rounded-md border bg-card/80 p-3 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground font-medium">Predicted Duration</span>
+                    <Badge variant="secondary" className="text-xs font-semibold">
+                      {livePrediction.predictedMinutes} mins
+                    </Badge>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">
+                    Base category ({livePrediction.baseCategoryMinutes}m) adjusted for pendency ({pending}d) and {adjournments} prior deferrals.
+                  </p>
+                </div>
+
+                <div className="rounded-md border bg-card/80 p-3 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground font-medium">Adjournment Risk</span>
+                    <Badge
+                      variant={liveRisk.tier === "High" ? "destructive" : liveRisk.tier === "Moderate" ? "outline" : "secondary"}
+                      className="text-xs font-semibold"
+                    >
+                      {liveRisk.riskPercentage}% ({liveRisk.tier} Risk)
+                    </Badge>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">
+                    {liveRisk.keyDrivers[0] ?? "Standard routine progression"}
+                  </p>
+                </div>
               </div>
             </div>
 

@@ -38,7 +38,14 @@ import { casesQuery, formatDate } from "@/lib/cases";
 import { useCurrentStaff, permissionsFor, roleLabel } from "@/hooks/use-current-staff";
 import { formatSlotLabel, schedulingDataQuery } from "@/lib/scheduling";
 import { recordAudit } from "@/lib/audit";
-import { applySimulation, simulateJudgeUnavailable, type SimulationResult } from "@/lib/simulation";
+import {
+  applySimulation,
+  applyCourtroomSimulation,
+  simulateJudgeUnavailable,
+  simulateCourtroomClosure,
+  type SimulationResult,
+  type CourtroomSimulationResult,
+} from "@/lib/simulation";
 
 export const Route = createFileRoute("/_authenticated/what-if-simulation")({
   head: () => ({
@@ -75,10 +82,14 @@ function Page() {
   const engineData = useQuery(schedulingDataQuery);
   const queryClient = useQueryClient();
 
+  const [conditionType, setConditionType] = useState<
+    "judge-unavailable" | "courtroom-closure"
+  >("judge-unavailable");
   const [judgeId, setJudgeId] = useState("");
+  const [courtroomId, setCourtroomId] = useState("");
   const [date, setDate] = useState("");
   const [step, setStep] = useState(-1);
-  const [result, setResult] = useState<SimulationResult | null>(null);
+  const [result, setResult] = useState<SimulationResult | CourtroomSimulationResult | null>(null);
   const [choices, setChoices] = useState<Record<string, string>>({});
   const [applying, setApplying] = useState(false);
   const [applied, setApplied] = useState<number | null>(null);
@@ -87,10 +98,11 @@ function Page() {
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   const judges = engineData.data?.judges ?? [];
+  const courtrooms = engineData.data?.courtrooms ?? [];
   const running = step >= 0 && step < STEPS.length;
   const canApply = permissionsFor(staff.data?.role).canSchedule;
 
-  /** Dates on which the selected judge currently has active hearings — handy shortcuts. */
+  /** Dates on which the selected judge currently has active hearings. */
   const judgeDates = useMemo(() => {
     if (!engineData.data || !judgeId) return [] as string[];
     const set = new Set<string>();
@@ -106,6 +118,22 @@ function Page() {
     return [...set].sort();
   }, [engineData.data, judgeId]);
 
+  /** Dates on which the selected courtroom currently has active hearings. */
+  const roomDates = useMemo(() => {
+    if (!engineData.data || !courtroomId) return [] as string[];
+    const set = new Set<string>();
+    for (const s of engineData.data.schedules) {
+      if (
+        (s.status === "proposed" || s.status === "confirmed") &&
+        s.courtroom_id === courtroomId &&
+        s.hearing_slots
+      ) {
+        set.add(s.hearing_slots.date);
+      }
+    }
+    return [...set].sort();
+  }, [engineData.data, courtroomId]);
+
   function discard() {
     timers.current.forEach(clearTimeout);
     setStep(-1);
@@ -115,30 +143,49 @@ function Page() {
   }
 
   function run() {
-    if (!judgeId || !date || !engineData.data || !cases.data) return;
+    if (!date || !engineData.data || !cases.data) return;
+    if (conditionType === "judge-unavailable" && !judgeId) return;
+    if (conditionType === "courtroom-closure" && !courtroomId) return;
+
     timers.current.forEach(clearTimeout);
     setResult(null);
     setChoices({});
     setApplied(null);
     setStep(0);
-    // Purely presentational pacing — the simulation itself is synchronous and in-memory.
+
     timers.current = STEPS.map((_, i) => setTimeout(() => setStep(i + 1), 480 * (i + 1)));
     timers.current.push(
       setTimeout(() => {
-        const sim = simulateJudgeUnavailable({
-          judgeId,
-          date,
-          data: engineData.data!,
-          cases: cases.data!,
-        });
-        setResult(sim);
-        // Records the run so an unapplied simulation surfaces in notifications.
-        if (sim) {
-          void recordAudit(
-            `Ran What-If Simulation — ${sim.judge.name} marked unavailable on ${sim.date}; ${sim.affected.length} hearing(s) affected`,
-            `judge:${sim.judge.id} date:${sim.date}`,
-          );
+        let sim: SimulationResult | CourtroomSimulationResult | null = null;
+        if (conditionType === "judge-unavailable") {
+          sim = simulateJudgeUnavailable({
+            judgeId,
+            date,
+            data: engineData.data!,
+            cases: cases.data!,
+          });
+          if (sim) {
+            void recordAudit(
+              `Ran What-If Simulation — ${sim.judge.name} marked unavailable on ${sim.date}; ${sim.affected.length} hearing(s) affected`,
+              `judge:${sim.judge.id} date:${sim.date}`,
+            );
+          }
+        } else {
+          sim = simulateCourtroomClosure({
+            courtroomId,
+            date,
+            data: engineData.data!,
+            cases: cases.data!,
+          });
+          if (sim) {
+            void recordAudit(
+              `Ran What-If Simulation — ${sim.courtroom.name} marked closed on ${sim.date}; ${sim.affected.length} hearing(s) affected`,
+              `courtroom:${sim.courtroom.id} date:${sim.date}`,
+            );
+          }
         }
+
+        setResult(sim);
         setChoices(
           Object.fromEntries(
             (sim?.affected ?? [])
@@ -158,12 +205,25 @@ function Page() {
     }
     setApplying(true);
     try {
-      const { reassigned } = await applySimulation({
-        result,
-        choices,
-        slots: engineData.data.slots,
-        userId: staff.data.id,
-      });
+      let reassigned = 0;
+      if (conditionType === "judge-unavailable") {
+        const res = await applySimulation({
+          result: result as SimulationResult,
+          choices,
+          slots: engineData.data.slots,
+          userId: staff.data.id,
+        });
+        reassigned = res.reassigned;
+      } else {
+        const res = await applyCourtroomSimulation({
+          result: result as CourtroomSimulationResult,
+          choices,
+          slots: engineData.data.slots,
+          userId: staff.data.id,
+        });
+        reassigned = res.reassigned;
+      }
+
       setApplied(reassigned);
       toast.success(`What-If Simulation applied — ${reassigned} hearing(s) reassigned`);
       await queryClient.invalidateQueries();
@@ -209,43 +269,77 @@ function Page() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label>Condition</Label>
-              <Select value="judge-unavailable" disabled>
+              <Select
+                value={conditionType}
+                onValueChange={(v: "judge-unavailable" | "courtroom-closure") => {
+                  setConditionType(v);
+                  discard();
+                }}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="judge-unavailable">
-                    Mark a judge unavailable on a specific date
+                    Judge emergency leave / absence on a date
+                  </SelectItem>
+                  <SelectItem value="courtroom-closure">
+                    Courtroom emergency infrastructure closure
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-xs text-muted-foreground">
-                Courtroom unavailability will be added as a second condition.
-              </p>
             </div>
+
+            {conditionType === "judge-unavailable" ? (
+              <div className="space-y-2">
+                <Label htmlFor="sim-judge">Judge</Label>
+                <Select
+                  value={judgeId}
+                  onValueChange={(v) => {
+                    setJudgeId(v);
+                    discard();
+                  }}
+                >
+                  <SelectTrigger id="sim-judge">
+                    <SelectValue placeholder="Select a judge" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {judges.map((j) => (
+                      <SelectItem key={j.id} value={j.id}>
+                        {j.name} · {j.specialisation || "General"}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Label htmlFor="sim-courtroom">Courtroom</Label>
+                <Select
+                  value={courtroomId}
+                  onValueChange={(v) => {
+                    setCourtroomId(v);
+                    discard();
+                  }}
+                >
+                  <SelectTrigger id="sim-courtroom">
+                    <SelectValue placeholder="Select a courtroom" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {courtrooms.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.name} · Capacity: {c.capacity}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
             <div className="space-y-2">
-              <Label htmlFor="sim-judge">Judge</Label>
-              <Select
-                value={judgeId}
-                onValueChange={(v) => {
-                  setJudgeId(v);
-                  discard();
-                }}
-              >
-                <SelectTrigger id="sim-judge">
-                  <SelectValue placeholder="Select a judge" />
-                </SelectTrigger>
-                <SelectContent>
-                  {judges.map((j) => (
-                    <SelectItem key={j.id} value={j.id}>
-                      {j.name} · {j.specialisation || "General"}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="sim-date">Unavailable on</Label>
+              <Label htmlFor="sim-date">
+                {conditionType === "judge-unavailable" ? "Unavailable on" : "Closed on"}
+              </Label>
               <Input
                 id="sim-date"
                 type="date"
@@ -256,30 +350,55 @@ function Page() {
                 }}
               />
             </div>
+
             <div className="space-y-2">
-              <Label>Dates with sittings</Label>
+              <Label>Dates with active sittings</Label>
               <div className="flex flex-wrap gap-2">
-                {judgeDates.length === 0 && (
+                {conditionType === "judge-unavailable" ? (
+                  judgeDates.length === 0 ? (
+                    <p className="text-xs text-muted-foreground">
+                      {judgeId
+                        ? "This judge has no active hearings scheduled."
+                        : "Select a judge to see their sitting dates."}
+                    </p>
+                  ) : (
+                    judgeDates.map((d) => (
+                      <Button
+                        key={d}
+                        type="button"
+                        size="sm"
+                        variant={date === d ? "default" : "outline"}
+                        onClick={() => {
+                          setDate(d);
+                          discard();
+                        }}
+                      >
+                        {formatDate(d)}
+                      </Button>
+                    ))
+                  )
+                ) : roomDates.length === 0 ? (
                   <p className="text-xs text-muted-foreground">
-                    {judgeId
-                      ? "This judge has no active hearings scheduled."
-                      : "Select a judge to see their sitting dates."}
+                    {courtroomId
+                      ? "This courtroom has no active hearings scheduled."
+                      : "Select a courtroom to see active dates."}
                   </p>
+                ) : (
+                  roomDates.map((d) => (
+                    <Button
+                      key={d}
+                      type="button"
+                      size="sm"
+                      variant={date === d ? "default" : "outline"}
+                      onClick={() => {
+                        setDate(d);
+                        discard();
+                      }}
+                    >
+                      {formatDate(d)}
+                    </Button>
+                  ))
                 )}
-                {judgeDates.map((d) => (
-                  <Button
-                    key={d}
-                    type="button"
-                    size="sm"
-                    variant={date === d ? "default" : "outline"}
-                    onClick={() => {
-                      setDate(d);
-                      discard();
-                    }}
-                  >
-                    {formatDate(d)}
-                  </Button>
-                ))}
               </div>
             </div>
           </div>
@@ -287,7 +406,14 @@ function Page() {
           <div className="flex flex-wrap gap-3">
             <Button
               onClick={run}
-              disabled={!judgeId || !date || running || engineData.isLoading || cases.isLoading}
+              disabled={
+                !date ||
+                (conditionType === "judge-unavailable" && !judgeId) ||
+                (conditionType === "courtroom-closure" && !courtroomId) ||
+                running ||
+                engineData.isLoading ||
+                cases.isLoading
+              }
             >
               {running ? (
                 <Loader2 className="size-4 animate-spin" />
@@ -350,7 +476,8 @@ function Page() {
                   {result.totalAlternatives === 1 ? "" : "s"} found
                 </p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {result.judge.name} marked unavailable on {formatDate(result.date)}.{" "}
+                  {"judge" in result ? result.judge.name : result.courtroom.name} marked{" "}
+                  {"judge" in result ? "unavailable" : "closed"} on {formatDate(result.date)}.{" "}
                   {result.unresolved > 0
                     ? `${result.unresolved} hearing(s) have no valid alternative under the current constraints.`
                     : "Every affected hearing has at least one valid alternative."}
@@ -386,9 +513,10 @@ function Page() {
             <div className="flex items-start gap-3 rounded-md border border-primary/40 bg-primary/5 px-4 py-3 text-sm">
               <CheckCircle2 className="mt-0.5 size-4 text-primary" />
               <p>
-                What-If Simulation committed — {result.judge.name} is now marked unavailable on{" "}
-                {formatDate(result.date)} and {applied} hearing{applied === 1 ? " was" : "s were"}{" "}
-                reassigned.
+                What-If Simulation committed —{" "}
+                {"judge" in result ? result.judge.name : result.courtroom.name} is now marked{" "}
+                {"judge" in result ? "unavailable" : "closed"} on {formatDate(result.date)} and{" "}
+                {applied} hearing{applied === 1 ? " was" : "s were"} reassigned.
               </p>
             </div>
           )}
@@ -396,8 +524,11 @@ function Page() {
           {result.affected.length === 0 && (
             <Card className="shadow-panel">
               <CardContent className="py-10 text-center text-sm text-muted-foreground">
-                No active hearings sit before {result.judge.name} on {formatDate(result.date)} —
-                this change would have no impact on the cause list.
+                No active hearings sit{" "}
+                {"judge" in result
+                  ? `before ${result.judge.name}`
+                  : `in ${result.courtroom.name}`}{" "}
+                on {formatDate(result.date)} — this change would have no impact on the cause list.
               </CardContent>
             </Card>
           )}

@@ -258,15 +258,45 @@ function CaseDetail() {
 
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle className="text-base">Case particulars</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-base">Case particulars</CardTitle>
+            {record.cnr_number && (
+              <Badge variant="outline" className="font-mono text-xs text-primary border-primary/30">
+                CNR: {record.cnr_number}
+              </Badge>
+            )}
+          </div>
         </CardHeader>
         <CardContent className="grid gap-5 sm:grid-cols-3">
           <Field label="Case number">{record.case_number}</Field>
+          <Field label="16-Digit CNR">{record.cnr_number || "Not assigned"}</Field>
           <Field label="Category">{record.case_categories?.name ?? "—"}</Field>
           <Field label="Status">{statusLabel[record.status as CaseStatus] ?? record.status}</Field>
           <Field label="Filing date">{formatDate(record.filing_date)}</Field>
           <Field label="Pending duration">{record.pending_duration_days} days</Field>
-          <Field label="Estimated hearing">{record.estimated_duration_minutes} minutes</Field>
+          <Field label="Estimated hearing">
+            {record.predicted_duration_minutes
+              ? `${record.predicted_duration_minutes} min (ML Forecast)`
+              : `${record.estimated_duration_minutes} min`}
+          </Field>
+          <Field label="Adjournment Risk">
+            {record.adjournment_risk_score !== null && record.adjournment_risk_score !== undefined ? (
+              <Badge
+                variant={
+                  Number(record.adjournment_risk_score) >= 60
+                    ? "destructive"
+                    : Number(record.adjournment_risk_score) >= 30
+                      ? "outline"
+                      : "secondary"
+                }
+                className="text-xs"
+              >
+                {record.adjournment_risk_score}% Risk
+              </Badge>
+            ) : (
+              "—"
+            )}
+          </Field>
           <Field label="Previous adjournments">{record.previous_adjournments}</Field>
           <Field label="Priority Score">
             <PriorityBadge score={record.priority_score} />
@@ -282,6 +312,24 @@ function CaseDetail() {
           </div>
         </CardContent>
       </Card>
+
+      <div className="mt-6">
+        <CaseTimeline
+          caseData={record}
+          adjournments={adjournments.data ?? []}
+          nextHearingSlot={
+            current?.hearing_slots
+              ? {
+                  date: current.hearing_slots.date,
+                  start_time: current.hearing_slots.start_time,
+                  end_time: current.hearing_slots.end_time,
+                  judge_name: current.judges?.name ?? null,
+                  courtroom_name: current.courtrooms?.name ?? null,
+                }
+              : null
+          }
+        />
+      </div>
 
       <Card className="mt-6">
         <CardHeader>
@@ -340,12 +388,6 @@ function CaseDetail() {
           </div>
         </CardContent>
       </Card>
-
-      <div className="mt-8">
-        <CaseTimeline
-          steps={buildCaseTimeline(record, schedules.data ?? [], adjournments.data ?? [])}
-        />
-      </div>
 
       {settings.data && (
         <div className="mt-8">

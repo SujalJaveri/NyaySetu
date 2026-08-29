@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { CalendarDays, Info, ListOrdered, Lock } from "lucide-react";
 
@@ -14,6 +14,7 @@ import { useCurrentStaff } from "@/hooks/use-current-staff";
 import { prioritySettingsQuery } from "@/lib/priority";
 import { causeListQuery, formatSlotTime } from "@/lib/cause-list";
 import { formatSlot, isActive, schedulesQuery, MAX_JUDGE_WORKLOAD } from "@/lib/registry";
+import { checkCourtHoliday } from "@/lib/holidays";
 
 export const Route = createFileRoute("/_authenticated/bench")({
   head: () => ({
@@ -158,7 +159,7 @@ function BenchPage() {
         </TabsList>
 
         <TabsContent value="cause-list" className="mt-4 space-y-4">
-          <div className="flex flex-wrap items-end gap-3">
+          <div className="flex flex-wrap items-end justify-between gap-3">
             <div className="space-y-1">
               <Label htmlFor="bench-date">Hearing date</Label>
               <Input
@@ -173,6 +174,15 @@ function BenchPage() {
               <Lock className="size-3.5" /> Read-only — the order is settled by the registrar.
             </p>
           </div>
+
+          {checkCourtHoliday(date).isHoliday && (
+            <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-900 dark:text-amber-200 flex items-center gap-2">
+              <span className="font-semibold">Court Closure:</span>
+              <span>
+                {date} is a non-sitting court day ({checkCourtHoliday(date).holidayName || "Gazetted Holiday"}).
+              </span>
+            </div>
+          )}
 
           {listing.isLoading || settings.isLoading ? (
             <LoadingState label="Loading the cause list…" />
@@ -192,11 +202,19 @@ function BenchPage() {
                       {index + 1}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <p className="font-medium text-foreground">{entry.caseNumber}</p>
-                        <Badge variant="outline" className={tierStyles[entry.tier]}>
-                          {entry.tier}
-                        </Badge>
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Link
+                            to="/cases/$caseId"
+                            params={{ caseId: entry.caseId ?? "" }}
+                            className="font-medium text-foreground hover:text-primary hover:underline"
+                          >
+                            {entry.caseNumber}
+                          </Link>
+                          <Badge variant="outline" className={tierStyles[entry.tier]}>
+                            {entry.tier}
+                          </Badge>
+                        </div>
                         <span className="text-xs text-muted-foreground">
                           {formatSlotTime(entry.startTime)}–{formatSlotTime(entry.endTime)} ·{" "}
                           {entry.courtroomName}

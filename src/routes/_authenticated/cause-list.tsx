@@ -1,14 +1,25 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { GripVertical, Info, ListOrdered, RotateCcw } from "lucide-react";
+import {
+  AlertTriangle,
+  Calendar,
+  CheckCircle2,
+  Clock,
+  GripVertical,
+  Info,
+  Layers,
+  ListOrdered,
+  RotateCcw,
+  Sparkles,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { PageHeader } from "@/components/page-shell";
 import { EmptyState, ErrorState, LoadingState } from "@/components/states";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -18,10 +29,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { usePermissions } from "@/hooks/use-current-staff";
 import { cn } from "@/lib/utils";
 import { prioritySettingsQuery } from "@/lib/priority";
 import { courtroomsQuery, judgesQuery } from "@/lib/registry";
+import { casesQuery, type CaseRow } from "@/lib/cases";
+import { schedulingDataQuery } from "@/lib/scheduling";
+import { checkCourtHoliday } from "@/lib/holidays";
+import {
+  runBatchCauseListOptimizer,
+  STAGE_LABELS,
+  type BatchOptimizationResult,
+  type ProceduralStage,
+} from "@/lib/batch-scheduling";
+import { recordAudit } from "@/lib/audit";
+import { supabase } from "@/integrations/supabase/client";
 import {
   causeListQuery,
   formatSlotTime,
@@ -70,11 +101,69 @@ function Page() {
   const [scope, setScope] = useState<string>("all");
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [overIndex, setOverIndex] = useState<number | null>(null);
+  const [batchModalOpen, setBatchModalOpen] = useState(false);
 
   const settings = useQuery(prioritySettingsQuery);
   const judges = useQuery(judgesQuery);
   const courtrooms = useQuery(courtroomsQuery);
+  const allCases = useQuery(casesQuery);
+  const engineData = useQuery(schedulingDataQuery);
   const listing = useQuery(causeListQuery(date, settings.data ?? null));
+
+  const holidayInfo = useMemo(() => checkCourtHoliday(date), [date]);
+
+  const pendingCases = useMemo(() => {
+    return (allCases.data ?? []).filter(
+      (c) => c.status === "filed" || c.status === "adjourned",
+    );
+  }, [allCases.data]);
+
+  const batchResult = useMemo(() => {
+    if (!engineData.data || !batchModalOpen) return null;
+    return runBatchCauseListOptimizer(pendingCases, date, engineData.data);
+  }, [pendingCases, date, engineData.data, batchModalOpen]);
+
+  const commitBatch = useMutation({
+    mutationFn: async (result: BatchOptimizationResult) => {
+      for (const item of result.listings) {
+        const { error } = await supabase.from("schedules").upsert(
+          {
+            case_id: item.caseId,
+            judge_id: item.judge.id,
+            courtroom_id: item.courtroom.id,
+            slot_id: item.slot.id,
+            status: "confirmed",
+            cause_list_position: item.sequenceNumber,
+          },
+          { onConflict: "case_id" },
+        );
+        if (error) throw error;
+
+        await supabase
+          .from("cases")
+          .update({ status: "scheduled" })
+          .eq("id", item.caseId);
+      }
+
+      await recordAudit(
+        `Committed batch cause list optimization for ${date}: ${result.listings.length} hearings scheduled across ${result.benchUtilisation.length} benches`,
+        `date:${date} batch:${result.listings.length}`,
+      );
+    },
+    onSuccess: () => {
+      toast.success(
+        `Successfully scheduled ${batchResult?.listings.length ?? 0} cases for ${date}!`,
+      );
+      setBatchModalOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["cause-list"] });
+      queryClient.invalidateQueries({ queryKey: ["schedules"] });
+      queryClient.invalidateQueries({ queryKey: ["cases"] });
+      queryClient.invalidateQueries({ queryKey: ["audit-logs"] });
+    },
+    onError: (err: Error) => {
+      toast.error(`Batch optimization commit failed: ${err.message}`);
+    },
+  });
 
   const scopeLabel = useMemo(() => {
     if (scope === "all") return "All benches and courtrooms";
@@ -123,7 +212,7 @@ function Page() {
   });
 
   const canReorder = permissions.canSchedule;
-  const busy = reorder.isPending || reset.isPending;
+  const busy = reorder.isPending || reset.isPending || commitBatch.isPending;
   const hasManual = entries.some((e) => e.position !== null);
 
   function onDrop(index: number) {
@@ -144,13 +233,41 @@ function Page() {
         title="Cause list"
         description="The proposed hearing order for the selected date, ranked by priority tier and score."
         actions={
-          hasManual && canReorder ? (
-            <Button variant="outline" size="sm" disabled={busy} onClick={() => reset.mutate()}>
-              <RotateCcw className="size-4" /> Restore suggested order
-            </Button>
-          ) : undefined
+          <div className="flex flex-wrap items-center gap-2">
+            {canReorder && (
+              <Button
+                variant="default"
+                size="sm"
+                className="gap-1.5"
+                onClick={() => setBatchModalOpen(true)}
+              >
+                <Sparkles className="size-4 text-accent" />
+                Batch Daily Optimizer
+              </Button>
+            )}
+            {hasManual && canReorder && (
+              <Button variant="outline" size="sm" disabled={busy} onClick={() => reset.mutate()}>
+                <RotateCcw className="size-4" /> Restore suggested order
+              </Button>
+            )}
+          </div>
         }
       />
+
+      {holidayInfo.isHoliday && (
+        <div className="mt-6 rounded-lg border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-900 dark:text-amber-200 flex items-start gap-3">
+          <AlertTriangle className="size-5 shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
+          <div>
+            <p className="font-semibold">
+              Non-sitting Day: {date} ({holidayInfo.holidayName || "Gazetted Court Holiday"})
+            </p>
+            <p className="text-xs mt-1 text-amber-800 dark:text-amber-300">
+              No regular court sessions are scheduled for this date. Use the Batch Daily Optimizer
+              to select an alternate working date.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="mt-6 flex items-start gap-3 rounded-md border border-primary/25 bg-primary/5 p-4">
         <Info className="mt-0.5 size-4 shrink-0 text-primary" />
@@ -158,6 +275,155 @@ function Page() {
           This ordering is a suggestion. A registrar may reorder, and any change is logged.
         </p>
       </div>
+
+      {/* Batch Cause List Optimizer Dialog */}
+      <Dialog open={batchModalOpen} onOpenChange={setBatchModalOpen}>
+        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <div className="flex items-center gap-2">
+              <Sparkles className="size-5 text-primary" />
+              <DialogTitle className="text-lg">Batch Cause List Optimizer</DialogTitle>
+            </div>
+            <DialogDescription>
+              Predict-then-Optimize automated daily board generator for {date}.
+            </DialogDescription>
+          </DialogHeader>
+
+          {batchResult ? (
+            <div className="space-y-5 py-2">
+              {batchResult.isHoliday ? (
+                <div className="rounded-md border border-destructive/40 bg-destructive/10 p-4 text-destructive text-sm flex items-center gap-2">
+                  <AlertTriangle className="size-4 shrink-0" />
+                  <span>
+                    Cannot optimize board: {date} is a court holiday ({batchResult.holidayName}).
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <Card className="p-3 shadow-2xs">
+                      <p className="text-xs text-muted-foreground font-medium">Cases Evaluated</p>
+                      <p className="text-xl font-bold text-foreground mt-1">
+                        {batchResult.totalCandidateCases}
+                      </p>
+                    </Card>
+                    <Card className="p-3 shadow-2xs bg-primary/5 border-primary/20">
+                      <p className="text-xs text-primary font-medium">To Schedule</p>
+                      <p className="text-xl font-bold text-primary mt-1">
+                        {batchResult.scheduledCount}
+                      </p>
+                    </Card>
+                    <Card className="p-3 shadow-2xs">
+                      <p className="text-xs text-muted-foreground font-medium">Procedural Stages</p>
+                      <p className="text-xl font-bold text-foreground mt-1">3 Sessions</p>
+                    </Card>
+                    <Card className="p-3 shadow-2xs">
+                      <p className="text-xs text-muted-foreground font-medium">Unassigned (Load)</p>
+                      <p className="text-xl font-bold text-muted-foreground mt-1">
+                        {batchResult.unassignedCount}
+                      </p>
+                    </Card>
+                  </div>
+
+                  {/* Staged Board Preview */}
+                  <div className="space-y-4 pt-2">
+                    {(
+                      [
+                        "morning_mentions",
+                        "contested_trials",
+                        "afternoon_orders",
+                      ] as ProceduralStage[]
+                    ).map((stageKey) => {
+                      const stageItems = batchResult.listings.filter((l) => l.stage === stageKey);
+                      if (stageItems.length === 0) return null;
+
+                      return (
+                        <div key={stageKey} className="rounded-lg border bg-card/60 p-4 space-y-3">
+                          <div className="flex items-center justify-between border-b pb-2">
+                            <div className="flex items-center gap-2">
+                              <Clock className="size-4 text-primary" />
+                              <span className="text-sm font-semibold text-foreground">
+                                {STAGE_LABELS[stageKey].title}
+                              </span>
+                              <Badge variant="outline" className="text-xs font-mono">
+                                {STAGE_LABELS[stageKey].window}
+                              </Badge>
+                            </div>
+                            <span className="text-xs text-muted-foreground">
+                              {stageItems.length} Matter{stageItems.length === 1 ? "" : "s"}
+                            </span>
+                          </div>
+
+                          <div className="space-y-2">
+                            {stageItems.map((item) => (
+                              <div
+                                key={item.caseId}
+                                className="flex flex-wrap items-center justify-between gap-2 rounded-md border bg-background/80 p-2.5 text-xs"
+                              >
+                                <div className="space-y-0.5">
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-semibold text-foreground">
+                                      #{item.sequenceNumber} {item.caseNumber}
+                                    </span>
+                                    {item.cnrNumber && (
+                                      <span className="font-mono text-[10px] text-muted-foreground">
+                                        {item.cnrNumber}
+                                      </span>
+                                    )}
+                                    <Badge variant="outline" className="text-[10px]">
+                                      {item.categoryName}
+                                    </Badge>
+                                    <Badge variant="secondary" className="text-[10px]">
+                                      {item.predictedDurationMinutes}m est.
+                                    </Badge>
+                                  </div>
+                                  <p className="text-muted-foreground truncate max-w-md">
+                                    {item.parties}
+                                  </p>
+                                </div>
+                                <div className="text-right">
+                                  <span className="font-medium text-foreground">
+                                    {item.judge.name}
+                                  </span>
+                                  <p className="text-muted-foreground text-[11px]">
+                                    {item.courtroom.name} · {item.slot.start_time.slice(0, 5)}–
+                                    {item.slot.end_time.slice(0, 5)}
+                                  </p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="py-8 text-center text-sm text-muted-foreground">
+              Evaluating pending case inventory and registry constraints…
+            </div>
+          )}
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" onClick={() => setBatchModalOpen(false)}>
+              Cancel
+            </Button>
+            {batchResult && batchResult.scheduledCount > 0 && !batchResult.isHoliday && (
+              <Button
+                variant="default"
+                disabled={commitBatch.isPending}
+                onClick={() => commitBatch.mutate(batchResult)}
+                className="gap-1.5"
+              >
+                <CheckCircle2 className="size-4" />
+                Commit {batchResult.scheduledCount} Hearings to Daily Board
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Card className="mt-6">
         <CardContent className="grid gap-4 py-5 sm:grid-cols-2">

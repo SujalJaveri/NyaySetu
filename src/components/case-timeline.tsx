@@ -1,87 +1,141 @@
-import { Check, CircleDot, Minus } from "lucide-react";
-
+import { Calendar, CheckCircle2, Clock, FileText, Gavel, HelpCircle, UserX } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import type { TimelineState, TimelineStep } from "@/lib/case-timeline";
+import { formatDate, type AdjournmentRow, type CaseRow } from "@/lib/cases";
 
-const dotClass: Record<TimelineState, string> = {
-  done: "border-primary bg-primary text-primary-foreground",
-  current: "border-accent bg-accent text-accent-foreground ring-4 ring-accent/20",
-  pending: "border-border bg-muted text-muted-foreground",
-  skipped: "border-dashed border-border bg-background text-muted-foreground",
+export type TimelineEvent = {
+  id: string;
+  title: string;
+  date: string;
+  type: "filing" | "adjournment" | "hearing" | "disposal" | "statutory";
+  detail: string;
+  badge?: string | undefined;
+  badgeVariant?: "default" | "destructive" | "outline" | "secondary" | undefined;
 };
 
-const labelClass: Record<TimelineState, string> = {
-  done: "text-foreground",
-  current: "text-foreground font-semibold",
-  pending: "text-muted-foreground",
-  skipped: "text-muted-foreground",
+type CaseTimelineProps = {
+  caseData: CaseRow;
+  adjournments?: AdjournmentRow[];
+  nextHearingSlot?: {
+    date: string;
+    start_time: string;
+    end_time: string;
+    judge_name?: string | null;
+    courtroom_name?: string | null;
+  } | null;
 };
 
-function StepIcon({ state }: { state: TimelineState }) {
-  if (state === "done") return <Check className="size-4" />;
-  if (state === "current") return <CircleDot className="size-4" />;
-  if (state === "skipped") return <Minus className="size-3.5" />;
-  return <span className="size-1.5 rounded-full bg-current" />;
-}
+export function CaseTimeline({ caseData, adjournments = [], nextHearingSlot }: CaseTimelineProps) {
+  const events: TimelineEvent[] = [];
 
-export function CaseTimeline({ steps }: { steps: TimelineStep[] }) {
+  // 1. Initial Filing
+  events.push({
+    id: "filing",
+    title: "Case Instituted & Registered",
+    date: caseData.filing_date,
+    type: "filing",
+    detail: `Filed under ${caseData.case_categories?.name || "General Category"}. Case Reference: ${caseData.case_number}`,
+    badge: caseData.cnr_number ? `CNR: ${caseData.cnr_number}` : undefined,
+    badgeVariant: "outline",
+  });
+
+  // 2. Statutory limitation if present
+  if (caseData.statutory_limitation_deadline) {
+    events.push({
+      id: "limitation",
+      title: "Statutory Limitation Bar Date",
+      date: caseData.statutory_limitation_deadline,
+      type: "statutory",
+      detail: "Limitation Act deadline for statutory disposal/listing.",
+      badge: "Statutory Horizon",
+      badgeVariant: "destructive",
+    });
+  }
+
+  // 3. Past Adjournments
+  adjournments.forEach((adj, idx) => {
+    const slotInfo = adj.hearing_slots
+      ? ` (${formatDate(adj.hearing_slots.date)} at ${adj.hearing_slots.start_time.slice(0, 5)})`
+      : "";
+    events.push({
+      id: `adj-${adj.id}`,
+      title: `Adjournment #${adjournments.length - idx}`,
+      date: adj.created_at.slice(0, 10),
+      type: "adjournment",
+      detail: adj.reason || "Adjourned on request of counsel/parties." + slotInfo,
+      badge: "Deferred",
+      badgeVariant: "secondary",
+    });
+  });
+
+  // 4. Next scheduled hearing
+  if (nextHearingSlot) {
+    events.push({
+      id: "next-hearing",
+      title: "Next Scheduled Hearing",
+      date: nextHearingSlot.date,
+      type: "hearing",
+      detail: `Listed before ${nextHearingSlot.judge_name || "Assigned Bench"} in ${nextHearingSlot.courtroom_name || "Court Hall"} (${nextHearingSlot.start_time.slice(0, 5)}–${nextHearingSlot.end_time.slice(0, 5)})`,
+      badge: "Active Listing",
+      badgeVariant: "default",
+    });
+  }
+
+  // Sort events chronologically
+  events.sort((a, b) => a.date.localeCompare(b.date));
+
+  const getIcon = (type: TimelineEvent["type"]) => {
+    switch (type) {
+      case "filing":
+        return <FileText className="h-4 w-4 text-primary" />;
+      case "adjournment":
+        return <Clock className="h-4 w-4 text-amber-500" />;
+      case "hearing":
+        return <Gavel className="h-4 w-4 text-emerald-500" />;
+      case "statutory":
+        return <CheckCircle2 className="h-4 w-4 text-destructive" />;
+      default:
+        return <HelpCircle className="h-4 w-4 text-muted-foreground" />;
+    }
+  };
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-base">Case status timeline</CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Derived from this case's own records — its listings, adjournments and current register
-          status.
-        </p>
+    <Card className="shadow-sm">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-base font-semibold">
+            <Calendar className="h-4 w-4 text-primary" />
+            Procedural Case Timeline
+          </CardTitle>
+          <Badge variant="outline" className="text-xs">
+            {events.length} Event{events.length === 1 ? "" : "s"} Recorded
+          </Badge>
+        </div>
       </CardHeader>
       <CardContent>
-        <ol className="flex flex-col gap-6 sm:flex-row sm:gap-0">
-          {steps.map((step, index) => (
-            <li key={step.key} className="relative flex flex-1 gap-3 sm:flex-col sm:gap-3">
-              {/* connector */}
-              {index < steps.length - 1 && (
-                <span
-                  aria-hidden
-                  className={cn(
-                    "absolute left-[15px] top-8 h-[calc(100%+0.75rem)] w-px sm:left-auto sm:top-[15px] sm:h-px sm:w-full sm:translate-x-4",
-                    steps[index + 1]?.state === "done" || steps[index + 1]?.state === "current"
-                      ? "bg-primary"
-                      : "bg-border",
-                  )}
-                />
-              )}
-              <span
-                className={cn(
-                  "z-10 flex size-8 shrink-0 items-center justify-center rounded-full border",
-                  dotClass[step.state],
-                )}
-                aria-hidden
-              >
-                <StepIcon state={step.state} />
-              </span>
-              <div className="sm:pr-6">
-                <p className={cn("text-sm", labelClass[step.state])}>
-                  {step.label}
-                  {step.state === "current" && (
-                    <span className="ml-2 rounded-full bg-accent/15 px-2 py-0.5 text-[11px] font-medium text-accent">
-                      Current
-                    </span>
-                  )}
-                  {step.state === "skipped" && (
-                    <span className="ml-2 text-[11px] font-medium text-muted-foreground">
-                      Not applicable
-                    </span>
-                  )}
-                </p>
-                {step.timestamp && (
-                  <p className="mt-0.5 text-xs text-muted-foreground">{step.timestamp}</p>
-                )}
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{step.detail}</p>
+        <div className="relative pl-6 before:absolute before:bottom-2 before:left-[11px] before:top-2 before:w-[2px] before:bg-border">
+          {events.map((event) => (
+            <div key={event.id} className="relative mb-6 last:mb-0">
+              <div className="absolute -left-[30px] top-1 flex h-6 w-6 items-center justify-center rounded-full border bg-background shadow-xs">
+                {getIcon(event.type)}
               </div>
-            </li>
+              <div className="rounded-lg border bg-card/60 p-3 shadow-2xs">
+                <div className="flex flex-wrap items-center justify-between gap-1">
+                  <span className="font-medium text-foreground text-sm">{event.title}</span>
+                  <div className="flex items-center gap-2">
+                    {event.badge && (
+                      <Badge variant={event.badgeVariant ?? "outline"} className="text-[11px]">
+                        {event.badge}
+                      </Badge>
+                    )}
+                    <span className="text-xs text-muted-foreground">{formatDate(event.date)}</span>
+                  </div>
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{event.detail}</p>
+              </div>
+            </div>
           ))}
-        </ol>
+        </div>
       </CardContent>
     </Card>
   );

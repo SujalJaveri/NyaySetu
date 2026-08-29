@@ -30,11 +30,14 @@ export type CaseCategory = {
 export type CaseRow = {
   id: string;
   case_number: string;
+  cnr_number?: string | null;
   category_id: string | null;
   filing_date: string;
   status: CaseStatus;
   parties: string;
   estimated_duration_minutes: number;
+  predicted_duration_minutes?: number | null;
+  adjournment_risk_score?: number | null;
   pending_duration_days: number;
   previous_adjournments: number;
   priority_score: number | null;
@@ -63,7 +66,7 @@ export type AdjournmentRow = {
 };
 
 const CASE_SELECT =
-  "id, case_number, category_id, filing_date, status, parties, estimated_duration_minutes, pending_duration_days, previous_adjournments, priority_score, priority_tier, legal_priority_flag, is_ftsc_pocso, senior_citizen_litigant, property_dispute_5yr_plus, statutory_limitation_deadline, created_at, is_example, example_order, example_label, example_note, case_categories(id, name, urgency_weight)";
+  "id, case_number, cnr_number, category_id, filing_date, status, parties, estimated_duration_minutes, predicted_duration_minutes, adjournment_risk_score, pending_duration_days, previous_adjournments, priority_score, priority_tier, legal_priority_flag, is_ftsc_pocso, senior_citizen_litigant, property_dispute_5yr_plus, statutory_limitation_deadline, created_at, is_example, example_order, example_label, example_note, case_categories(id, name, urgency_weight)";
 
 export const caseCategoriesQuery = {
   queryKey: ["case-categories"],
@@ -145,4 +148,30 @@ export async function generateCaseNumber(categoryCode = "CASE"): Promise<string>
   const last = data?.[0]?.case_number;
   const next = last ? Number(last.slice(prefix.length)) + 1 : 1;
   return `${prefix}${String(Number.isFinite(next) ? next : 1).padStart(4, "0")}`;
+}
+
+/**
+ * Generates a standard Indian 16-character CNR Number:
+ * Format: [State(2)][District(2)][Complex(2)][Sequence(6)][Year(4)]
+ * Example: DLCT01-002415-2026
+ */
+export function generateCnrNumber(
+  stateCode = "DL",
+  districtCode = "CT",
+  complexCode = "01",
+  sequence = 1,
+): string {
+  const year = new Date().getFullYear();
+  const seqStr = String(sequence).padStart(6, "0");
+  return `${stateCode.toUpperCase()}${districtCode.toUpperCase()}${complexCode}-${seqStr}-${year}`;
+}
+
+/**
+ * Validates whether a string matches Indian 16-character CNR syntax.
+ */
+export function validateCnrNumber(cnr: string): boolean {
+  if (!cnr) return false;
+  const clean = cnr.trim().toUpperCase();
+  // Regex: 6 alphanumeric chars, optional hyphen/slash, 6 digits, optional hyphen/slash, 4 digits year
+  return /^[A-Z]{2}[A-Z0-9]{4}[-\s]?[0-9]{6}[-\s]?[0-9]{4}$/.test(clean);
 }

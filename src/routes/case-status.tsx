@@ -97,34 +97,34 @@ function CaseStatusPage() {
           className="rounded-lg border bg-card p-5 shadow-sm"
         >
           <h2 id="enquiry-heading" className="text-lg font-semibold text-foreground">
-            Enter your case number
+            Enter your case number or CNR
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Use the number printed on your filing acknowledgement, for example CASE-2026-0012.
+            Use the Case Number or 16-digit CNR printed on your acknowledgement, for example CASE-2026-0012 or DLCT01-002415-2026.
           </p>
           <form onSubmit={onSubmit} className="mt-4 flex flex-col gap-3 sm:flex-row">
             <div className="flex-1">
               <label htmlFor="case-number" className="sr-only">
-                Case number
+                Case number or CNR
               </label>
               <Input
                 id="case-number"
                 name="case-number"
                 value={caseNumber}
                 onChange={(e) => setCaseNumber(e.target.value)}
-                placeholder="CASE-2026-0012"
+                placeholder="CASE-2026-0012 or DLCT01-002415-2026"
                 autoComplete="off"
-                className="h-11 text-base"
+                className="h-11 text-base font-mono"
                 required
               />
             </div>
-            <Button type="submit" size="lg" disabled={loading} className="h-11">
-              {loading ? "Checking…" : "Check status"}
+            <Button type="submit" disabled={loading} className="h-11 px-6 text-base">
+              {loading ? "Searching…" : "Check status"}
             </Button>
           </form>
         </section>
 
-        <div aria-live="polite" className="mt-6 space-y-4">
+        <div className="mt-6 space-y-6" aria-live="polite">
           {error ? (
             <p className="rounded-md border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive">
               {error}
@@ -133,7 +133,7 @@ function CaseStatusPage() {
 
           {notFound ? (
             <p className="rounded-md border bg-card p-4 text-sm text-muted-foreground">
-              No case was found with that number. Please check the number and try again, or contact
+              No case was found with that Case Number or CNR. Please check the number and try again, or contact
               the registry counter for assistance.
             </p>
           ) : null}
@@ -146,9 +146,16 @@ function CaseStatusPage() {
               className="rounded-lg border bg-card shadow-sm"
             >
               <div className="border-b px-5 py-4">
-                <h2 id="result-heading" className="text-lg font-semibold text-foreground">
-                  {result.caseNumber}
-                </h2>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <h2 id="result-heading" className="text-lg font-semibold text-foreground">
+                    {result.caseNumber}
+                  </h2>
+                  {result.cnrNumber && (
+                    <span className="font-mono text-xs text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-md">
+                      CNR: {result.cnrNumber}
+                    </span>
+                  )}
+                </div>
                 <p className="mt-1 text-sm text-muted-foreground">{result.status}</p>
               </div>
               <dl className="divide-y">

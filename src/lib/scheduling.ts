@@ -13,6 +13,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { MAX_JUDGE_WORKLOAD, type Courtroom, type Judge } from "@/lib/registry";
 import type { CaseRow } from "@/lib/cases";
+import { checkCourtHoliday, DEFAULT_COURT_HOLIDAYS_2026, type CourtHoliday } from "@/lib/holidays";
 
 export type Slot = { id: string; date: string; start_time: string; end_time: string };
 
@@ -57,6 +58,7 @@ export type EngineData = {
   schedules: OccupiedSchedule[];
   maxJudgeWorkload: number;
   weights?: SchedulingWeights;
+  courtHolidays?: CourtHoliday[];
 };
 
 export type SoftFactor = {
@@ -79,6 +81,7 @@ export type Candidate = {
 };
 
 export type RejectionCounts = {
+  holidayClosure: number;
   judgeUnavailable: number;
   courtroomUnavailable: number;
   judgeBooked: number;
@@ -174,6 +177,7 @@ function isEntityUnavailable(
 
 export function runSchedulingEngine(target: CaseRow, data: EngineData): EngineResult {
   const rejections: RejectionCounts = {
+    holidayClosure: 0,
     judgeUnavailable: 0,
     courtroomUnavailable: 0,
     judgeBooked: 0,
@@ -183,7 +187,10 @@ export function runSchedulingEngine(target: CaseRow, data: EngineData): EngineRe
   };
 
   const active = data.schedules.filter((s) => isActiveSchedule(s.status) && s.hearing_slots);
-  const duration = Math.max(1, target.estimated_duration_minutes || 60);
+  const duration = Math.max(
+    1,
+    target.predicted_duration_minutes || target.estimated_duration_minutes || 60,
+  );
   const categoryName = target.case_categories?.name ?? null;
   const priorityNorm = Math.min(1, Math.max(0, (target.priority_score ?? 50) / 100));
   const weights = data.weights ?? DEFAULT_SCHEDULING_WEIGHTS;
@@ -215,38 +222,36 @@ export function runSchedulingEngine(target: CaseRow, data: EngineData): EngineRe
     const match = specialisationMatch(judge, categoryName);
     const workloadRatio = 1 - Math.min(1, judge.current_workload / MAX_JUDGE_WORKLOAD);
     const earliness = 1 - slotIndex / lastIndex;
-    const priorityFit = (0.4 + 0.6 * priorityNorm) * earliness;
-    const utilisation = 1 - Math.min(1, (roomBookings.get(courtroom.id) ?? 0) / busiestRoom);
+    const roomLoad = roomBookings.get(courtroom.id) ?? 0;
+    const utilisation = 1 - roomLoad / busiestRoom;
 
     return [
       {
         key: "specialisation",
-        label: "Specialisation match",
-        detail: categoryName
-          ? match >= 0.85
-            ? `${judge.specialisation} aligns with ${categoryName}`
-            : match > 0
-              ? `Partial overlap with ${categoryName}`
-              : `${judge.specialisation || "No specialisation"} vs ${categoryName}`
-          : "Case has no category",
+        label: "Specialisation fit",
+        detail:
+          match > 0
+            ? `${judge.specialisation || "General"} covers ${categoryName ?? "this category"}`
+            : `General listing (${judge.specialisation || "General"})`,
         weight: weights.specialisation,
         points: round1(weights.specialisation * match),
       },
       {
         key: "workload",
         label: "Workload balance",
-        detail: `${judge.current_workload} of ${MAX_JUDGE_WORKLOAD} active hearings`,
+        detail: `${judge.current_workload} of ${data.maxJudgeWorkload} active hearings`,
         weight: weights.workload,
         points: round1(weights.workload * workloadRatio),
       },
       {
         key: "priority",
-        label: "Priority slot fit",
-        detail: `Priority ${Math.round(target.priority_score ?? 50)} → ${
-          earliness > 0.66 ? "earliest" : earliness > 0.33 ? "mid-range" : "later"
-        } sitting`,
+        label: "Priority slot match",
+        detail:
+          priorityNorm >= 0.7
+            ? "High Priority Score — early slot prioritized"
+            : "Standard scheduling window",
         weight: weights.priority,
-        points: round1(weights.priority * priorityFit),
+        points: round1(weights.priority * (priorityNorm * 0.5 + earliness * 0.5)),
       },
       {
         key: "utilisation",
@@ -272,6 +277,13 @@ export function runSchedulingEngine(target: CaseRow, data: EngineData): EngineRe
   };
 
   slots.forEach((slot, slotIndex) => {
+    // HARD CONSTRAINT 0 — Court holiday or closed sitting day.
+    const holidayCheck = checkCourtHoliday(slot.date, data.courtHolidays);
+    if (holidayCheck.isHoliday) {
+      rejections.holidayClosure += data.judges.length * data.courtrooms.length;
+      return;
+    }
+
     // HARD CONSTRAINT 4 — the estimated hearing must fit inside the slot length.
     if (duration > slotMinutes(slot)) {
       rejections.durationOverflow += data.judges.length * data.courtrooms.length;
@@ -397,35 +409,46 @@ export const schedulingDataQuery = {
     today.setHours(0, 0, 0, 0);
     const from = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 
-    const [judges, courtrooms, slots, availability, schedules, settings] = await Promise.all([
-      supabase.from("judges").select("*").order("name"),
-      supabase.from("courtrooms").select("*").order("name"),
-      supabase
-        .from("hearing_slots")
-        .select("id, date, start_time, end_time")
-        .gte("date", from)
-        .order("date"),
-      supabase
-        .from("availability")
-        .select("entity_type, entity_id, date, slot_id, status")
-        .gte("date", from),
-      supabase
-        .from("schedules")
-        .select(
-          "id, status, judge_id, courtroom_id, slot_id, cases(id), hearing_slots(id, date, start_time, end_time)",
-        ),
-      supabase
-        .from("priority_settings")
-        .select(
-          "max_judge_workload, sched_specialisation_weight, sched_workload_weight, sched_priority_weight, sched_utilisation_weight",
-        )
-        .limit(1)
-        .maybeSingle(),
-    ]);
+    const [judges, courtrooms, slots, availability, schedules, settings, holidaysRes] =
+      await Promise.all([
+        supabase.from("judges").select("*").order("name"),
+        supabase.from("courtrooms").select("*").order("name"),
+        supabase
+          .from("hearing_slots")
+          .select("id, date, start_time, end_time")
+          .gte("date", from)
+          .order("date"),
+        supabase
+          .from("availability")
+          .select("entity_type, entity_id, date, slot_id, status")
+          .gte("date", from),
+        supabase
+          .from("schedules")
+          .select(
+            "id, status, judge_id, courtroom_id, slot_id, cases(id), hearing_slots(id, date, start_time, end_time)",
+          ),
+        supabase
+          .from("priority_settings")
+          .select(
+            "max_judge_workload, sched_specialisation_weight, sched_workload_weight, sched_priority_weight, sched_utilisation_weight",
+          )
+          .limit(1)
+          .maybeSingle(),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (supabase as any)
+          .from("court_holidays")
+          .select("id, date, name, type, jurisdiction")
+          .order("date"),
+      ]);
 
     for (const res of [judges, courtrooms, slots, availability, schedules]) {
       if (res.error) throw res.error;
     }
+
+    const holidays =
+      holidaysRes?.data && holidaysRes.data.length > 0
+        ? (holidaysRes.data as unknown as CourtHoliday[])
+        : DEFAULT_COURT_HOLIDAYS_2026;
 
     return {
       judges: (judges.data ?? []) as Judge[],
@@ -448,6 +471,7 @@ export const schedulingDataQuery = {
           settings.data?.sched_utilisation_weight ?? DEFAULT_SCHEDULING_WEIGHTS.utilisation,
         ),
       },
+      courtHolidays: holidays,
     };
   },
 };

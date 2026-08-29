@@ -734,5 +734,70 @@ USING (public.is_registry_staff() OR user_id = auth.uid());
 REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM PUBLIC, anon, authenticated;
 REVOKE EXECUTE ON FUNCTION public.update_updated_at_column() FROM PUBLIC, anon, authenticated;
 
+-- ============================================================================
+-- COURT HOLIDAYS & NON-SITTING CALENDAR
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS public.court_holidays (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  date date NOT NULL,
+  name text NOT NULL DEFAULT '',
+  type text NOT NULL DEFAULT 'gazetted' CHECK (type IN ('gazetted','court_vacation','restricted','second_saturday','sunday')),
+  jurisdiction text NOT NULL DEFAULT 'all',
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (date, jurisdiction)
+);
 
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.court_holidays TO authenticated;
+GRANT ALL ON public.court_holidays TO service_role;
 
+ALTER TABLE public.court_holidays ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Staff view holidays" ON public.court_holidays
+  FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Admins manage holidays" ON public.court_holidays
+  FOR ALL TO authenticated
+  USING (public.has_role(auth.uid(), 'admin'::app_role))
+  WITH CHECK (public.has_role(auth.uid(), 'admin'::app_role));
+
+CREATE TRIGGER trg_court_holidays_updated BEFORE UPDATE ON public.court_holidays
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+CREATE INDEX IF NOT EXISTS court_holidays_date_idx ON public.court_holidays(date);
+
+-- Seed Indian court holidays & vacation periods for 2026
+INSERT INTO public.court_holidays (date, name, type) VALUES
+  ('2026-08-15', 'Independence Day', 'gazetted'),
+  ('2026-09-04', 'Janmashtami', 'gazetted'),
+  ('2026-09-17', 'Milad-un-Nabi', 'gazetted'),
+  ('2026-10-02', 'Mahatma Gandhi Jayanti', 'gazetted'),
+  ('2026-10-20', 'Maha Navami / Dussehra', 'gazetted'),
+  ('2026-10-21', 'Vijaya Dashami', 'gazetted'),
+  ('2026-11-08', 'Diwali (Lakshmi Puja)', 'gazetted'),
+  ('2026-11-09', 'Govardhan Puja', 'gazetted'),
+  ('2026-11-10', 'Bhai Dooj', 'gazetted'),
+  ('2026-11-24', 'Guru Nanak Jayanti', 'gazetted'),
+  ('2026-12-21', 'Court Winter Vacation Begins', 'court_vacation'),
+  ('2026-12-22', 'Court Winter Vacation', 'court_vacation'),
+  ('2026-12-23', 'Court Winter Vacation', 'court_vacation'),
+  ('2026-12-24', 'Court Winter Vacation', 'court_vacation'),
+  ('2026-12-25', 'Christmas Day', 'gazetted'),
+  ('2026-12-26', 'Court Winter Vacation', 'court_vacation'),
+  ('2026-12-28', 'Court Winter Vacation', 'court_vacation'),
+  ('2026-12-29', 'Court Winter Vacation', 'court_vacation'),
+  ('2026-12-30', 'Court Winter Vacation', 'court_vacation'),
+  ('2026-12-31', 'Court Winter Vacation', 'court_vacation')
+ON CONFLICT (date, jurisdiction) DO UPDATE SET name = EXCLUDED.name, type = EXCLUDED.type;
+
+-- CNR Number and Predictive ML fields on cases
+ALTER TABLE public.cases ADD COLUMN IF NOT EXISTS cnr_number text;
+ALTER TABLE public.cases ADD COLUMN IF NOT EXISTS predicted_duration_minutes integer;
+ALTER TABLE public.cases ADD COLUMN IF NOT EXISTS adjournment_risk_score numeric;
+CREATE INDEX IF NOT EXISTS cases_cnr_idx ON public.cases(cnr_number) WHERE cnr_number IS NOT NULL;
+
+-- BNS / BNSS / BSA Categories (Bharatiya Nyaya Sanhita criminal reforms)
+INSERT INTO public.case_categories (name, typical_duration_minutes, urgency_weight) VALUES
+  ('BNS Criminal Trial (Bharatiya Nyaya Sanhita)', 90, 85),
+  ('BNSS Bail & Inquiry (Bharatiya Nagarik Suraksha)', 45, 90),
+  ('BSA Evidentiary Matter (Bharatiya Sakshya Adhiniyam)', 60, 75)
+ON CONFLICT (name) DO UPDATE SET urgency_weight = EXCLUDED.urgency_weight, typical_duration_minutes = EXCLUDED.typical_duration_minutes;
