@@ -16,7 +16,6 @@ import { Route as CaseStatusRouteImport } from './routes/case-status'
 import { Route as SetupAdminRouteImport } from './routes/setup-admin'
 import { Route as AuthenticatedActivityLogRouteImport } from './routes/_authenticated/activity-log'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
-import { Route as AuthenticatedArchitectureRouteImport } from './routes/_authenticated/architecture'
 import { Route as AuthenticatedBacklogSimulatorRouteImport } from './routes/_authenticated/backlog-simulator'
 import { Route as AuthenticatedBenchRouteImport } from './routes/_authenticated/bench'
 import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
@@ -71,12 +70,6 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedArchitectureRoute =
-  AuthenticatedArchitectureRouteImport.update({
-    id: '/architecture',
-    path: '/architecture',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const AuthenticatedBacklogSimulatorRoute =
   AuthenticatedBacklogSimulatorRouteImport.update({
     id: '/backlog-simulator',
@@ -184,7 +177,6 @@ export interface FileRoutesByFullPath {
   '/setup-admin': typeof SetupAdminRoute
   '/activity-log': typeof AuthenticatedActivityLogRoute
   '/admin': typeof AuthenticatedAdminRoute
-  '/architecture': typeof AuthenticatedArchitectureRoute
   '/backlog-simulator': typeof AuthenticatedBacklogSimulatorRoute
   '/bench': typeof AuthenticatedBenchRoute
   '/calendar': typeof AuthenticatedCalendarRoute
@@ -211,7 +203,6 @@ export interface FileRoutesByTo {
   '/setup-admin': typeof SetupAdminRoute
   '/activity-log': typeof AuthenticatedActivityLogRoute
   '/admin': typeof AuthenticatedAdminRoute
-  '/architecture': typeof AuthenticatedArchitectureRoute
   '/backlog-simulator': typeof AuthenticatedBacklogSimulatorRoute
   '/bench': typeof AuthenticatedBenchRoute
   '/calendar': typeof AuthenticatedCalendarRoute
@@ -240,7 +231,6 @@ export interface FileRoutesById {
   '/setup-admin': typeof SetupAdminRoute
   '/_authenticated/activity-log': typeof AuthenticatedActivityLogRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
-  '/_authenticated/architecture': typeof AuthenticatedArchitectureRoute
   '/_authenticated/backlog-simulator': typeof AuthenticatedBacklogSimulatorRoute
   '/_authenticated/bench': typeof AuthenticatedBenchRoute
   '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
@@ -269,7 +259,6 @@ export interface FileRouteTypes {
     | '/setup-admin'
     | '/activity-log'
     | '/admin'
-    | '/architecture'
     | '/backlog-simulator'
     | '/bench'
     | '/calendar'
@@ -296,7 +285,6 @@ export interface FileRouteTypes {
     | '/setup-admin'
     | '/activity-log'
     | '/admin'
-    | '/architecture'
     | '/backlog-simulator'
     | '/bench'
     | '/calendar'
@@ -324,7 +312,6 @@ export interface FileRouteTypes {
     | '/setup-admin'
     | '/_authenticated/activity-log'
     | '/_authenticated/admin'
-    | '/_authenticated/architecture'
     | '/_authenticated/backlog-simulator'
     | '/_authenticated/bench'
     | '/_authenticated/calendar'
@@ -402,13 +389,6 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/architecture': {
-      id: '/_authenticated/architecture'
-      path: '/architecture'
-      fullPath: '/architecture'
-      preLoaderRoute: typeof AuthenticatedArchitectureRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/backlog-simulator': {
@@ -543,7 +523,6 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedActivityLogRoute: typeof AuthenticatedActivityLogRoute
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
-  AuthenticatedArchitectureRoute: typeof AuthenticatedArchitectureRoute
   AuthenticatedBacklogSimulatorRoute: typeof AuthenticatedBacklogSimulatorRoute
   AuthenticatedBenchRoute: typeof AuthenticatedBenchRoute
   AuthenticatedCalendarRoute: typeof AuthenticatedCalendarRoute
@@ -567,7 +546,6 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedActivityLogRoute: AuthenticatedActivityLogRoute,
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
-  AuthenticatedArchitectureRoute: AuthenticatedArchitectureRoute,
   AuthenticatedBacklogSimulatorRoute: AuthenticatedBacklogSimulatorRoute,
   AuthenticatedBenchRoute: AuthenticatedBenchRoute,
   AuthenticatedCalendarRoute: AuthenticatedCalendarRoute,

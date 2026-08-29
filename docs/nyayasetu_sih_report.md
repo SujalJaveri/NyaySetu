@@ -22,7 +22,6 @@ NyayaSetu is a **deterministic, constraint-solving, AI-assisted court scheduling
 | Custom Judicial Directive Listing | ✅ Fully Functional | Judge/Registrar custom scheduling with live pre-flight checks and audit compliance notes |
 | Judge's Self-Scheduling Portal | ✅ Fully Functional | Bench View (`/bench`) with Direct Bench Listing tab for judges to self-schedule cases |
 | Dual-Engine Full-Page Hindi Translation | ✅ Fully Functional | 500+ legal dictionary DOM TreeWalker + seamless background dynamic translator |
-| Multi-Court Architecture Preview | ✅ Fully Functional | 3-Tier scaling topology (District → State High Court → National NJDG network) |
 | Real-Time Impact Counter Banner | ✅ Fully Functional | Live count-up animation for conflicts prevented, Tier 1 prioritized, and recommendations |
 | Backlog Simulator | ✅ Fully Functional | Deterministic comparison between FIFO vs Priority-based disposal horizons |
 | Calendar View & Branded PDF Export | ✅ Fully Functional | Monthly/weekly/day views with NyayaSetu court-formatted PDF generation |
@@ -139,8 +138,7 @@ Language barrier in district courts       →   Dual-Engine Full-Page Hindi Tran
 - Navigate to /cause-list: Generate the 3-stage procedurally optimized daily board.
 - Switch to /bench: Show the Judge's perspective and Direct Bench Listing feature.
 
-04:00 - 05:00 | ACT 5: SCALE, GOVERNANCE & CLOSING
-- Open /architecture: Present the 3-tier roadmap scaling to State High Courts and National NJDG.
+04:00 - 05:00 | ACT 5: GOVERNANCE, COMPLIANCE & CLOSING
 - Show /governance: AI oversight acceptance rates and immutable audit logs.
 - Deliver Winning Line: "NyayaSetu is what happens when you apply constraint-solving mathematics to India's court backlog — and make it explain itself."
 ```
@@ -158,7 +156,7 @@ Language barrier in district courts       →   Dual-Engine Full-Page Hindi Tran
 ### ❌ What NOT to Claim:
 - ~~"Our AI predicts judicial verdicts or case outcomes"~~ (Courts reject outcome-predicting AI).
 - ~~"The scheduling engine is a deep neural network"~~ (Emphasize that scheduling is deterministic constraint programming).
-- ~~"Already deployed live in 24,000 courts"~~ (State clearly: "Built as a production-ready pilot with a 3-tier national scaling roadmap").
+- ~~"Already deployed live in 24,000 courts"~~ (State clearly: "Built as a production-ready pilot for district and taluka registries").
 
 ---
 
@@ -169,5 +167,4 @@ Language barrier in district courts       →   Dual-Engine Full-Page Hindi Tran
    - Pinned **Decision Receipt** in Smart Scheduling
    - **What-If Simulation** progress and resolution cards
    - **Live Impact Counter** on Dashboard
-   - **Multi-Court 3-Tier Topology** on Architecture page
    - **Dual-Engine Full-Page Hindi Translation** toggle

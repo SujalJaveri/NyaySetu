@@ -40,7 +40,6 @@ export const translations = {
   "nav.governance": { en: "Governance & Compliance", hi: "शासन एवं अनुपालन" },
   "nav.admin": { en: "Admin Panel", hi: "प्रशासन पैनल" },
   "nav.priority-settings": { en: "Priority Settings", hi: "प्राथमिकता सेटिंग" },
-  "nav.architecture": { en: "Architecture Preview", hi: "वास्तुकला पूर्वावलोकन" },
 
   // Dashboard
   "dash.pending-cases": { en: "Pending cases", hi: "लंबित मामले" },

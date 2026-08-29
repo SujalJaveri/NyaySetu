@@ -51,7 +51,6 @@ export function AppSidebar() {
     "/governance": "nav.governance",
     "/admin": "nav.admin",
     "/priority-settings": "nav.priority-settings",
-    "/architecture": "nav.architecture",
   };
 
   const sections = (isJudge ? benchNavSections : navSections)

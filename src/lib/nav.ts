@@ -15,7 +15,6 @@ import {
   ListOrdered,
   SlidersHorizontal,
   UserCog,
-  Network,
   type LucideIcon,
 } from "lucide-react";
 
@@ -66,12 +65,6 @@ export const navSections: { label: string; items: NavItem[] }[] = [
         title: "Priority Settings",
         to: "/priority-settings",
         icon: SlidersHorizontal,
-        adminOnly: true,
-      },
-      {
-        title: "Architecture Preview",
-        to: "/architecture",
-        icon: Network,
         adminOnly: true,
       },
     ],
