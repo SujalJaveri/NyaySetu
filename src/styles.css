@@ -183,6 +183,93 @@
     background: oklch(0.78 0.07 84 / 0.45);
   }
 
+  /* Modern themed scrollbars for WebKit & Chromium */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.68 0.02 90 / 0.55);
+    border-radius: 9999px;
+    border: 1px solid transparent;
+    background-clip: padding-box;
+    transition: background-color 180ms ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.42 0.04 255 / 0.7);
+  }
+
+  ::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* Modern themed scrollbar for Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(0.68 0.02 90 / 0.55) transparent;
+  }
+
+  /* Dark mode scrollbars */
+  .dark * {
+    scrollbar-color: oklch(0.42 0.03 258 / 0.6) transparent;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: oklch(0.42 0.03 258 / 0.6);
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.62 0.06 250 / 0.8);
+  }
+
+  /* Sidebar-specific scrollbars (dark ink-navy palette) */
+  [data-sidebar="content"],
+  [data-sidebar="sidebar"],
+  .bg-sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(0.42 0.04 255 / 0.45) transparent;
+  }
+
+  [data-sidebar="content"]::-webkit-scrollbar,
+  [data-sidebar="sidebar"]::-webkit-scrollbar,
+  .bg-sidebar::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  [data-sidebar="content"]::-webkit-scrollbar-track,
+  [data-sidebar="sidebar"]::-webkit-scrollbar-track,
+  .bg-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  [data-sidebar="content"]::-webkit-scrollbar-thumb,
+  [data-sidebar="sidebar"]::-webkit-scrollbar-thumb,
+  .bg-sidebar::-webkit-scrollbar-thumb {
+    background: oklch(0.42 0.04 255 / 0.45);
+    border-radius: 9999px;
+    border: 1px solid transparent;
+    background-clip: padding-box;
+  }
+
+  [data-sidebar="content"]::-webkit-scrollbar-thumb:hover,
+  [data-sidebar="sidebar"]::-webkit-scrollbar-thumb:hover,
+  .bg-sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--color-gold);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
