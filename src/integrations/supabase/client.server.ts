@@ -1,5 +1,5 @@
-// Server-side Supabase client with service role key - bypasses RLS.
-// Use this for trusted administrative operations in server functions only.
+// Server-side Supabase client with service role key - bypasses RLS when configured.
+// Reads service role key from environment variables; falls back to publishable key.
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
 
@@ -30,17 +30,28 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
   };
 }
 
+const DEFAULT_SUPABASE_URL = "https://keqlhaerxaliqljyibzx.supabase.co";
+const DEFAULT_ANON_KEY = "sb_publishable_FZvKCCOsCUtbS9qP7v2XAw_xblsYT8d";
+
 function createSupabaseAdminClient() {
   const SUPABASE_URL =
     process.env["SUPABASE_URL"] ||
     process.env["VITE_SUPABASE_URL"] ||
-    "https://keqlhaerxaliqljyibzx.supabase.co";
-  const SUPABASE_SERVICE_ROLE_KEY =
-    process.env["SUPABASE_SERVICE_ROLE_KEY"] || "placeholder-service-role-key";
+    DEFAULT_SUPABASE_URL;
 
-  return createClient<Database>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+  const rawServiceKey = process.env["SUPABASE_SERVICE_ROLE_KEY"];
+  const SUPABASE_KEY =
+    rawServiceKey &&
+    rawServiceKey !== "placeholder-service-role-key" &&
+    rawServiceKey.trim().length > 10
+      ? rawServiceKey
+      : (process.env["SUPABASE_PUBLISHABLE_KEY"] ||
+         process.env["VITE_SUPABASE_PUBLISHABLE_KEY"] ||
+         DEFAULT_ANON_KEY);
+
+  return createClient<Database>(SUPABASE_URL, SUPABASE_KEY, {
     global: {
-      fetch: createSupabaseFetch(SUPABASE_SERVICE_ROLE_KEY),
+      fetch: createSupabaseFetch(SUPABASE_KEY),
     },
     auth: {
       storage: undefined,
