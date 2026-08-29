@@ -109,50 +109,63 @@ export async function queryLLM(messages: ChatMessage[]): Promise<string | null> 
     }
   }
 
-  // 3. Google Gemini API
+  // 3. Google Gemini API with Multi-Model Fallback Cascade
   if (geminiKey) {
-    try {
-      const systemInstruction = messages.find((m) => m.role === "system")?.content;
-      const contents = messages
-        .filter((m) => m.role !== "system")
-        .map((m) => ({
-          role: m.role === "assistant" ? "model" : "user",
-          parts: [{ text: m.content }],
-        }));
+    const candidateModels = [
+      getEnvVar("GEMINI_MODEL"),
+      "gemini-3.5-flash-lite",
+      "gemini-3.5-flash",
+      "gemini-3-flash-preview",
+      "gemini-3.6-flash",
+      "gemini-3.7-flash",
+    ].filter(Boolean) as string[];
 
-      const model = getEnvVar("GEMINI_MODEL") || "gemini-3.6-flash";
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
+    const systemInstruction = messages.find((m) => m.role === "system")?.content;
+    const contents = messages
+      .filter((m) => m.role !== "system")
+      .map((m) => ({
+        role: m.role === "assistant" ? "model" : "user",
+        parts: [{ text: m.content }],
+      }));
 
-      const body: {
-        contents: typeof contents;
-        systemInstruction?: { parts: { text: string }[] };
-      } = { contents };
+    const body: {
+      contents: typeof contents;
+      systemInstruction?: { parts: { text: string }[] };
+    } = { contents };
 
-      if (systemInstruction) {
-        body.systemInstruction = { parts: [{ text: systemInstruction }] };
+    if (systemInstruction) {
+      body.systemInstruction = { parts: [{ text: systemInstruction }] };
+    }
+
+    for (const model of candidateModels) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+          signal: AbortSignal.timeout(12000),
+        });
+
+        if (res.ok) {
+          const payload = (await res.json()) as {
+            candidates?: { content?: { parts?: { text?: string }[] } }[];
+          };
+          const parts = payload.candidates?.[0]?.content?.parts ?? [];
+          const text = parts
+            .map((p) => p.text)
+            .filter(Boolean)
+            .join("\n")
+            .trim();
+          if (text) return text;
+        } else {
+          console.warn(
+            `Gemini model ${model} returned HTTP ${res.status}, cascading to next candidate...`,
+          );
+        }
+      } catch (e) {
+        console.warn(`Gemini model ${model} request error:`, e);
       }
-
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-
-      if (res.ok) {
-        const payload = (await res.json()) as {
-          candidates?: { content?: { parts?: { text?: string }[] } }[];
-        };
-        const parts = payload.candidates?.[0]?.content?.parts ?? [];
-        const text = parts
-          .map((p) => p.text)
-          .filter(Boolean)
-          .join("\n")
-          .trim();
-        return text || null;
-      }
-      console.error(`Gemini API returned status ${res.status}: ${res.statusText}`);
-    } catch (e) {
-      console.error("Gemini API request failed:", e);
     }
   }
 
