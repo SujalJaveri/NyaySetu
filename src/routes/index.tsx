@@ -114,7 +114,7 @@ function PortalPage() {
       <header className="border-b border-primary/20 bg-primary text-primary-foreground">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
           <div className="flex min-w-0 items-center gap-3">
-            <BrandMark className="size-11 bg-primary-foreground p-1" showLabel />
+            <BrandMark className="size-11 bg-white p-0.5 shadow-xs" showLabel />
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold">NyayaSetu</p>
               <p className="text-xs text-primary-foreground/70">AI powered court scheduling</p>
@@ -140,10 +140,10 @@ function PortalPage() {
               traceable.
             </p>
           </div>
-          <div className="registry-interactive border border-border bg-background p-5">
+          <div className="registry-interactive border border-border bg-background p-5 rounded-xl">
             <BrandMark
-              className="mx-auto h-48 w-full max-w-sm bg-card p-4 sm:h-56"
-              imageClassName="drop-shadow-sm"
+              className="mx-auto h-48 w-full max-w-sm bg-white p-3 sm:h-56 rounded-lg"
+              imageClassName="drop-shadow-xs"
               showLabel
             />
           </div>

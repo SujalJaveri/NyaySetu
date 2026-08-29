@@ -10,7 +10,7 @@ export function BrandMark({ className, imageClassName, showLabel = false }: Bran
   return (
     <span
       className={cn(
-        "nyayasetu-mark flex shrink-0 items-center justify-center overflow-hidden rounded-sm bg-card ring-1 ring-border",
+        "nyayasetu-mark flex shrink-0 items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-border/20 shadow-xs",
         className,
       )}
       aria-label="NyayaSetu"

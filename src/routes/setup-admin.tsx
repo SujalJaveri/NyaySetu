@@ -59,7 +59,7 @@ function SetupAdminPage() {
     <main className="grid min-h-screen lg:grid-cols-2">
       <section className="hidden flex-col justify-between bg-primary px-12 py-14 text-primary-foreground lg:flex">
         <div className="flex items-center gap-3">
-          <BrandMark className="size-12 bg-primary-foreground p-1" showLabel />
+          <BrandMark className="size-12 bg-white p-0.5 shadow-xs" showLabel />
           <span className="text-sm font-semibold tracking-wide">NyayaSetu</span>
         </div>
         <div className="max-w-md">
@@ -77,7 +77,7 @@ function SetupAdminPage() {
       <section className="flex items-center justify-center bg-background px-5 py-14 sm:px-10">
         <div className="w-full max-w-sm">
           <div className="mb-8 flex items-center gap-3 lg:hidden">
-            <BrandMark className="size-12 p-1" showLabel />
+            <BrandMark className="size-12 bg-white p-0.5 shadow-xs" showLabel />
             <span className="text-sm font-semibold">NyayaSetu</span>
           </div>
 

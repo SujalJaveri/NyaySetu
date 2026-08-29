@@ -211,7 +211,7 @@ function CaseStatusPage() {
       <header className="border-b-4 border-accent bg-primary text-primary-foreground">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-5 py-6">
           <div className="flex items-center gap-4">
-            <BrandMark className="size-14 bg-primary-foreground p-1" showLabel />
+            <BrandMark className="size-14 bg-white p-0.5 shadow-xs" showLabel />
             <div className="min-w-0">
               <p className="text-xs font-medium tracking-[0.14em] text-primary-foreground/70 uppercase">
                 NyayaSetu Public Portal • District & Taluka Courts

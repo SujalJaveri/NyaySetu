@@ -68,7 +68,7 @@ export function AppSidebar() {
         >
           <BrandMark
             className={cn(
-              "bg-sidebar-foreground p-1 transition-all duration-200",
+              "bg-white p-0.5 transition-all duration-200 ring-1 ring-border/20 shadow-xs",
               collapsed ? "size-8" : "size-10",
             )}
             showLabel
