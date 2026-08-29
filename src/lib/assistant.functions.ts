@@ -143,7 +143,7 @@ ${holidaysSummary}
         return {
           intent: deterministicAnswer.intent !== "unknown" ? deterministicAnswer.intent : "unknown",
           summary: aiResponse,
-          source: "Gemini 2.5 Flash AI Copilot (grounded on live registry database)",
+          source: "Gemini 3.6 Flash AI Copilot (grounded on live registry database)",
           rows: deterministicAnswer.rows ?? [],
         };
       }
@@ -151,5 +151,15 @@ ${holidaysSummary}
       console.error("Assistant AI response error:", e);
     }
 
-    return deterministicAnswer;
+    if (deterministicAnswer.intent !== "unknown") {
+      return deterministicAnswer;
+    }
+
+    return {
+      intent: "unknown",
+      summary:
+        "I'm ready to answer any custom question about court cases, judge rosters, schedules, and legal procedures. Type your question or choose one of the quick shortcuts below.",
+      source: "NyayaSetu AI Copilot",
+      rows: deterministicAnswer.rows ?? [],
+    };
   });
