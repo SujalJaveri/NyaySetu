@@ -130,10 +130,11 @@ export function formatDate(value: string) {
   return d.toLocaleDateString(undefined, { day: "2-digit", month: "short", year: "numeric" });
 }
 
-/** Generates the next case number for the current year, e.g. CASE-2026-0001. */
-export async function generateCaseNumber(): Promise<string> {
+/** Generates the next case number for the current year, e.g. CIV-2026-0001 or CASE-2026-0001. */
+export async function generateCaseNumber(categoryCode = "CASE"): Promise<string> {
   const year = new Date().getFullYear();
-  const prefix = `CASE-${year}-`;
+  const cleanPrefix = (categoryCode || "CASE").trim().toUpperCase();
+  const prefix = `${cleanPrefix}-${year}-`;
   const { data, error } = await supabase
     .from("cases")
     .select("case_number")
