@@ -28,6 +28,8 @@ import {
 import { PageHeader } from "@/components/page-shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -35,6 +37,18 @@ import { ErrorState } from "@/components/states";
 import { computeDashboardMetrics, dashboardDataQuery } from "@/lib/dashboard";
 import { conflictDataQuery, scanSystemConflicts } from "@/lib/conflicts";
 import { buildBriefingInput, composeBriefingSentences } from "@/lib/briefing";
+
+function formatJudgeShortName(fullName: string): string {
+  const clean = (fullName || "")
+    .replace(/Hon('ble|\.)?\s*/gi, "")
+    .replace(/Justice\s*/gi, "")
+    .trim();
+  const parts = clean.split(/\s+/).filter(Boolean);
+  if (parts.length <= 1) return parts[0] || "Judge";
+  const firstChar = parts[0]?.[0] ?? "";
+  const lastPart = parts[parts.length - 1] ?? "";
+  return firstChar && lastPart ? `${firstChar}. ${lastPart}` : parts[0] || "Judge";
+}
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
@@ -268,7 +282,24 @@ function Page() {
     return composeBriefingSentences(buildBriefingInput(data.data, metrics, conflicts));
   }, [data.data, metrics, conflicts, conflictData.isLoading]);
 
-  const courtroomPie = (metrics?.courtroomLoad ?? []).filter((c) => c.hearings > 0);
+  const courtroomPie = useMemo(
+    () => (metrics?.courtroomLoad ?? []).filter((c) => c.hearings > 0),
+    [metrics?.courtroomLoad],
+  );
+
+  const totalCourtroomHearings = useMemo(
+    () => courtroomPie.reduce((acc, curr) => acc + curr.hearings, 0),
+    [courtroomPie],
+  );
+
+  const formattedJudgeWorkload = useMemo(() => {
+    if (!metrics?.judgeWorkload) return [];
+    return metrics.judgeWorkload.map((j) => ({
+      ...j,
+      shortName: formatJudgeShortName(j.name),
+      fullName: j.name,
+    }));
+  }, [metrics?.judgeWorkload]);
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-7 sm:px-8 sm:py-9">
@@ -388,53 +419,74 @@ function Page() {
             />
           </div>
 
-          <div className="mt-7 grid gap-5 lg:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Judge workload distribution</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Active hearings per judge against the configured workload threshold of{" "}
-                  {data.data?.maxJudgeWorkload}.
-                </p>
+          <div className="mt-7 grid gap-6 lg:grid-cols-2 items-stretch">
+            <Card className="flex flex-col">
+              <CardHeader className="flex flex-row items-center justify-between pb-3">
+                <div>
+                  <CardTitle className="text-base">Judge workload distribution</CardTitle>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Active hearings per judge (Threshold: {data.data?.maxJudgeWorkload ?? 25})
+                  </p>
+                </div>
+                <Badge variant="outline" className="text-xs font-mono">
+                  {formattedJudgeWorkload.length} Benches
+                </Badge>
               </CardHeader>
-              <CardContent>
-                {metrics.judgeWorkload.length === 0 ? (
+              <CardContent className="flex-1 flex flex-col justify-center pt-2">
+                {formattedJudgeWorkload.length === 0 ? (
                   <p className="py-10 text-center text-sm text-muted-foreground">
                     No judges on record yet.
                   </p>
                 ) : (
-                  <div className="h-64 w-full">
+                  <div className="h-60 w-full">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart
-                        data={metrics.judgeWorkload}
-                        margin={{ top: 8, right: 8, left: -20, bottom: 0 }}
+                        data={formattedJudgeWorkload}
+                        margin={{ top: 8, right: 8, left: -24, bottom: 24 }}
                       >
                         <CartesianGrid
                           strokeDasharray="3 3"
                           stroke="var(--border)"
                           vertical={false}
+                          opacity={0.5}
                         />
                         <XAxis
-                          dataKey="name"
-                          tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                          dataKey="shortName"
+                          tick={{ fontSize: 9.5, fill: "var(--muted-foreground)" }}
                           tickLine={false}
                           axisLine={{ stroke: "var(--border)" }}
                           interval={0}
-                          height={48}
-                          angle={-20}
+                          height={44}
+                          angle={-40}
                           textAnchor="end"
                         />
                         <YAxis
                           allowDecimals={false}
-                          tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                          tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
                           tickLine={false}
                           axisLine={false}
                         />
                         <Tooltip
-                          cursor={{ fill: "var(--muted)" }}
-                          content={<ChartTip unit="hearings" />}
+                          cursor={{ fill: "var(--muted)/40" }}
+                          content={({ active, payload }) => {
+                            if (!active || !payload?.length || !payload[0]?.payload) return null;
+                            const item = payload[0].payload as { fullName?: string; hearings?: number };
+                            return (
+                              <div className="rounded-md border border-border bg-popover px-3 py-2 text-xs shadow-md">
+                                <p className="font-semibold text-foreground">{item.fullName ?? "Judge"}</p>
+                                <p className="mt-0.5 text-muted-foreground">
+                                  {item.hearings ?? 0} active hearing{item.hearings !== 1 ? "s" : ""}
+                                </p>
+                              </div>
+                            );
+                          }}
                         />
-                        <Bar dataKey="hearings" radius={[4, 4, 0, 0]} fill="var(--chart-1)" />
+                        <Bar
+                          dataKey="hearings"
+                          radius={[3, 3, 0, 0]}
+                          fill="var(--primary)"
+                          maxBarSize={22}
+                        />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -442,29 +494,34 @@ function Page() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Courtroom utilisation</CardTitle>
-                <p className="text-sm text-muted-foreground">
-                  Share of active listings held in each courtroom.
-                </p>
+            <Card className="flex flex-col">
+              <CardHeader className="flex flex-row items-center justify-between pb-3">
+                <div>
+                  <CardTitle className="text-base">Courtroom utilisation</CardTitle>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Share of active listings held in each courtroom.
+                  </p>
+                </div>
+                <Badge variant="outline" className="text-xs font-mono">
+                  {courtroomPie.length} Active Halls
+                </Badge>
               </CardHeader>
-              <CardContent>
+              <CardContent className="flex-1 flex flex-col justify-center pt-2">
                 {courtroomPie.length === 0 ? (
                   <p className="py-10 text-center text-sm text-muted-foreground">
                     No courtroom bookings recorded yet.
                   </p>
                 ) : (
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="h-48 w-full">
+                  <div className="grid gap-4 sm:grid-cols-2 items-center">
+                    <div className="h-60 w-full relative flex items-center justify-center">
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                           <Pie
                             data={courtroomPie}
                             dataKey="hearings"
                             nameKey="name"
-                            innerRadius={44}
-                            outerRadius={70}
+                            innerRadius={48}
+                            outerRadius={76}
                             paddingAngle={2}
                             stroke="var(--card)"
                           >
@@ -472,33 +529,63 @@ function Page() {
                               <Cell key={entry.name} fill={CHART_COLORS[i % CHART_COLORS.length]} />
                             ))}
                           </Pie>
-                          <Tooltip content={<ChartTip unit="hearings" />} />
+                          <Tooltip
+                            content={({ active, payload }) => {
+                              if (!active || !payload?.length || !payload[0]) return null;
+                              const item = payload[0];
+                              const val = Number(item.value) || 0;
+                              const pct =
+                                totalCourtroomHearings > 0
+                                  ? Math.round((val / totalCourtroomHearings) * 100)
+                                  : 0;
+                              return (
+                                <div className="rounded-md border border-border bg-popover px-3 py-2 text-xs shadow-md">
+                                  <p className="font-semibold text-foreground">{item.name ?? "Courtroom"}</p>
+                                  <p className="mt-0.5 text-muted-foreground">
+                                    {val} hearings ({pct}%)
+                                  </p>
+                                </div>
+                              );
+                            }}
+                          />
                         </PieChart>
                       </ResponsiveContainer>
+                      <div className="absolute flex flex-col items-center justify-center pointer-events-none">
+                        <span className="text-xl font-bold tabular-nums text-foreground">
+                          {totalCourtroomHearings}
+                        </span>
+                        <span className="text-[10px] uppercase font-semibold text-muted-foreground">
+                          Listings
+                        </span>
+                      </div>
                     </div>
-                    <ul className="space-y-3 self-center">
-                      {courtroomPie.map((c, i) => (
-                        <li key={c.name} className="text-sm">
-                          <div className="flex items-center justify-between gap-3">
-                            <span className="flex min-w-0 items-center gap-2">
-                              <span
-                                className="size-2.5 shrink-0 rounded-full"
-                                style={{ background: CHART_COLORS[i % CHART_COLORS.length] }}
-                              />
-                              <span className="truncate text-foreground">{c.name}</span>
-                            </span>
-                            <span className="tabular-nums text-muted-foreground">{c.hearings}</span>
-                          </div>
-                          <Progress
-                            className="mt-1.5 h-1.5"
-                            value={Math.min(
-                              100,
-                              (c.hearings / Math.max(1, metrics.scheduledHearings)) * 100,
-                            )}
-                          />
-                        </li>
-                      ))}
-                    </ul>
+                    <ScrollArea className="h-60 pr-3">
+                      <ul className="space-y-2.5">
+                        {courtroomPie.map((c, i) => (
+                          <li key={c.name} className="text-xs">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="flex min-w-0 items-center gap-1.5">
+                                <span
+                                  className="size-2 shrink-0 rounded-full"
+                                  style={{ background: CHART_COLORS[i % CHART_COLORS.length] }}
+                                />
+                                <span className="truncate text-foreground font-medium">{c.name}</span>
+                              </span>
+                              <span className="tabular-nums font-mono text-muted-foreground">
+                                {c.hearings}
+                              </span>
+                            </div>
+                            <Progress
+                              className="mt-1 h-1"
+                              value={Math.min(
+                                100,
+                                (c.hearings / Math.max(1, metrics.scheduledHearings)) * 100,
+                              )}
+                            />
+                          </li>
+                        ))}
+                      </ul>
+                    </ScrollArea>
                   </div>
                 )}
               </CardContent>

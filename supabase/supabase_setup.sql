@@ -730,9 +730,204 @@ CREATE POLICY "Registry staff view roles, users view own"
 ON public.user_roles FOR SELECT TO authenticated
 USING (public.is_registry_staff() OR user_id = auth.uid());
 
+ALTER TABLE public.case_status_translations ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Staff view case status translations"
+  ON public.case_status_translations FOR SELECT TO authenticated USING (true);
+
+CREATE TRIGGER trg_case_status_translations_updated
+  BEFORE UPDATE ON public.case_status_translations
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+
+
+ALTER TYPE public.app_role ADD VALUE IF NOT EXISTS 'judge';
+
+
+
+-- Link a bench (judge) login to a judge record
+ALTER TABLE public.judges ADD COLUMN IF NOT EXISTS user_id uuid UNIQUE REFERENCES auth.users(id) ON DELETE SET NULL;
+CREATE INDEX IF NOT EXISTS judges_user_id_idx ON public.judges(user_id);
+
+CREATE OR REPLACE FUNCTION public.current_judge_id()
+RETURNS uuid
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT id FROM public.judges WHERE user_id = auth.uid() LIMIT 1
+$$;
+
+CREATE OR REPLACE FUNCTION public.is_registry_staff()
+RETURNS boolean
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'registrar')
+$$;
+
+-- JUDGES: staff see all; a judge sees only their own record
+DROP POLICY IF EXISTS "Staff view judges" ON public.judges;
+CREATE POLICY "Registry staff and own bench view judges" ON public.judges
+FOR SELECT TO authenticated
+USING (public.is_registry_staff() OR user_id = auth.uid());
+
+-- SCHEDULES: staff see all; a judge sees only their own listings
+DROP POLICY IF EXISTS "Staff view schedules" ON public.schedules;
+CREATE POLICY "Registry staff and own bench view schedules" ON public.schedules
+FOR SELECT TO authenticated
+USING (public.is_registry_staff() OR judge_id = public.current_judge_id());
+
+-- CASES: staff see all; a judge sees only cases listed before them
+DROP POLICY IF EXISTS "Staff view cases" ON public.cases;
+CREATE POLICY "Registry staff and own bench view cases" ON public.cases
+FOR SELECT TO authenticated
+USING (
+  public.is_registry_staff() OR EXISTS (
+    SELECT 1 FROM public.schedules s
+    WHERE s.case_id = cases.id AND s.judge_id = public.current_judge_id()
+  )
+);
+
+-- COURTROOMS: staff see all; a judge sees only courtrooms they are listed in
+DROP POLICY IF EXISTS "Staff view courtrooms" ON public.courtrooms;
+CREATE POLICY "Registry staff and own bench view courtrooms" ON public.courtrooms
+FOR SELECT TO authenticated
+USING (
+  public.is_registry_staff() OR EXISTS (
+    SELECT 1 FROM public.schedules s
+    WHERE s.courtroom_id = courtrooms.id AND s.judge_id = public.current_judge_id()
+  )
+);
+
+-- AVAILABILITY: staff see all; a judge sees only their own availability
+DROP POLICY IF EXISTS "Staff view availability" ON public.availability;
+CREATE POLICY "Registry staff and own bench view availability" ON public.availability
+FOR SELECT TO authenticated
+USING (
+  public.is_registry_staff()
+  OR (entity_type = 'judge' AND entity_id = public.current_judge_id())
+);
+
+-- ADJOURNMENTS: staff see all; a judge sees only their own cases' adjournments
+DROP POLICY IF EXISTS "Staff view adjournments" ON public.adjournments;
+CREATE POLICY "Registry staff and own bench view adjournments" ON public.adjournments
+FOR SELECT TO authenticated
+USING (
+  public.is_registry_staff() OR EXISTS (
+    SELECT 1 FROM public.schedules s
+    WHERE s.case_id = adjournments.case_id AND s.judge_id = public.current_judge_id()
+  )
+);
+
+-- AI RECOMMENDATIONS: staff see all; a judge may read the reasoning for their own listings
+DROP POLICY IF EXISTS "Staff view recommendations" ON public.ai_recommendations;
+CREATE POLICY "Registry staff and own bench view recommendations" ON public.ai_recommendations
+FOR SELECT TO authenticated
+USING (
+  public.is_registry_staff() OR EXISTS (
+    SELECT 1 FROM public.schedules s
+    WHERE s.id = ai_recommendations.schedule_id AND s.judge_id = public.current_judge_id()
+  )
+);
+
+-- NOTIFICATIONS LOG: registry staff only
+DROP POLICY IF EXISTS "Staff view notification log" ON public.notifications_log;
+CREATE POLICY "Registry staff view notification log" ON public.notifications_log
+FOR SELECT TO authenticated
+USING (public.is_registry_staff());
+
+
+
+REVOKE EXECUTE ON FUNCTION public.current_judge_id() FROM PUBLIC, anon;
+REVOKE EXECUTE ON FUNCTION public.is_registry_staff() FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.current_judge_id() TO authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.is_registry_staff() TO authenticated, service_role;
+
+
+
+CREATE OR REPLACE FUNCTION public.has_role(_user_id uuid, _role app_role)
+RETURNS boolean
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT CASE
+    WHEN auth.uid() IS NOT NULL AND _user_id IS DISTINCT FROM auth.uid() THEN false
+    ELSE EXISTS (SELECT 1 FROM public.user_roles WHERE user_id = _user_id AND role = _role)
+  END
+$$;
+
+REVOKE ALL ON FUNCTION public.has_role(uuid, app_role) FROM PUBLIC, anon;
+REVOKE ALL ON FUNCTION public.current_judge_id() FROM PUBLIC, anon;
+REVOKE ALL ON FUNCTION public.is_registry_staff() FROM PUBLIC, anon;
+REVOKE ALL ON FUNCTION public.handle_new_user() FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.update_updated_at_column() FROM PUBLIC, anon, authenticated;
+
+GRANT EXECUTE ON FUNCTION public.has_role(uuid, app_role) TO authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.current_judge_id() TO authenticated, service_role;
+GRANT EXECUTE ON FUNCTION public.is_registry_staff() TO authenticated, service_role;
+
+
+
+-- Helper: is the current user a linked judge?
+CREATE OR REPLACE FUNCTION public.is_bench_user()
+RETURNS boolean
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (SELECT 1 FROM public.judges WHERE user_id = auth.uid())
+$$;
+
+REVOKE EXECUTE ON FUNCTION public.is_bench_user() FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.is_bench_user() TO authenticated;
+
+-- case_categories
+DROP POLICY IF EXISTS "Staff view categories" ON public.case_categories;
+CREATE POLICY "Registry staff and bench view categories"
+ON public.case_categories FOR SELECT TO authenticated
+USING (public.is_registry_staff() OR public.is_bench_user());
+
+-- case_status_translations
+DROP POLICY IF EXISTS "Staff view case status translations" ON public.case_status_translations;
+CREATE POLICY "Registry staff view case status translations"
+ON public.case_status_translations FOR SELECT TO authenticated
+USING (public.is_registry_staff());
+
+-- hearing_slots
+DROP POLICY IF EXISTS "Staff view slots" ON public.hearing_slots;
+CREATE POLICY "Registry staff and bench view slots"
+ON public.hearing_slots FOR SELECT TO authenticated
+USING (public.is_registry_staff() OR public.is_bench_user());
+
+-- priority_settings
+DROP POLICY IF EXISTS "Staff view priority settings" ON public.priority_settings;
+CREATE POLICY "Registry staff view priority settings"
+ON public.priority_settings FOR SELECT TO authenticated
+USING (public.is_registry_staff() OR public.is_bench_user());
+
+-- profiles
+DROP POLICY IF EXISTS "Staff can view profiles" ON public.profiles;
+CREATE POLICY "Registry staff view profiles, users view own"
+ON public.profiles FOR SELECT TO authenticated
+USING (public.is_registry_staff() OR id = auth.uid());
+
+-- user_roles
+DROP POLICY IF EXISTS "Staff can view roles" ON public.user_roles;
+CREATE POLICY "Registry staff view roles, users view own"
+ON public.user_roles FOR SELECT TO authenticated
+USING (public.is_registry_staff() OR user_id = auth.uid());
+
 -- Trigger-only functions do not need to be callable by signed-in users
 REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM PUBLIC, anon, authenticated;
 REVOKE EXECUTE ON FUNCTION public.update_updated_at_column() FROM PUBLIC, anon, authenticated;
+
 
 -- ============================================================================
 -- COURT HOLIDAYS & NON-SITTING CALENDAR
@@ -749,12 +944,13 @@ CREATE TABLE IF NOT EXISTS public.court_holidays (
 );
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.court_holidays TO authenticated;
+GRANT SELECT ON public.court_holidays TO anon;
 GRANT ALL ON public.court_holidays TO service_role;
 
 ALTER TABLE public.court_holidays ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Staff view holidays" ON public.court_holidays
-  FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Anyone view holidays" ON public.court_holidays
+  FOR SELECT USING (true);
 CREATE POLICY "Admins manage holidays" ON public.court_holidays
   FOR ALL TO authenticated
   USING (public.has_role(auth.uid(), 'admin'::app_role))

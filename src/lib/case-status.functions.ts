@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { checkRateLimit } from "@/lib/rate-limit.server";
 
 export type PublicCaseStatus = {
   caseNumber: string;
@@ -34,6 +35,15 @@ export const lookupCaseStatus = createServerFn({ method: "POST" })
     return { caseNumber: raw };
   })
   .handler(async ({ data }): Promise<PublicCaseStatus | null> => {
+    // Rate limit public lookups to 45 per minute
+    const rateCheck = checkRateLimit("public-case-lookup", {
+      maxRequests: 45,
+      windowMs: 60_000,
+    });
+    if (!rateCheck.allowed) {
+      throw new Error("Too many lookup requests. Please wait a few seconds before trying again.");
+    }
+
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     // Exact-match lookup by case_number OR cnr_number

@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { queryLLM } from "@/lib/ai.server";
+import { checkRateLimit } from "@/lib/rate-limit.server";
 
 export const PUBLIC_LANGUAGES = [
   { code: "en", label: "English", native: "English" },
@@ -47,6 +48,15 @@ export const translateCaseStatusSummary = createServerFn({ method: "POST" })
   .validator((data: unknown) => Input.parse(data))
   .handler(
     async ({ data }): Promise<{ summary: string; language: PublicLanguage; cached: boolean }> => {
+      // Rate limit translation calls to 20 per minute
+      const rateCheck = checkRateLimit("public-translate-summary", {
+        maxRequests: 20,
+        windowMs: 60_000,
+      });
+      if (!rateCheck.allowed) {
+        return { summary: data.summary, language: "en", cached: false };
+      }
+
       if (data.language === "en") {
         return { summary: data.summary, language: "en", cached: true };
       }
