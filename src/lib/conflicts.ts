@@ -338,7 +338,8 @@ type OccupancyRaw = {
   hearing_slots: Slot | null;
 };
 
-export async function fetchConflictData(db: any = supabase) {
+export async function fetchConflictData(dbOrContext?: any) {
+  const db = dbOrContext && typeof dbOrContext.from === "function" ? dbOrContext : supabase;
   const [schedulesRes, availabilityRes, judgesRes, settingsRes, holidaysRes] =
     await Promise.all([
       db.from("schedules").select(OCCUPANCY_SELECT),
@@ -387,5 +388,5 @@ export async function fetchConflictData(db: any = supabase) {
 
 export const conflictDataQuery = {
   queryKey: ["conflict-data"],
-  queryFn: fetchConflictData,
+  queryFn: () => fetchConflictData(),
 };
