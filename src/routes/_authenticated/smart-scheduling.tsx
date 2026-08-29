@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { CheckCircle2, Gavel, Loader2, MapPin, Play, ShieldCheck, Timer } from "lucide-react";
+import { CheckCircle2, FlaskConical, Gavel, Loader2, MapPin, Play, ShieldCheck, Timer } from "lucide-react";
 
 import { PageHeader } from "@/components/page-shell";
 import { PriorityBadge } from "@/components/priority-badge";
 import { RecommendationPanel } from "@/components/recommendation-panel";
 import { ReasoningList } from "@/components/reasoning-list";
 import { ConfidenceBar } from "@/components/confidence-bar";
+import { DecisionReceiptCard } from "@/components/decision-receipt-card";
 import { ErrorState } from "@/components/states";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -103,12 +104,45 @@ function Page() {
   const top = result?.candidates[0] ?? null;
   const alternatives = result?.candidates.slice(1, 4) ?? [];
 
+  function loadDemo() {
+    if (!pending.length || !engineData.data) return;
+    const best = [...pending].sort((a, b) => (b.priority_score ?? 0) - (a.priority_score ?? 0))[0];
+    if (!best) return;
+    setCaseId(best.id);
+    // slight delay so the select state propagates before run() reads `selected`
+    setTimeout(() => {
+      timers.current.forEach(clearTimeout);
+      setResult(null);
+      setRanCase(best);
+      setStep(0);
+      timers.current = STEPS.map((_, i) => setTimeout(() => setStep(i + 1), 550 * (i + 1)));
+      timers.current.push(
+        setTimeout(() => {
+          setResult(runSchedulingEngine(best, engineData.data!));
+          setStep(-1);
+        }, 550 * STEPS.length + 250),
+      );
+    }, 50);
+  }
+
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-8 sm:py-10">
       <PageHeader
         eyebrow="Automation"
         title="Smart Scheduling"
-        description="Batch view for working through pending cases. To list a single case, use Schedule This Case on the case detail page. Hard constraints filter invalid slots, and soft preferences rank only the valid options."
+        description="Batch view for working through pending cases. Hard constraints filter invalid slots; soft preferences rank only the valid options."
+        actions={
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={loadDemo}
+            disabled={!pending.length || !engineData.data || running}
+            title="Pre-select the highest-priority pending case and run the engine"
+          >
+            <FlaskConical className="size-4" />
+            Load Demo
+          </Button>
+        }
       />
 
       {(cases.isError || engineData.isError) && (
@@ -231,27 +265,44 @@ function Page() {
       )}
 
       {top && ranCase && (
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1.2fr_1fr]">
-          <RecommendationPanel
-            key={ranCase.id + top.key}
-            caseRow={ranCase}
-            top={top}
-            alternatives={alternatives}
-          />
-          <div className="space-y-4">
-            <h2 className="text-sm font-semibold text-foreground">
-              Alternative scheduling options
-            </h2>
-            {alternatives.length === 0 && (
-              <p className="text-sm text-muted-foreground">
-                No other valid combinations were found.
-              </p>
-            )}
-            {alternatives.map((c, i) => (
-              <CandidateCard key={c.key} candidate={c} caseRow={ranCase} rank={i + 2} />
-            ))}
+        <>
+          {/* ── AI Explainability Decision Receipt ── */}
+          <div className="mt-6">
+            <div className="mb-3 flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                Decision receipt
+              </span>
+              <span className="h-px flex-1 bg-border" />
+              <span className="text-[10px] text-muted-foreground">
+                Every constraint checked · every preference scored
+              </span>
+            </div>
+            <DecisionReceiptCard top={top} caseRow={ranCase} />
           </div>
-        </div>
+
+          {/* ── Candidates ── */}
+          <div className="mt-6 grid gap-6 lg:grid-cols-[1.2fr_1fr]">
+            <RecommendationPanel
+              key={ranCase.id + top.key}
+              caseRow={ranCase}
+              top={top}
+              alternatives={alternatives}
+            />
+            <div className="space-y-4">
+              <h2 className="text-sm font-semibold text-foreground">
+                Alternative scheduling options
+              </h2>
+              {alternatives.length === 0 && (
+                <p className="text-sm text-muted-foreground">
+                  No other valid combinations were found.
+                </p>
+              )}
+              {alternatives.map((c, i) => (
+                <CandidateCard key={c.key} candidate={c} caseRow={ranCase} rank={i + 2} />
+              ))}
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { LogOut } from "lucide-react";
+import { Languages, LogOut } from "lucide-react";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -18,11 +18,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { useCurrentStaff, roleLabel } from "@/hooks/use-current-staff";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { AssistantPanel } from "@/components/assistant-panel";
+import { useLanguage } from "@/lib/i18n";
 
 export function TopBar() {
   const { data: staff } = useCurrentStaff();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { lang, setLang } = useLanguage();
 
   const initials =
     staff?.fullName
@@ -58,6 +60,16 @@ export function TopBar() {
             <NotificationsBell />
           </>
         )}
+
+        {/* Language toggle */}
+        <button
+          onClick={() => setLang(lang === "en" ? "hi" : "en")}
+          className="flex items-center gap-1 rounded-sm px-2 py-1 text-xs font-semibold transition-colors hover:bg-muted text-muted-foreground hover:text-foreground"
+          title={lang === "en" ? "Switch to Hindi" : "Switch to English"}
+        >
+          <Languages className="size-3.5" />
+          <span className="hidden sm:inline">{lang === "en" ? "EN | हिं" : "हिं | EN"}</span>
+        </button>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

@@ -17,14 +17,43 @@ import {
 } from "@/components/ui/sidebar";
 import { benchNavSections, navSections } from "@/lib/nav";
 import { useCurrentStaff } from "@/hooks/use-current-staff";
+import { useLanguage, type TranslationKey } from "@/lib/i18n";
 
 export function AppSidebar() {
   const { state, isMobile, setOpenMobile } = useSidebar();
   const collapsed = state === "collapsed";
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const staff = useCurrentStaff();
+  const { t } = useLanguage();
   const isAdmin = staff.data?.role === "admin";
   const isJudge = staff.data?.role === "judge";
+
+  const sectionLabelKey: Record<string, TranslationKey> = {
+    "Overview": "nav.overview",
+    "Scheduling": "nav.scheduling",
+    "Administration": "nav.administration",
+    "My bench": "nav.overview",
+  };
+
+  const routeTitleKey: Record<string, TranslationKey> = {
+    "/dashboard": "nav.dashboard",
+    "/cases": "nav.cases",
+    "/judges": "nav.judges",
+    "/courtrooms": "nav.courtrooms",
+    "/calendar": "nav.calendar",
+    "/cause-list": "nav.cause-list",
+    "/smart-scheduling": "nav.smart-scheduling",
+    "/conflicts": "nav.conflicts",
+    "/what-if-simulation": "nav.what-if",
+    "/backlog-simulator": "nav.backlog",
+    "/reports": "nav.reports",
+    "/activity-log": "nav.activity-log",
+    "/governance": "nav.governance",
+    "/admin": "nav.admin",
+    "/priority-settings": "nav.priority-settings",
+    "/architecture": "nav.architecture",
+  };
+
   const sections = (isJudge ? benchNavSections : navSections)
     .map((section) => ({ ...section, items: section.items.filter((i) => !i.adminOnly || isAdmin) }))
     .filter((section) => section.items.length > 0);
@@ -60,7 +89,7 @@ export function AppSidebar() {
         {sections.map((section) => (
           <SidebarGroup key={section.label} className="py-3">
             <SidebarGroupLabel className="text-[11px] tracking-[0.12em] text-sidebar-foreground/50 uppercase">
-              {section.label}
+              {t((sectionLabelKey[section.label] ?? "nav.overview") as TranslationKey)}
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
@@ -77,7 +106,7 @@ export function AppSidebar() {
                         }}
                       >
                         <item.icon className="size-4" />
-                        <span>{item.title}</span>
+                        <span>{routeTitleKey[item.to] ? t(routeTitleKey[item.to] as TranslationKey) : item.title}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

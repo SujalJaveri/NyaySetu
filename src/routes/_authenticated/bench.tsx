@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { CalendarDays, Info, ListOrdered, Lock } from "lucide-react";
+import { CalendarDays, Info, ListOrdered, Lock, Scale, Search } from "lucide-react";
 
 import { PageHeader } from "@/components/page-shell";
 import { EmptyState, ErrorState, LoadingState } from "@/components/states";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,6 +16,9 @@ import { prioritySettingsQuery } from "@/lib/priority";
 import { causeListQuery, formatSlotTime } from "@/lib/cause-list";
 import { formatSlot, isActive, schedulesQuery, MAX_JUDGE_WORKLOAD } from "@/lib/registry";
 import { checkCourtHoliday } from "@/lib/holidays";
+import { casesQuery } from "@/lib/cases";
+import { PriorityBadge } from "@/components/priority-badge";
+import { CustomJudicialScheduleModal } from "@/components/custom-judicial-schedule-modal";
 
 export const Route = createFileRoute("/_authenticated/bench")({
   head: () => ({
@@ -53,8 +57,24 @@ function BenchPage() {
   const settings = useQuery(prioritySettingsQuery);
   const schedules = useQuery(schedulesQuery);
   const listing = useQuery(causeListQuery(date, settings.data ?? null));
+  const cases = useQuery(casesQuery);
+  const [pendingSearch, setPendingSearch] = useState("");
 
   const judgeId = staff.data?.judgeId ?? null;
+
+  const pendingCases = useMemo(() => {
+    return (cases.data ?? [])
+      .filter((c) => ["filed", "adjourned"].includes(c.status))
+      .filter((c) => {
+        if (!pendingSearch.trim()) return true;
+        const q = pendingSearch.toLowerCase();
+        return (
+          c.case_number.toLowerCase().includes(q) ||
+          c.parties.toLowerCase().includes(q) ||
+          (c.case_categories?.name ?? "").toLowerCase().includes(q)
+        );
+      });
+  }, [cases.data, pendingSearch]);
 
   const mine = useMemo(
     () => (schedules.data ?? []).filter((s) => !judgeId || s.judge_id === judgeId),
@@ -155,6 +175,9 @@ function BenchPage() {
           </TabsTrigger>
           <TabsTrigger value="calendar" className="gap-2">
             <CalendarDays className="size-4" /> My calendar
+          </TabsTrigger>
+          <TabsTrigger value="direct-scheduling" className="gap-2">
+            <Scale className="size-4 text-primary" /> Direct Bench Listing
           </TabsTrigger>
         </TabsList>
 
@@ -259,6 +282,78 @@ function BenchPage() {
                       <p className="text-muted-foreground">
                         {row.courtrooms?.name ?? "Courtroom to be allotted"} · {row.status}
                       </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="direct-scheduling" className="mt-4 space-y-4">
+          <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+                <Scale className="size-4 text-primary" />
+                Judicial Directive & Direct Bench Scheduling
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Select any pending or unlisted case from the registry to schedule directly on your bench with a judicial directive note.
+              </p>
+            </div>
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-2.5 top-2.5 size-3.5 text-muted-foreground" />
+              <Input
+                placeholder="Search case or parties…"
+                value={pendingSearch}
+                onChange={(e) => setPendingSearch(e.target.value)}
+                className="pl-8 text-xs h-8"
+              />
+            </div>
+          </div>
+
+          {cases.isLoading ? (
+            <LoadingState label="Loading registry cases…" />
+          ) : pendingCases.length === 0 ? (
+            <EmptyState
+              title="No pending cases found"
+              description="No open cases match your search query."
+            />
+          ) : (
+            <div className="space-y-3">
+              {pendingCases.map((c) => (
+                <Card key={c.id} className="hover:border-primary/40 transition-colors">
+                  <CardContent className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4">
+                    <div className="space-y-1 min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Link
+                          to="/cases/$caseId"
+                          params={{ caseId: c.id }}
+                          className="font-semibold text-foreground hover:text-primary hover:underline text-sm"
+                        >
+                          {c.case_number}
+                        </Link>
+                        <Badge variant="outline" className="text-xs">
+                          {c.case_categories?.name ?? "Uncategorised"}
+                        </Badge>
+                        <PriorityBadge score={c.priority_score} />
+                        <span className="text-xs text-muted-foreground">
+                          {c.estimated_duration_minutes} min est.
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground truncate">{c.parties || "Parties on record"}</p>
+                    </div>
+                    <div className="shrink-0 flex items-center gap-2">
+                      <CustomJudicialScheduleModal
+                        caseRow={c}
+                        preselectedJudgeId={judgeId ?? undefined}
+                        triggerButton={
+                          <Button size="sm" className="gap-1.5 text-xs">
+                            <Scale className="size-3.5" />
+                            Fix Hearing on My Bench
+                          </Button>
+                        }
+                      />
                     </div>
                   </CardContent>
                 </Card>

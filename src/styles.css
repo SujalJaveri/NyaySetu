@@ -428,3 +428,29 @@
   text-transform: uppercase;
   color: var(--color-muted-foreground);
 }
+
+/* Seamless Full-Page Translation Native Styling */
+.goog-te-banner-frame,
+.goog-te-banner,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+}
+
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+#google_translate_element,
+.skiptranslate:not(.allowed-translate) {
+  display: none !important;
+}
+

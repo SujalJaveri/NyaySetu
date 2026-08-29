@@ -17,6 +17,7 @@ import { ReasoningList } from "@/components/reasoning-list";
 import { ConfidenceBar } from "@/components/confidence-bar";
 import { PermissionNotice } from "@/components/states";
 import { NotifyPartiesPanel } from "@/components/notify-parties-panel";
+import { CustomJudicialScheduleModal } from "@/components/custom-judicial-schedule-modal";
 
 import type { CaseRow } from "@/lib/cases";
 import { formatSlotLabel, slotMinutes, type Candidate } from "@/lib/scheduling";
@@ -316,6 +317,12 @@ export function RecommendationPanel({
                 )}
                 Reject
               </Button>
+              <CustomJudicialScheduleModal
+                caseRow={caseRow}
+                onScheduled={() => {
+                  setOutcome(null);
+                }}
+              />
             </div>
 
             {/* Rejection Flow: Pick alternative OR confirm full rejection */}

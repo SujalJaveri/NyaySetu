@@ -102,6 +102,30 @@ function Page() {
   const running = step >= 0 && step < STEPS.length;
   const canApply = permissionsFor(staff.data?.role).canSchedule;
 
+  function loadDemo() {
+    if (!engineData.data) return;
+    const firstJudgeWithHearings = engineData.data.judges.find((j) =>
+      engineData.data!.schedules.some(
+        (s) =>
+          (s.status === "proposed" || s.status === "confirmed") &&
+          s.judge_id === j.id &&
+          s.hearing_slots,
+      ),
+    );
+    if (!firstJudgeWithHearings) return;
+    const scheduleForJudge = engineData.data.schedules.find(
+      (s) =>
+        (s.status === "proposed" || s.status === "confirmed") &&
+        s.judge_id === firstJudgeWithHearings.id &&
+        s.hearing_slots,
+    );
+    const demoDate = scheduleForJudge?.hearing_slots?.date ?? "";
+    discard();
+    setConditionType("judge-unavailable");
+    setJudgeId(firstJudgeWithHearings.id);
+    setDate(demoDate);
+  }
+
   /** Dates on which the selected judge currently has active hearings. */
   const judgeDates = useMemo(() => {
     if (!engineData.data || !judgeId) return [] as string[];
@@ -244,6 +268,18 @@ function Page() {
         eyebrow="Planning"
         title="What-If Simulation"
         description="Model a change to court conditions and see its full knock-on effect. Nothing is written to the live cause list until you press Apply Changes."
+        actions={
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={loadDemo}
+            disabled={!engineData.data || running}
+            title="Pre-fill the first judge who has active hearings as a demo scenario"
+          >
+            <FlaskConical className="size-4" />
+            Load Demo
+          </Button>
+        }
       />
 
       {(cases.isError || engineData.isError) && (

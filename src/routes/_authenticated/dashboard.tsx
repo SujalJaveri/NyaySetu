@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -11,6 +11,10 @@ import {
   ListChecks,
   Building2,
   RefreshCw,
+  TrendingUp,
+  Zap,
+  Target,
+  Trophy,
 } from "lucide-react";
 import {
   Bar,
@@ -37,6 +41,8 @@ import { ErrorState } from "@/components/states";
 import { computeDashboardMetrics, dashboardDataQuery } from "@/lib/dashboard";
 import { conflictDataQuery, scanSystemConflicts } from "@/lib/conflicts";
 import { buildBriefingInput, composeBriefingSentences } from "@/lib/briefing";
+import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/lib/i18n";
 
 function formatJudgeShortName(fullName: string): string {
   const clean = (fullName || "")
@@ -134,6 +140,107 @@ function StatCard({
     </Link>
   ) : (
     body
+  );
+}
+
+function useCountUp(target: number, duration = 900) {
+  const [count, setCount] = useState(0);
+  const raf = useRef<number | null>(null);
+  useEffect(() => {
+    if (target === 0) { setCount(0); return; }
+    const start = performance.now();
+    function tick(now: number) {
+      const progress = Math.min(1, (now - start) / duration);
+      // ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.round(eased * target));
+      if (progress < 1) raf.current = requestAnimationFrame(tick);
+    }
+    raf.current = requestAnimationFrame(tick);
+    return () => { if (raf.current) cancelAnimationFrame(raf.current); };
+  }, [target, duration]);
+  return count;
+}
+
+function ImpactStat({
+  label,
+  value,
+  icon: Icon,
+  accent,
+}: {
+  label: string;
+  value: number;
+  icon: React.ComponentType<{ className?: string }>;
+  accent: string;
+}) {
+  const displayed = useCountUp(value);
+  return (
+    <div className="flex flex-col items-center gap-1 text-center">
+      <span className={cn("flex size-9 items-center justify-center rounded-sm", accent)}>
+        <Icon className="size-4" />
+      </span>
+      <p className="text-2xl font-bold tabular-nums text-foreground">{displayed}</p>
+      <p className="text-xs text-muted-foreground leading-snug">{label}</p>
+    </div>
+  );
+}
+
+function ImpactBanner({
+  conflictsDetected,
+  tier1Cases,
+  recommendationsIssued,
+  scheduledHearings,
+  loading,
+}: {
+  conflictsDetected: number;
+  tier1Cases: number;
+  recommendationsIssued: number;
+  scheduledHearings: number;
+  loading: boolean;
+}) {
+  return (
+    <Card className="registry-enter border border-primary/20 bg-gradient-to-br from-primary/5 to-primary/[0.02]">
+      <CardContent className="py-4 px-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Zap className="size-4 text-primary" />
+          <p className="text-xs font-bold uppercase tracking-widest text-primary">NyayaSetu Impact</p>
+          <span className="h-px flex-1 bg-primary/20" />
+          <p className="text-[10px] text-muted-foreground">Live data from this registry</p>
+        </div>
+        {loading ? (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {[0, 1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <ImpactStat
+              label="Conflicts Detected & Prevented"
+              value={conflictsDetected}
+              icon={AlertTriangle}
+              accent="bg-destructive/10 text-destructive"
+            />
+            <ImpactStat
+              label="Tier 1 Cases Prioritised"
+              value={tier1Cases}
+              icon={Trophy}
+              accent="bg-accent text-accent-foreground"
+            />
+            <ImpactStat
+              label="AI Recommendations Issued"
+              value={recommendationsIssued}
+              icon={Target}
+              accent="bg-primary/10 text-primary"
+            />
+            <ImpactStat
+              label="Active Scheduled Hearings"
+              value={scheduledHearings}
+              icon={TrendingUp}
+              accent="bg-secondary text-secondary-foreground"
+            />
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
@@ -265,6 +372,16 @@ function CourtReadiness({
 function Page() {
   const data = useQuery(dashboardDataQuery);
   const conflictData = useQuery(conflictDataQuery);
+  const { t } = useLanguage();
+  const recsQuery = useQuery({
+    queryKey: ["dashboard", "recs-count"],
+    queryFn: async () => {
+      const { count } = await supabase
+        .from("ai_recommendations")
+        .select("id", { count: "exact", head: true });
+      return count ?? 0;
+    },
+  });
 
   const metrics = useMemo(
     () => (data.data ? computeDashboardMetrics(data.data) : null),
@@ -349,12 +466,19 @@ function Page() {
               courtroomUtilisation={metrics.courtroomUtilisation}
             />
             <RegistryBriefing sentences={briefing ?? []} pending={briefing === null} />
+            <ImpactBanner
+              conflictsDetected={conflicts.length}
+              tier1Cases={metrics.highPriorityCases}
+              recommendationsIssued={recsQuery.data ?? 0}
+              scheduledHearings={metrics.scheduledHearings}
+              loading={recsQuery.isLoading}
+            />
           </div>
 
           <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               className="registry-enter stagger-1"
-              label="Pending cases"
+              label={t("dash.pending-cases")}
               value={metrics.pendingCases}
               hint={`${metrics.totalCases} cases on file`}
               icon={Layers}
@@ -362,7 +486,7 @@ function Page() {
             />
             <StatCard
               className="registry-enter stagger-2"
-              label="Tier 1 cases"
+              label={t("dash.tier1-cases")}
               value={metrics.highPriorityCases}
               hint={`Tier 2: ${metrics.tierCounts["Tier 2"]} · Tier 3: ${metrics.tierCounts["Tier 3"]}`}
               icon={ListChecks}
@@ -371,7 +495,7 @@ function Page() {
             />
             <StatCard
               className="registry-enter stagger-3"
-              label="Scheduled hearings"
+              label={t("dash.scheduled")}
               value={metrics.scheduledHearings}
               hint="Proposed or confirmed listings"
               icon={CalendarCheck}
@@ -379,7 +503,7 @@ function Page() {
             />
             <StatCard
               className="registry-enter stagger-4"
-              label="Conflicts detected"
+              label={t("dash.conflicts")}
               value={conflictData.isLoading ? "—" : conflicts.length}
               hint="Hard-constraint violations"
               icon={AlertTriangle}
@@ -388,7 +512,7 @@ function Page() {
             />
             <StatCard
               className="registry-enter stagger-5"
-              label="Judge utilisation"
+              label={t("dash.judge-util")}
               value={`${metrics.judgeUtilisation}%`}
               hint={`Against ${metrics.judgeWorkload.length} judges × ${data.data?.maxJudgeWorkload} hearing threshold`}
               icon={Gavel}
@@ -396,7 +520,7 @@ function Page() {
             />
             <StatCard
               className="registry-enter stagger-1"
-              label="Courtroom utilisation"
+              label={t("dash.courtroom-util")}
               value={`${metrics.courtroomUtilisation}%`}
               hint="Booked courtroom-slot pairs of all published slots"
               icon={Building2}
@@ -404,7 +528,7 @@ function Page() {
             />
             <StatCard
               className="registry-enter stagger-2"
-              label="Awaiting scheduling"
+              label={t("dash.awaiting")}
               value={metrics.awaitingScheduling}
               hint="Open cases with no active listing"
               icon={Clock}

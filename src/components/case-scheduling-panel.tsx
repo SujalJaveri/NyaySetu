@@ -19,6 +19,7 @@ import { Progress } from "@/components/ui/progress";
 import { ReasoningList } from "@/components/reasoning-list";
 import { ConfidenceBar } from "@/components/confidence-bar";
 import { RecommendationPanel } from "@/components/recommendation-panel";
+import { CustomJudicialScheduleModal } from "@/components/custom-judicial-schedule-modal";
 import { cn } from "@/lib/utils";
 import type { CaseRow } from "@/lib/cases";
 import {
@@ -105,14 +106,17 @@ export function CaseSchedulingPanel({ caseRow }: { caseRow: CaseRow }) {
             preferences rank only the valid options. Nothing is listed until you accept.
           </p>
         </div>
-        <Button onClick={run} disabled={running || engineData.isLoading} size="lg">
-          {running ? (
-            <Loader2 className="size-4 animate-spin" />
-          ) : (
-            <CalendarPlus className="size-4" />
-          )}
-          {running ? "Analysing…" : result ? "Re-run engine" : "Schedule This Case"}
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <CustomJudicialScheduleModal caseRow={caseRow} />
+          <Button onClick={run} disabled={running || engineData.isLoading} size="lg">
+            {running ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <CalendarPlus className="size-4" />
+            )}
+            {running ? "Analysing…" : result ? "Re-run engine" : "Schedule This Case"}
+          </Button>
+        </div>
       </div>
 
       {engineData.isError && (

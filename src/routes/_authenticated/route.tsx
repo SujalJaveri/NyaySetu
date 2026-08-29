@@ -12,6 +12,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { TopBar } from "@/components/top-bar";
 import { useCurrentStaff } from "@/hooks/use-current-staff";
+import { LanguageProvider } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
@@ -30,20 +31,22 @@ function AuthenticatedLayout() {
   // Tablet widths start with the rail collapsed so content keeps a usable measure.
   const defaultOpen = typeof window === "undefined" ? true : window.innerWidth >= 1024;
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
-      <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        <BenchScopeGuard />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <TopBar />
-          <main className="flex-1">
-            <div key={pathname} className="registry-enter">
-              <Outlet />
-            </div>
-          </main>
+    <LanguageProvider>
+      <SidebarProvider defaultOpen={defaultOpen}>
+        <div className="flex min-h-screen w-full bg-background">
+          <AppSidebar />
+          <BenchScopeGuard />
+          <div className="flex min-w-0 flex-1 flex-col">
+            <TopBar />
+            <main className="flex-1">
+              <div key={pathname} className="registry-enter">
+                <Outlet />
+              </div>
+            </main>
+          </div>
         </div>
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
+    </LanguageProvider>
   );
 }
 
