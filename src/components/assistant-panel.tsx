@@ -19,6 +19,7 @@ import {
 import { cn } from "@/lib/utils";
 import { EXAMPLE_QUESTIONS, type AssistantAnswer, type AssistantRow } from "@/lib/assistant";
 import { askRegistryAssistant } from "@/lib/assistant.functions";
+import { ChatMarkdown } from "@/components/chat-markdown";
 
 type Turn =
   | { role: "user"; id: string; text: string }
@@ -144,9 +145,7 @@ export function AssistantPanel() {
                   key={turn.id}
                   className="space-y-3 rounded-2xl rounded-tl-xs border border-border/80 bg-card/90 p-4 shadow-sm min-w-0 max-w-full overflow-hidden"
                 >
-                  <div className="text-sm text-foreground leading-relaxed whitespace-pre-wrap break-words">
-                    {turn.answer.summary}
-                  </div>
+                  <ChatMarkdown content={turn.answer.summary} />
                   {turn.answer.rows.length > 0 && (
                     <ul className="divide-y divide-border/60 overflow-hidden rounded-xl border border-border/70 bg-background/50">
                       {turn.answer.rows.map((row) => (
