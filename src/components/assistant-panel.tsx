@@ -101,7 +101,7 @@ export function AssistantPanel() {
             AI Registry Copilot
           </SheetTitle>
           <SheetDescription className="text-xs text-muted-foreground leading-normal">
-            Ask any custom question about court cases, judge workloads, schedules, or legal procedures. Powered by Gemini 3.5 Flash.
+            Ask any custom question about court cases, judge workloads, schedules, or legal procedures.
           </SheetDescription>
         </SheetHeader>
 

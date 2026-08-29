@@ -204,7 +204,7 @@ ${holidaysSummary}
         return {
           intent: deterministicAnswer.intent !== "unknown" ? deterministicAnswer.intent : "unknown",
           summary: aiResponse,
-          source: "Gemini 3.5 Flash Copilot",
+          source: "AI Registry Copilot",
           rows: deterministicAnswer.intent !== "unknown" ? (deterministicAnswer.rows ?? []) : [],
         };
       }
