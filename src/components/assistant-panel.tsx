@@ -91,30 +91,32 @@ export function AssistantPanel() {
           <MessageSquareText className="size-4" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-md">
-        <SheetHeader className="px-5 py-4">
-          <SheetTitle className="flex items-center gap-2 text-base">
-            <FileSearch className="size-4 text-primary" />
+      <SheetContent
+        side="right"
+        className="flex w-full flex-col gap-0 p-0 sm:max-w-lg md:max-w-xl border-l border-border/80 bg-background shadow-2xl"
+      >
+        <SheetHeader className="px-5 py-4 pr-12 border-b bg-card/60">
+          <SheetTitle className="flex items-center gap-2 text-base font-semibold">
+            <FileSearch className="size-4.5 text-primary" />
             AI Registry Copilot
           </SheetTitle>
-          <SheetDescription className="text-xs">
+          <SheetDescription className="text-xs text-muted-foreground leading-normal">
             Ask any custom question about court cases, judge workloads, schedules, or legal procedures. Powered by Gemini 3.5 Flash.
           </SheetDescription>
         </SheetHeader>
-        <Separator />
 
-        <ScrollArea className="flex-1">
-          <div className="space-y-4 px-5 py-4">
+        <ScrollArea className="flex-1 w-full min-w-0 [&>[data-radix-scroll-area-viewport]]:!block">
+          <div className="space-y-4 p-5 w-full min-w-0 max-w-full">
             {turns.length === 0 && (
               <div className="space-y-3">
-                <p className="text-sm text-muted-foreground">Try one of these lookups:</p>
+                <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Try one of these lookups:</p>
                 <div className="flex flex-wrap gap-2">
                   {EXAMPLE_QUESTIONS.map((q) => (
                     <button
                       key={q}
                       type="button"
                       onClick={() => ask(q)}
-                      className="rounded-md border border-border px-2.5 py-1.5 text-left text-xs text-foreground transition-colors hover:bg-muted"
+                      className="rounded-lg border border-border/80 bg-card/80 px-3 py-1.5 text-left text-xs text-foreground transition-all hover:bg-accent hover:border-primary/40 hover:text-accent-foreground"
                     >
                       {q}
                     </button>
@@ -126,25 +128,27 @@ export function AssistantPanel() {
             {turns.map((turn) =>
               turn.role === "user" ? (
                 <div key={turn.id} className="flex justify-end">
-                  <p className="max-w-[85%] rounded-lg bg-primary px-3 py-2 text-sm text-primary-foreground">
+                  <p className="max-w-[85%] rounded-2xl rounded-br-xs bg-primary px-4 py-2.5 text-sm text-primary-foreground shadow-sm leading-relaxed break-words">
                     {turn.text}
                   </p>
                 </div>
               ) : turn.role === "error" ? (
                 <p
                   key={turn.id}
-                  className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive"
+                  className="rounded-xl bg-destructive/10 border border-destructive/20 px-4 py-3 text-sm text-destructive leading-relaxed break-words"
                 >
                   {turn.text}
                 </p>
               ) : (
                 <div
                   key={turn.id}
-                  className="space-y-2 rounded-lg border border-border bg-card p-3"
+                  className="space-y-3 rounded-2xl rounded-tl-xs border border-border/80 bg-card/90 p-4 shadow-sm min-w-0 max-w-full overflow-hidden"
                 >
-                  <p className="text-sm font-medium text-foreground">{turn.answer.summary}</p>
+                  <div className="text-sm text-foreground leading-relaxed whitespace-pre-wrap break-words">
+                    {turn.answer.summary}
+                  </div>
                   {turn.answer.rows.length > 0 && (
-                    <ul className="divide-y divide-border overflow-hidden rounded-md border border-border">
+                    <ul className="divide-y divide-border/60 overflow-hidden rounded-xl border border-border/70 bg-background/50">
                       {turn.answer.rows.map((row) => (
                         <li key={row.id}>
                           <button
@@ -152,20 +156,20 @@ export function AssistantPanel() {
                             onClick={() => openRow(row)}
                             disabled={!row.target}
                             className={cn(
-                              "flex w-full items-start justify-between gap-2 px-3 py-2 text-left",
-                              row.target ? "transition-colors hover:bg-muted" : "cursor-default",
+                              "flex w-full items-start justify-between gap-3 px-3.5 py-2.5 text-left transition-colors",
+                              row.target ? "hover:bg-muted/70 cursor-pointer" : "cursor-default",
                             )}
                           >
-                            <span className="min-w-0">
-                              <span className="block truncate text-sm text-foreground">
+                            <span className="min-w-0 flex-1">
+                              <span className="block truncate text-sm font-medium text-foreground">
                                 {row.label}
                               </span>
-                              <span className="block truncate text-xs text-muted-foreground">
+                              <span className="block truncate text-xs text-muted-foreground mt-0.5">
                                 {row.detail}
                               </span>
                             </span>
                             {row.badge && (
-                              <Badge variant="outline" className="shrink-0 text-[10px] font-normal">
+                              <Badge variant="outline" className="shrink-0 text-[10px] font-normal px-2 py-0.5">
                                 {row.badge}
                               </Badge>
                             )}
@@ -179,17 +183,16 @@ export function AssistantPanel() {
             )}
 
             {busy && (
-              <p className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Loader2 className="size-3.5 animate-spin" /> Querying the registry…
+              <p className="flex items-center gap-2 text-sm text-muted-foreground py-2 px-1">
+                <Loader2 className="size-4 animate-spin text-primary" /> Querying the legal engine & registry…
               </p>
             )}
             <div ref={bottomRef} />
           </div>
         </ScrollArea>
 
-        <Separator />
         <form
-          className="flex items-center gap-2 px-5 py-4"
+          className="flex items-center gap-2 p-4 border-t border-border/80 bg-card/40 shrink-0"
           onSubmit={(e) => {
             e.preventDefault();
             void ask(value);
@@ -201,12 +204,14 @@ export function AssistantPanel() {
             onChange={(e) => setValue(e.target.value)}
             placeholder="Ask anything about cases, schedules, judges, or procedures…"
             aria-label="Ask the AI Copilot"
+            className="flex-1 min-w-0 text-sm h-10 bg-background/80 focus-visible:ring-1"
           />
           <Button
             type="submit"
             size="icon"
             disabled={busy || !value.trim()}
             aria-label="Send question"
+            className="h-10 w-10 shrink-0"
           >
             <SendHorizonal className="size-4" />
           </Button>

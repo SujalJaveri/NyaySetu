@@ -21,6 +21,7 @@ export default defineConfig(({ mode }) => {
       ),
       "process.env.CUSTOM_LLM_URL": JSON.stringify(env["CUSTOM_LLM_URL"] || ""),
       "process.env.OPENAI_API_KEY": JSON.stringify(env["OPENAI_API_KEY"] || ""),
+      "process.env.GROQ_API_KEY": JSON.stringify(env["GROQ_API_KEY"] || ""),
     },
     plugins: [
       tsconfigPaths(),
