@@ -174,7 +174,6 @@ export function AssistantPanel() {
                       ))}
                     </ul>
                   )}
-                  <p className="text-[11px] text-muted-foreground">Source: {turn.answer.source}</p>
                 </div>
               ),
             )}
