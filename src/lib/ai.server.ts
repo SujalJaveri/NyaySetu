@@ -14,6 +14,12 @@ export function getEnvVar(key: string): string | undefined {
     );
   }
 
+  if (key === "GEMINI_MODEL") {
+    return (
+      envObj?.["GEMINI_MODEL"] || procEnv?.["GEMINI_MODEL"] || process.env["GEMINI_MODEL"]
+    );
+  }
+
   if (key === "OPENAI_API_KEY") {
     return (
       envObj?.["OPENAI_API_KEY"] || procEnv?.["OPENAI_API_KEY"] || process.env["OPENAI_API_KEY"]
@@ -114,7 +120,7 @@ export async function queryLLM(messages: ChatMessage[]): Promise<string | null> 
           parts: [{ text: m.content }],
         }));
 
-      const model = process.env["GEMINI_MODEL"] || "gemini-3.6-flash";
+      const model = getEnvVar("GEMINI_MODEL") || "gemini-2.5-flash";
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
 
       const body: {

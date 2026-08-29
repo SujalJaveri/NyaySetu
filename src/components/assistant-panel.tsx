@@ -94,12 +94,11 @@ export function AssistantPanel() {
       <SheetContent side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-md">
         <SheetHeader className="px-5 py-4">
           <SheetTitle className="flex items-center gap-2 text-base">
-            <FileSearch className="size-4 text-gold" />
-            Registry Assistant
+            <FileSearch className="size-4 text-primary" />
+            AI Registry Copilot
           </SheetTitle>
           <SheetDescription className="text-xs">
-            Answers come from live queries against cases, judges, availability and schedules.
-            Unsupported questions are declined rather than guessed.
+            Ask any custom question about court cases, judge workloads, schedules, or legal procedures. Powered by Gemini 2.5 Flash.
           </SheetDescription>
         </SheetHeader>
         <Separator />
@@ -201,8 +200,8 @@ export function AssistantPanel() {
             ref={inputRef}
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            placeholder="Ask about cases, judges, availability…"
-            aria-label="Ask the Registry Assistant"
+            placeholder="Ask anything about cases, schedules, judges, or procedures…"
+            aria-label="Ask the AI Copilot"
           />
           <Button
             type="submit"
