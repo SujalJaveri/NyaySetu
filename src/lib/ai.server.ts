@@ -109,15 +109,13 @@ export async function queryLLM(messages: ChatMessage[]): Promise<string | null> 
     }
   }
 
-  // 3. Google Gemini API with Multi-Model Fallback Cascade
+  // 3. Google Gemini API (Powered by Gemini 3.5 Flash)
   if (geminiKey) {
     const candidateModels = [
-      getEnvVar("GEMINI_MODEL"),
-      "gemini-3.5-flash-lite",
+      getEnvVar("GEMINI_MODEL") || "gemini-3.5-flash",
       "gemini-3.5-flash",
+      "gemini-3.5-flash-lite",
       "gemini-3-flash-preview",
-      "gemini-3.6-flash",
-      "gemini-3.7-flash",
     ].filter(Boolean) as string[];
 
     const systemInstruction = messages.find((m) => m.role === "system")?.content;

@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => {
   return {
     define: {
       "process.env.GEMINI_API_KEY": JSON.stringify(env["GEMINI_API_KEY"] || ""),
-      "process.env.GEMINI_MODEL": JSON.stringify(env["GEMINI_MODEL"] || "gemini-3.6-flash"),
+      "process.env.GEMINI_MODEL": JSON.stringify(env["GEMINI_MODEL"] || "gemini-3.5-flash"),
       "process.env.SUPABASE_URL": JSON.stringify(
         env["SUPABASE_URL"] || "https://keqlhaerxaliqljyibzx.supabase.co",
       ),
