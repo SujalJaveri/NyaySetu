@@ -80,7 +80,8 @@ export async function queryLLM(messages: ChatMessage[]): Promise<string | null> 
     const body: {
       contents: typeof contents;
       systemInstruction?: { parts: { text: string }[] };
-    } = { contents };
+      generationConfig?: { maxOutputTokens: number };
+    } = { contents, generationConfig: { maxOutputTokens: 512 } };
 
     if (systemInstruction) {
       body.systemInstruction = { parts: [{ text: systemInstruction }] };
@@ -93,7 +94,7 @@ export async function queryLLM(messages: ChatMessage[]): Promise<string | null> 
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
-          signal: AbortSignal.timeout(12000),
+          signal: AbortSignal.timeout(8000),
         });
 
         if (res.ok) {
@@ -138,6 +139,7 @@ export async function queryLLM(messages: ChatMessage[]): Promise<string | null> 
           body: JSON.stringify({
             model,
             messages,
+            max_tokens: 512,
           }),
           signal: AbortSignal.timeout(10000),
         });
