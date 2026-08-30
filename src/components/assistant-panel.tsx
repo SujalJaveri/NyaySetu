@@ -106,8 +106,8 @@ export function AssistantPanel() {
           </SheetDescription>
         </SheetHeader>
 
-        <ScrollArea className="flex-1 w-full min-w-0 [&>[data-radix-scroll-area-viewport]]:!block">
-          <div className="space-y-4 p-5 w-full min-w-0 max-w-full">
+        <ScrollArea className="flex-1 min-w-0 overflow-hidden">
+          <div className="space-y-4 p-5 min-w-0 overflow-x-hidden">
             {turns.length === 0 && (
               <div className="space-y-3">
                 <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Try one of these lookups:</p>
@@ -128,8 +128,8 @@ export function AssistantPanel() {
 
             {turns.map((turn) =>
               turn.role === "user" ? (
-                <div key={turn.id} className="flex justify-end">
-                  <p className="max-w-[85%] rounded-2xl rounded-br-xs bg-primary px-4 py-2.5 text-sm text-primary-foreground shadow-sm leading-relaxed break-words">
+                <div key={turn.id} className="flex justify-end min-w-0">
+                  <p className="max-w-[85%] min-w-0 rounded-2xl rounded-br-xs bg-primary px-4 py-2.5 text-sm text-primary-foreground shadow-sm leading-relaxed break-words whitespace-pre-wrap">
                     {turn.text}
                   </p>
                 </div>
