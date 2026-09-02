@@ -63,10 +63,11 @@ export async function queryLLM(messages: ChatMessage[]): Promise<string | null> 
   // 1. Google Gemini API (Primary — Powered by Gemini 3.5 Flash)
   if (geminiKey) {
     const candidateModels = [
-      getEnvVar("GEMINI_MODEL") || "gemini-3.5-flash",
-      "gemini-3.5-flash",
-      "gemini-3.5-flash-lite",
-      "gemini-3-flash-preview",
+      getEnvVar("GEMINI_MODEL") || "gemini-2.0-flash",
+      "gemini-2.0-flash",
+      "gemini-1.5-flash",
+      "gemini-2.5-flash",
+      "gemini-2.0-flash-lite",
     ].filter(Boolean) as string[];
 
     const systemInstruction = messages.find((m) => m.role === "system")?.content;
@@ -122,10 +123,9 @@ export async function queryLLM(messages: ChatMessage[]): Promise<string | null> 
   // 2. Groq Ultra-Fast Backup (High Performance Fallback)
   if (groqKey) {
     const groqModels = [
-      "openai/gpt-oss-120b",
-      "groq/compound-mini",
-      "openai/gpt-oss-20b",
-      "qwen/qwen3.6-27b",
+      "llama-3.3-70b-versatile",
+      "llama-3.1-8b-instant",
+      "mixtral-8x7b-32768",
     ];
 
     for (const model of groqModels) {
