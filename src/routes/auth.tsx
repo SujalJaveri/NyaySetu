@@ -160,58 +160,6 @@ function AuthPage() {
             ))}
           </div>
 
-          {/* Quick Demo Credentials Box */}
-          {role === "judge" ? (
-            <div className="mt-4 rounded-lg border border-primary/30 bg-primary/5 p-3 text-xs space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-foreground flex items-center gap-1.5">
-                  <Gavel className="size-3.5 text-primary" />
-                  Judge Account Demo
-                </span>
-                <span className="text-[10px] font-mono text-muted-foreground">Aditya Shah</span>
-              </div>
-              <p className="text-[11px] text-muted-foreground font-mono">
-                adityashah@court.gov.in · Password@123
-              </p>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="w-full text-xs h-7 border-primary/40 text-primary hover:bg-primary hover:text-primary-foreground font-medium"
-                onClick={() => {
-                  setEmail("adityashah@court.gov.in");
-                  setPassword("Password@123");
-                }}
-              >
-                Auto-fill Judge Credentials
-              </Button>
-            </div>
-          ) : (
-            <div className="mt-4 rounded-lg border border-border bg-muted/40 p-3 text-xs space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-foreground flex items-center gap-1.5">
-                  <ClipboardList className="size-3.5 text-primary" />
-                  Admin Account Demo
-                </span>
-                <span className="text-[10px] font-mono text-muted-foreground">Registrar</span>
-              </div>
-              <p className="text-[11px] text-muted-foreground font-mono">
-                sujaljaveri24@gmail.com
-              </p>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="w-full text-xs h-7 border-border text-foreground hover:bg-accent hover:text-accent-foreground font-medium"
-                onClick={() => {
-                  setEmail("sujaljaveri24@gmail.com");
-                }}
-              >
-                Auto-fill Admin Email
-              </Button>
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             <div className="space-y-2">
               <Label htmlFor="email">Official email</Label>
