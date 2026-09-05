@@ -99,7 +99,7 @@ function Page() {
   const horizon = HORIZONS.find((h) => h.key === horizonKey) ?? HORIZONS[0];
 
   const projection = useMemo(
-    () => (casesQuery.data ? runBacklogProjection(casesQuery.data, rate, horizon.weeks) : null),
+    () => runBacklogProjection(casesQuery.data ?? [], rate, horizon.weeks),
     [casesQuery.data, rate, horizon.weeks],
   );
 
@@ -168,7 +168,7 @@ function Page() {
             void casesQuery.refetch();
           }}
         />
-      ) : casesQuery.isLoading || !projection ? (
+      ) : !projection ? (
         <Skeleton className="h-[420px] w-full" />
       ) : (
         <>
@@ -190,36 +190,49 @@ function Page() {
               </Tabs>
             </CardHeader>
             <CardContent className="pt-3">
-              <div className="h-[320px] w-full sm:h-[360px]">
-                <ResponsiveContainer width="100%" height="100%">
+              <div className="h-[340px] w-full min-h-[320px] sm:h-[380px]">
+                <ResponsiveContainer width="100%" height="100%" minHeight={320}>
                   <LineChart
                     data={projection.series}
-                    margin={{ top: 8, right: 18, bottom: 8, left: 4 }}
+                    margin={{ top: 12, right: 24, bottom: 12, left: 4 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="var(--border)"
+                      strokeOpacity={0.6}
+                      vertical={false}
+                    />
                     <XAxis
                       dataKey="label"
-                      tick={{ fontSize: 11 }}
+                      tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                      stroke="var(--border)"
                       interval={Math.ceil(horizon.weeks / 13)}
                     />
-                    <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
+                    <YAxis
+                      tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                      stroke="var(--border)"
+                      allowDecimals={false}
+                    />
                     <Tooltip content={<Tip />} />
-                    <Legend wrapperStyle={{ fontSize: 12 }} />
+                    <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
                     <Line
                       type="monotone"
                       dataKey={metric === "all" ? "fifoPending" : "fifoTier1"}
                       name="Filing-date order (FIFO)"
-                      stroke="hsl(var(--muted-foreground))"
-                      strokeWidth={2}
-                      dot={false}
+                      stroke="#64748b"
+                      strokeWidth={2.5}
+                      strokeDasharray="4 4"
+                      dot={{ r: 2.5, fill: "#64748b" }}
+                      activeDot={{ r: 6 }}
                     />
                     <Line
                       type="monotone"
                       dataKey={metric === "all" ? "priorityPending" : "priorityTier1"}
                       name="Proposed order (tier + score)"
-                      stroke="hsl(var(--primary))"
-                      strokeWidth={2}
-                      dot={false}
+                      stroke="#2563eb"
+                      strokeWidth={3}
+                      dot={{ r: 3.5, fill: "#2563eb" }}
+                      activeDot={{ r: 6 }}
                     />
                   </LineChart>
                 </ResponsiveContainer>

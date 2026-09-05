@@ -25,7 +25,7 @@ NyayaSetu is a **deterministic, constraint-solving, AI-assisted court scheduling
 | Real-Time Impact Counter Banner | ✅ Fully Functional | Live count-up animation for conflicts prevented, Tier 1 prioritized, and recommendations |
 | Backlog Simulator | ✅ Fully Functional | Deterministic comparison between FIFO vs Priority-based disposal horizons |
 | Calendar View & Branded PDF Export | ✅ Fully Functional | Monthly/weekly/day views with NyayaSetu court-formatted PDF generation |
-| AI Registry Copilot (NLP Q&A) | ✅ Fully Functional | Multi-tier LLM fallback (Gemini 3.5 Flash → Groq → OpenAI) with Indian legal knowledge |
+| AI Registry Copilot (NLP Q&A) | ✅ Fully Functional | Resilient dual-tier LLM engine (Gemini 3.5 Flash → Groq LLaMA 3.3) with Indian legal knowledge |
 | Governance & Compliance Dashboard | ✅ Fully Functional | AI acceptance rates, human override tracking, and Supreme Court AI regulation alignment |
 | 1-Click SIH Demo Triggers | ✅ Fully Functional | Instant pre-seeded scenario loaders on Smart Scheduling and What-If pages |
 | Activity Log / Immutable Audit Trail | ✅ Fully Functional | All registrar/judge actions logged with timestamp, user ID, and entity reference |

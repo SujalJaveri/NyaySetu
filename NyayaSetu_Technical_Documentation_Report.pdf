@@ -1,0 +1,4169 @@
+%PDF-1.3
+%ºß¬à
+3 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 4 0 R
+>>
+endobj
+4 0 obj
+<<
+/Length 11351
+>>
+stream
+0.200025 w
+0 G
+0.09 0.16 0.31 rg
+0. 841.8899999999999864 595.2799999999999727 -240. re
+f
+BT
+/F2 26 Tf
+29.8999999999999986 TL
+1. g
+46. 761.8899999999999864 Td
+(NYAYASETU \(Bridge to Justice\)) Tj
+ET
+BT
+/F1 12 Tf
+13.7999999999999989 TL
+0.863 0.902 0.961 rg
+46. 736.8899999999999864 Td
+(AI-Assisted Smart Court Case Scheduling & Cause-List Optimisation Platform) Tj
+ET
+BT
+/F1 9.5 Tf
+10.9249999999999989 TL
+0.667 0.471 0.137 rg
+46. 711.8899999999999864 Td
+(OFFICIAL SYSTEM SPECIFICATION & COMPREHENSIVE ARCHITECTURAL REPORT) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 696.8899999999999864 m
+549.2799999999999727 696.8899999999999864 l
+S
+BT
+/F1 8.5 Tf
+9.7749999999999986 TL
+0.804 0.863 0.941 rg
+46. 676.8899999999999864 Td
+(Target Domain: Indian District & Taluka Courts | National Judicial Data Grid \(NJDG\) Synergy) Tj
+ET
+BT
+/F1 8.5 Tf
+9.7749999999999986 TL
+0.804 0.863 0.941 rg
+46. 661.8899999999999864 Td
+(Fullstack SSR Architecture: React 19 + TanStack Start + Nitro Engine + Supabase PostgreSQL) Tj
+ET
+BT
+/F1 8.5 Tf
+9.7749999999999986 TL
+0.804 0.863 0.941 rg
+46. 646.8899999999999864 Td
+(Audience: Software Engineers, Academic Evaluators, Court Administrators & Judicial Officers) Tj
+ET
+0.96 0.97 0.98 rg
+49. 576.8899999999999864 m
+546.2799999999999727 576.8899999999999864 l
+547.9368542494923986 576.8899999999999864 549.2799999999999727 575.5468542494922985 549.2799999999999727 573.8899999999999864 c
+549.2799999999999727 500.8899999999999864 l
+549.2799999999999727 499.2331457505076173 547.6231457505075468 497.8899999999999864 546.2799999999999727 497.8899999999999864 c
+49. 497.8899999999999864 l
+47.3431457505076168 497.8899999999999864 46. 499.5468542494923554 46. 500.8899999999999864 c
+46. 573.8899999999999864 l
+46. 575.5468542494922985 47.6568542494923832 576.8899999999999864 49. 576.8899999999999864 c
+h
+f
+0.67 0.47 0.14 RG
+1.5 w
+46. 576.8899999999999864 m
+46. 497.8899999999999864 l
+S
+BT
+/F2 9.5 Tf
+10.9249999999999989 TL
+0.09 0.165 0.306 rg
+56. 562.8899999999999864 Td
+(EXECUTIVE SUMMARY & DOCUMENT INTENT) Tj
+ET
+BT
+/F1 8.5 Tf
+9.7749999999999986 TL
+0.137 0.157 0.188 rg
+56. 550.8899999999999864 Td
+(NyayaSetu is an enterprise-grade judicial infrastructure platform engineered to eliminate scheduling bottlenecks, advocate) Tj
+ET
+BT
+/F1 8.5 Tf
+9.7749999999999986 TL
+0.137 0.157 0.188 rg
+56. 539.8899999999999864 Td
+(double-bookings, and arbitrary hearing listings across Indian District and Taluka courts. Unlike opaque AI tools, NyayaSetu) Tj
+ET
+BT
+/F1 8.5 Tf
+9.7749999999999986 TL
+0.137 0.157 0.188 rg
+56. 528.8899999999999864 Td
+(introduces deterministic constraint-based mathematical optimization combined with explainable AI receipts, human-in-the-loop) Tj
+ET
+BT
+/F1 8.5 Tf
+9.7749999999999986 TL
+0.137 0.157 0.188 rg
+56. 517.8899999999999864 Td
+(registrar oversight, and multi-persona portals. This comprehensive document details the entire technical architecture, domain) Tj
+ET
+BT
+/F1 8.5 Tf
+9.7749999999999986 TL
+0.137 0.157 0.188 rg
+56. 506.8899999999999864 Td
+(logic, data models, and user journeys.) Tj
+ET
+BT
+/F2 11 Tf
+12.6499999999999986 TL
+0.09 0.165 0.306 rg
+46. 477.8899999999999864 Td
+(MASTER TABLE OF CONTENTS \(26-PART TECHNICAL SPECIFICATION\)) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+0.67 0.47 0.14 RG
+1.5 w
+0.09 0.16 0.31 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.09 0.16 0.31 rg
+46. 465.8899999999999864 147.6505091094840623 -17.1999999999999993 re
+B
+BT
+/F2 8 Tf
+9.1999999999999993 TL
+1. g
+50. 455.089999999999975 Td
+(Parts 1 to 9) Tj
+ET
+0.09 0.16 0.31 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.09 0.16 0.31 rg
+193.6505091094840623 465.8899999999999864 186.5555184743742529 -17.1999999999999993 re
+B
+BT
+/F2 8 Tf
+9.1999999999999993 TL
+1. g
+197.6505091094840623 455.089999999999975 Td
+(Parts 10 to 18) Tj
+ET
+0.09 0.16 0.31 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.09 0.16 0.31 rg
+380.2060275838583152 465.8899999999999864 169.0739724161416575 -17.1999999999999993 re
+B
+BT
+/F2 8 Tf
+9.1999999999999993 TL
+1. g
+384.2060275838583152 455.089999999999975 Td
+(Parts 19 to 26) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+46. 448.6899999999999977 147.6505091094840623 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 437.8899999999999864 Td
+(Part 1: Project Introduction) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+193.6505091094840623 448.6899999999999977 186.5555184743742529 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+197.6505091094840623 437.8899999999999864 Td
+(Part 10: Complete Data Flow) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+380.2060275838583152 448.6899999999999977 169.0739724161416575 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+384.2060275838583152 437.8899999999999864 Td
+(Part 19: Deployment Architecture) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+46. 431.4900000000000091 147.6505091094840623 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 420.6899999999999977 Td
+(Part 2: Project Story & Concept) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+193.6505091094840623 431.4900000000000091 186.5555184743742529 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+197.6505091094840623 420.6899999999999977 Td
+(Part 11: Backend API & Server Functions) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+380.2060275838583152 431.4900000000000091 169.0739724161416575 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+384.2060275838583152 420.6899999999999977 Td
+(Part 20: How Project Works Internally) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+46. 414.2900000000000205 147.6505091094840623 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 403.4900000000000091 Td
+(Part 3: Technology Stack Breakdown) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+193.6505091094840623 414.2900000000000205 186.5555184743742529 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+197.6505091094840623 403.4900000000000091 Td
+(Part 12: Database Schema & PostgreSQL RLS) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+380.2060275838583152 414.2900000000000205 169.0739724161416575 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+384.2060275838583152 403.4900000000000091 Td
+(Part 21: Code Architecture & Key Symbols) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+46. 397.0900000000000318 147.6505091094840623 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 386.2900000000000205 Td
+(Part 4: System Architecture & Tiers) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+193.6505091094840623 397.0900000000000318 186.5555184743742529 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+197.6505091094840623 386.2900000000000205 Td
+(Part 13: Authentication & Role Management) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+380.2060275838583152 397.0900000000000318 169.0739724161416575 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+384.2060275838583152 386.2900000000000205 Td
+(Part 22: Architectural Evolution & Choices) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+46. 379.8900000000000432 147.6505091094840623 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 369.0900000000000318 Td
+(Part 5: Project Folder & File Guide) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+193.6505091094840623 379.8900000000000432 186.5555184743742529 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+197.6505091094840623 369.0900000000000318 Td
+(Part 14: UI/UX & Judicial Design System) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+380.2060275838583152 379.8900000000000432 169.0739724161416575 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+384.2060275838583152 369.0900000000000318 Td
+(Part 23: System Strengths & Innovations) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+46. 362.6900000000000546 147.6505091094840623 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 351.8900000000000432 Td
+(Part 6: Complete Application Flow) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+193.6505091094840623 362.6900000000000546 186.5555184743742529 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+197.6505091094840623 351.8900000000000432 Td
+(Part 15: Detailed Persona User Journeys) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+380.2060275838583152 362.6900000000000546 169.0739724161416575 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+384.2060275838583152 351.8900000000000432 Td
+(Part 24: Current Limitations & Constraints) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+46. 345.4900000000000659 147.6505091094840623 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 334.6900000000000546 Td
+(Part 7: Screen & Route Catalog) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+193.6505091094840623 345.4900000000000659 186.5555184743742529 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+197.6505091094840623 334.6900000000000546 Td
+(Part 16: Business Logic & Priority Scoring) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+380.2060275838583152 345.4900000000000659 169.0739724161416575 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+384.2060275838583152 334.6900000000000546 Td
+(Part 25: Future Development Roadmap) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+46. 328.2900000000000773 147.6505091094840623 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 317.4900000000001228 Td
+(Part 8: Major Functional Features) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+193.6505091094840623 328.2900000000000773 186.5555184743742529 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+197.6505091094840623 317.4900000000001228 Td
+(Part 17: Integrations & External AI Gates) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+380.2060275838583152 328.2900000000000773 169.0739724161416575 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+384.2060275838583152 317.4900000000001228 Td
+(Part 26: Complete Executive Summary) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+46. 311.0900000000000318 147.6505091094840623 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 300.2900000000000773 Td
+(Part 9: Component Architecture) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+193.6505091094840623 311.0900000000000318 186.5555184743742529 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+197.6505091094840623 300.2900000000000773 Td
+(Part 18: Configuration & Environment) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+380.2060275838583152 311.0900000000000318 169.0739724161416575 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+384.2060275838583152 300.2900000000000773 Td
+(Official Project Appendix & Sign-Off) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+0.78 G
+0. w
+0.67 0.47 0.14 RG
+1.5 w
+0.67 0.47 0.14 RG
+1.5 w
+endstream
+endobj
+5 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 6 0 R
+>>
+endobj
+6 0 obj
+<<
+/Length 10014
+>>
+stream
+1.5 w
+0.67 0.47 0.14 RG
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+46. 805.8899999999999864 Td
+(NyayaSetu — Master Technical & System Documentation) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+354.8799999999999386 805.8899999999999864 Td
+(Indian Judiciary Smart Court Case Scheduling Platform) Tj
+ET
+0.84 0.87 0.9 RG
+0.5 w
+46. 799.8899999999999864 m
+549.2799999999999727 799.8899999999999864 l
+S
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 759.8899999999999864 Td
+(PART 1 — PROJECT INTRODUCTION) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 754.8899999999999864 m
+116. 754.8899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 740.8899999999999864 Td
+(Project Name: NyayaSetu \(Sanskrit: 'Bridge to Justice' / Court Scheduler Pro\).) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 723.3899999999999864 Td
+(Project Type: Fullstack Production-Grade Judicial Case Scheduling, Hearing Roster Management & Cause-List Optimization) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 711.8899999999999864 Td
+(Platform.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 694.3899999999999864 Td
+(Purpose: NyayaSetu addresses the staggering pendency crisis of over 4.5 crore \(45 million\) pending cases in the Indian) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 682.8899999999999864 Td
+(judicial system—where more than 85% reside in District and Taluka courts. The root operational bottleneck in district courts is) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 671.3899999999999864 Td
+(not merely a shortage of judges, but the archaic, manual, and arbitrary process of scheduling hearings and compiling the daily) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 659.8899999999999864 Td
+('cause list' \(the daily board of cases heard by a judge\).) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 642.3899999999999864 Td
+(Why This Problem Exists: Traditionally, court clerks \(peshkars/registrars\) manually list 100 to 150 cases per courtroom per day) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 630.8899999999999864 Td
+(using physical ledgers. This creates chronic advocate schedule clashes \(the same advocate being listed in 3 different) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 619.3899999999999864 Td
+(courtrooms simultaneously\), massive judge overwork, unpredictable courtroom allocation, and a persistent culture of repeated) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 607.8899999999999864 Td
+(adjournments. Litigants travel dozens of kilometers to court, only to discover their matter has been adjourned without being) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 596.3899999999999864 Td
+(heard.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 578.8899999999999864 Td
+(Target Personas: \(1\) Court Registrars & Administrative Staff who intake cases, assign hearings, and publish daily cause lists;) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 567.3899999999999864 Td
+(\(2\) Judicial Officers \(Judges\) who require clean, conflict-free daily boards with explainable listing rationale; \(3\) Litigants &) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 555.8899999999999864 Td
+(Advocates who require transparent, multilingual, mobile-friendly case tracking without intermediaries.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 538.3899999999999864 Td
+(Main Objectives: Enforce deterministic hard constraints \(preventing double-booking of judges, rooms, and advocates\); provide) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 526.8899999999999864 Td
+(explainable soft preference scoring \(prioritizing senior citizens, POCSO/FTSC cases, long-pending property disputes\); maintain) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 515.3899999999999864 Td
+(complete human-in-the-loop auditability; and offer transparent citizen access.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 497.8899999999999864 Td
+(What Makes It Different From a Basic Website: NyayaSetu is not a simple CRUD wrapper or form-filler. It implements a) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 486.3899999999999864 Td
+(multi-tier constraint satisfaction engine, predictive adjournment risk modeling, live what-if simulation for courtroom closures,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 474.8899999999999864 Td
+(and draft Regulation 9 compliance tracking for judicial AI oversight.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 441.3899999999999864 Td
+(PART 2 — PROJECT STORY / CONCEPT) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 436.3899999999999864 m
+116. 436.3899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 422.3899999999999864 Td
+(The Reality in District Courts: Imagine Shri Ramesh, a 71-year-old retired schoolteacher in a district in Maharashtra, fighting a) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 410.8899999999999864 Td
+(land boundary dispute since 2018. His hearing date is set manually every three months. On each date, he takes a morning bus) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 399.3899999999999864 Td
+(to the district court. Upon arrival, he finds his case is Item #94 on Courtroom 3's cause list. By 3:30 PM, the judge has only) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 387.8899999999999864 Td
+(been able to reach Item #32 due to time constraints, and Ramesh's matter is adjourned to another distant date without being) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 376.3899999999999864 Td
+(called.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 358.8899999999999864 Td
+(Simultaneously, Advocate Mehra represents Ramesh but also has urgent bail matters listed at the exact same hour in) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 347.3899999999999864 Td
+(Courtroom 1 and Courtroom 4. Because there is no cross-courtroom synchronization, Advocate Mehra is forced to send junior) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 335.8899999999999864 Td
+(proxy counsel to seek adjournments.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 318.3899999999999864 Td
+(How NyayaSetu Transforms This Journey: With NyayaSetu, the court registry no longer guesses sitting dates. When a case is) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 306.8899999999999864 Td
+(filed, the deterministic scheduling engine analyzes statutory priority tags \(POCSO, senior citizen, statutory limitation\), case) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 295.3899999999999864 Td
+(complexity, and historical durations. It evaluates open slots across judicial benches, verifies that neither the judge nor the) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 283.8899999999999864 Td
+(courtroom is double-booked, and ranks open slots based on judge specialization and workload balance.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 266.3899999999999864 Td
+(The registrar reviews the top-ranked recommendation, accompanied by an explicit 'Decision Receipt' explaining why that slot) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 254.8899999999999864 Td
+(was chosen. Once confirmed, a conflict-free daily cause list is generated. Ramesh receives SMS/portal visibility in Hindi,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 243.3899999999999864 Td
+(Marathi, or English, knowing his exact cause-list position and estimated reporting time.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 209.8899999999999864 Td
+(PART 3 — TECHNOLOGY STACK) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 204.8899999999999864 m
+116. 204.8899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 190.8899999999999864 Td
+(The application leverages modern web and edge infrastructure designed for maximum reliability and type safety:) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 173.3899999999999864 Td
+(•  React 19.2.0: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+111.3400000000000034 173.3899999999999864 Td
+(Core frontend component rendering library. Utilizes modern hook paradigms, transition management, and) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 161.8899999999999864 Td
+(concurrent features.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 147.3899999999999864 Td
+(•  TanStack Start & Router: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+161.0199999999999818 147.3899999999999864 Td
+(Fullstack SSR meta-framework and type-safe router. Powers isomorphic server functions under) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 135.8899999999999864 Td
+(src/lib/*.functions.ts and handles file-based routing with zero runtime route mismatches.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 121.3899999999999864 Td
+(•  Nitro Engine \(v3 beta\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+152.2900000000000205 121.3899999999999864 Td
+(High-performance universal server engine compiling to Cloudflare Workers edge module presets.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 106.8899999999999864 Td
+(•  Tailwind CSS v4.2.1: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+142.3000000000000114 106.8899999999999864 Td
+(Next-generation CSS engine using inline theme tokens and OKLCH color spaces tailored to a dignified) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 95.3899999999999864 Td
+(judicial aesthetic.) Tj
+ET
+endstream
+endobj
+7 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 8 0 R
+>>
+endobj
+8 0 obj
+<<
+/Length 6326
+>>
+stream
+1.5 w
+0.67 0.47 0.14 RG
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+46. 805.8899999999999864 Td
+(NyayaSetu — Master Technical & System Documentation) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+354.8799999999999386 805.8899999999999864 Td
+(Indian Judiciary Smart Court Case Scheduling Platform) Tj
+ET
+0.84 0.87 0.9 RG
+0.5 w
+46. 799.8899999999999864 m
+549.2799999999999727 799.8899999999999864 l
+S
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 775.8899999999999864 Td
+(•  Radix UI Primitives: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+140.9499999999999886 775.8899999999999864 Td
+(Accessible, unstyled UI primitives powering accessible Dialogs, Selects, Dropdowns, Tabs, and Sliders) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 764.3899999999999864 Td
+(with full keyboard navigation and ARIA tags.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 749.8899999999999864 Td
+(•  Supabase PostgreSQL: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+156.1599999999999682 749.8899999999999864 Td
+(Cloud database storing relational tables, enforced by Postgres Row Level Security \(RLS\) policies,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 738.3899999999999864 Td
+(database functions \(has_role\), and automated triggers.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 723.8899999999999864 Td
+(•  Google Gemini 3.5 Flash: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+164.5299999999999727 723.8899999999999864 Td
+(Primary multimodal LLM engine utilized inside the Registry Assistant panel to parse natural) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 712.3899999999999864 Td
+(language questions into database insights.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 697.8899999999999864 Td
+(•  Groq LLaMA 3.3 Failover: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+165.4300000000000068 697.8899999999999864 Td
+(Sub-second AI inference engine providing seamless backup if primary Gemini API quotas are) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 686.3899999999999864 Td
+(reached.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 671.8899999999999864 Td
+(•  Recharts & D3: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+120.8799999999999812 671.8899999999999864 Td
+(Powers interactive data visualizations for the Backlog Simulator, Pendency Projections, and Courtroom) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 660.3899999999999864 Td
+(Heatmaps.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 645.8899999999999864 Td
+(•  jsPDF & jspdf-autotable: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+160.75 645.8899999999999864 Td
+(Generates official, print-ready cause lists, compliance reports, and calendar schedules directly) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 634.3899999999999864 Td
+(within the browser.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 619.8899999999999864 Td
+(•  Zod & React Hook Form: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+161.9199999999999591 619.8899999999999864 Td
+(Validates case intake inputs, party records, and server function payloads with strict runtime) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 608.3899999999999864 Td
+(schema verification.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 577.8899999999999864 Td
+(PART 4 — SYSTEM ARCHITECTURE) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 572.8899999999999864 m
+116. 572.8899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 558.8899999999999864 Td
+(NyayaSetu is architected around a 5-tier fullstack architecture:) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 541.3899999999999864 Td
+(•  Tier 1: Client / Browser Presentation: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+213.3100000000000307 541.3899999999999864 Td
+(React 19 single-page client running TanStack Router, providing responsive) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 529.8899999999999864 Td
+(interfaces for Desktop, Tablet, and Mobile devices.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 515.3899999999999864 Td
+(•  Tier 2: Edge Routing & SSR Gateway: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+215.7400000000000091 515.3899999999999864 Td
+(Nitro server running on Cloudflare Workers edge runtime. Renders initial HTML) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 503.8899999999999864 Td
+(shells and dispatches isomorphic server functions.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 489.3899999999999864 Td
+(•  Tier 3: Isomorphic Server Functions: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+212.3199999999999932 489.3899999999999864 Td
+(Type-safe server actions created with createServerFn\({ method: 'POST' }\). Handles) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 477.8899999999999864 Td
+(authentication validation, input sanitization, rate-limiting, and AI gateway dispatch.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 463.3899999999999864 Td
+(•  Tier 4: Business Logic & Deterministic Engines: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+260.1100000000000136 463.3899999999999864 Td
+(Pure, side-effect-free algorithms \(scheduling.ts, priority.ts, conflicts.ts,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 451.8899999999999864 Td
+(simulation.ts\) that compute constraint satisfaction and scoring without cloud or model dependencies.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 437.3899999999999864 Td
+(•  Tier 5: Persistence & Security Layer: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+211.5099999999999909 437.3899999999999864 Td
+(Supabase PostgreSQL database with Row Level Security. Authenticated staff query) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 425.8899999999999864 Td
+(tables through scoped sessions; server admin operations utilize service-role clients.) Tj
+ET
+endstream
+endobj
+9 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 10 0 R
+>>
+endobj
+10 0 obj
+<<
+/Length 11233
+>>
+stream
+1.5 w
+0.67 0.47 0.14 RG
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+46. 805.8899999999999864 Td
+(NyayaSetu — Master Technical & System Documentation) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+354.8799999999999386 805.8899999999999864 Td
+(Indian Judiciary Smart Court Case Scheduling Platform) Tj
+ET
+0.84 0.87 0.9 RG
+0.5 w
+46. 799.8899999999999864 m
+549.2799999999999727 799.8899999999999864 l
+S
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 759.8899999999999864 Td
+(PART 5 — PROJECT FOLDER STRUCTURE) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 754.8899999999999864 m
+116. 754.8899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 740.8899999999999864 Td
+(The codebase follows a modular, feature-oriented structure:) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 723.3899999999999864 Td
+(•  src/routes/: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+105.4900000000000091 723.3899999999999864 Td
+(File-based routes managed by TanStack Router. Includes public routes \(__root.tsx, index.tsx, auth.tsx,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 711.8899999999999864 Td
+(case-status.tsx, setup-admin.tsx\) and authenticated routes under _authenticated/.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 697.3899999999999864 Td
+(•  src/routes/_authenticated/: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+171.1000000000000227 697.3899999999999864 Td
+(Protected workspace routes including dashboard.tsx, smart-scheduling.tsx, cause-list.tsx,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 685.8899999999999864 Td
+(bench.tsx, conflicts.tsx, what-if-simulation.tsx, backlog-simulator.tsx, governance.tsx, activity-log.tsx, reports.tsx, and) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 674.3899999999999864 Td
+(admin.tsx.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 659.8899999999999864 Td
+(•  src/lib/: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+88.6600000000000108 659.8899999999999864 Td
+(Domain logic core. Houses scheduling.ts \(the constraint engine\), priority.ts \(scoring equations\), holidays.ts \(court) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 648.3899999999999864 Td
+(calendar closures\), cases.ts, conflicts.ts, assistant.ts, and all *.functions.ts server endpoints.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 633.8899999999999864 Td
+(•  src/components/: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+131.4099999999999966 633.8899999999999864 Td
+(Reusable UI components. Contains app-sidebar.tsx, top-bar.tsx, case-scheduling-panel.tsx,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 622.3899999999999864 Td
+(recommendation-panel.tsx, why-this-order.tsx, confidence-bar.tsx, decision-receipt-card.tsx, and ui/ \(Radix wrappers\).) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 607.8899999999999864 Td
+(•  src/integrations/supabase/: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+173.1700000000000159 607.8899999999999864 Td
+(Database client factories. Houses client.ts \(browser client\), client.server.ts \(service-role admin) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 596.3899999999999864 Td
+(client\), auth-middleware.ts, and types.ts \(PostgreSQL schema types\).) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 581.8899999999999864 Td
+(•  supabase/: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+103.4200000000000017 581.8899999999999864 Td
+(Contains database setup scripts \(supabase_setup.sql\) and 23 historical migrations defining tables, triggers, and) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 570.3899999999999864 Td
+(RLS policies.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 539.8899999999999864 Td
+(PART 6 — COMPLETE APPLICATION FLOW) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 534.8899999999999864 m
+116. 534.8899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 520.8899999999999864 Td
+(When a user accesses NyayaSetu, the lifecycle proceeds through precise execution stages:) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 503.3899999999999864 Td
+(•  1. Request Initialization: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+159.3999999999999773 503.3899999999999864 Td
+(The client browser sends an HTTP request to the edge server. The Nitro engine intercepts the) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 491.8899999999999864 Td
+(request.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 477.3899999999999864 Td
+(•  2. Root Shell SSR: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+134.9200000000000159 477.3899999999999864 Td
+(src/routes/__root.tsx renders the root HTML document, injecting fonts, CSS stylesheets, and TanStack) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 465.8899999999999864 Td
+(Start hydration scripts.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 451.3899999999999864 Td
+(•  3. Client Route Resolution: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+171.3700000000000045 451.3899999999999864 Td
+(TanStack Router loads the route definition on the client. For protected routes \(_authenticated\),) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 439.8899999999999864 Td
+(beforeLoad executes in src/routes/_authenticated/route.tsx.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 425.3899999999999864 Td
+(•  4. Auth Guard & Scope Check: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+186.7600000000000193 425.3899999999999864 Td
+(beforeLoad queries supabase.auth.getSession\(\). If null, it throws a redirect to /auth. If the) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 413.8899999999999864 Td
+(user is a judicial officer, BenchScopeGuard ensures they are routed to /bench.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 399.3899999999999864 Td
+(•  5. TanStack Query Fetching: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+176.0499999999999829 399.3899999999999864 Td
+(Active routes execute prefetch queries \(e.g., casesQuery, schedulingDataQuery\). Cached) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 387.8899999999999864 Td
+(data renders instantly, while background fetches revalidate stale data.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 373.3899999999999864 Td
+(•  6. Algorithmic Execution: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+164.8899999999999864 373.3899999999999864 Td
+(When a registrar triggers scheduling, runSchedulingEngine\(\) executes in browser memory,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 361.8899999999999864 Td
+(running 1,000+ hard/soft constraint checks in < 5 milliseconds.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 347.3899999999999864 Td
+(•  7. Server Mutation & Audit: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+171.8199999999999648 347.3899999999999864 Td
+(The registrar confirms a listing. A TanStack server function writes the schedule to PostgreSQL) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 335.8899999999999864 Td
+(and creates an immutable audit log entry in audit_logs.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 305.3899999999999864 Td
+(PART 7 — EVERY PAGE & SCREEN IN THE APPLICATION) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 300.3899999999999864 m
+116. 300.3899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 286.3899999999999864 Td
+(NyayaSetu features 19 dedicated screens catering to specific judicial workflows:) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 268.8899999999999864 Td
+(•  1. Portal Choice Screen \(/\) : ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+173.2599999999999909 268.8899999999999864 Td
+(The public entry point allowing users to choose between Judicial Officer Sign-In, Registrar) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 257.3899999999999864 Td
+(Portal, or Public Case Lookup.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 242.8899999999999864 Td
+(•  2. Staff Authentication \(/auth\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+184.5999999999999943 242.8899999999999864 Td
+(Unified sign-in screen supporting Judge and Registrar roles with role-specific copy and) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 231.3899999999999864 Td
+(credential authentication.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 216.8899999999999864 Td
+(•  3. Public Case Status \(/case-status\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+210.25 216.8899999999999864 Td
+(Citizen portal allowing litigants to search by CNR or Case Number with multi-lingual) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 205.3899999999999864 Td
+(presentation \(English, Hindi, Marathi\) and cause-list position.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 190.8899999999999864 Td
+(•  4. Initial Admin Setup \(/setup-admin\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+215.289999999999992 190.8899999999999864 Td
+(One-time bootstrapping route allowing the creation of the primary administrative) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 179.3899999999999864 Td
+(authority when the system is initialized.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 164.8899999999999864 Td
+(•  5. Registry Dashboard \(/dashboard\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+211.5999999999999659 164.8899999999999864 Td
+(The central nerve center displaying key metrics: total pending cases, Tier 1 urgent) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 153.3899999999999864 Td
+(cases, courtroom utilization rates, and quick action shortcuts.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 138.8899999999999864 Td
+(•  6. Case Intake Form \(/cases/new\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+200.0800000000000125 138.8899999999999864 Td
+(Comprehensive 2,000+ line case filing workflow capturing acts, sections, parties,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 127.3899999999999864 Td
+(advocates, senior citizen flags, and predicted hearing durations.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 112.8899999999999864 Td
+(•  7. Case Docket View \(/cases/$caseId\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+216.5500000000000114 112.8899999999999864 Td
+(Deep dive into an individual case file, displaying filing timeline, priority score) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 101.3899999999999864 Td
+(breakdown, adjournment history, and case documents.) Tj
+ET
+endstream
+endobj
+11 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 12 0 R
+>>
+endobj
+12 0 obj
+<<
+/Length 6114
+>>
+stream
+1.5 w
+0.67 0.47 0.14 RG
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+46. 805.8899999999999864 Td
+(NyayaSetu — Master Technical & System Documentation) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+354.8799999999999386 805.8899999999999864 Td
+(Indian Judiciary Smart Court Case Scheduling Platform) Tj
+ET
+0.84 0.87 0.9 RG
+0.5 w
+46. 799.8899999999999864 m
+549.2799999999999727 799.8899999999999864 l
+S
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 775.8899999999999864 Td
+(•  8. Smart Scheduling Panel \(/smart-scheduling\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+257.9499999999999318 775.8899999999999864 Td
+(Core listing engine interface. Registrars select pending cases, review) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 764.3899999999999864 Td
+(algorithmically ranked hearing slots, and view explainability factor receipts.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 749.8899999999999864 Td
+(•  9. Daily Cause List \(/cause-list\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+191.0800000000000125 749.8899999999999864 Td
+(The court's official daily hearing board. Displays cases ordered by priority tier, supports) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 738.3899999999999864 Td
+(manual drag-and-drop re-ordering, and exports to official PDF.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 723.8899999999999864 Td
+(•  10. Judge Bench View \(/bench\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+190.4499999999999886 723.8899999999999864 Td
+(Personal judicial workbench for judges, showing their daily cause list, statutory rationale) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 712.3899999999999864 Td
+(for listing order, and courtroom workload ceiling.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 697.8899999999999864 Td
+(•  11. Conflict Detection \(/conflicts\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+199.0899999999999466 697.8899999999999864 Td
+(Quality-assurance dashboard flagging double-bookings, holiday closures, judge) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 686.3899999999999864 Td
+(unavailability, and courtroom duration clashes.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 671.8899999999999864 Td
+(•  12. What-If Simulation \(/what-if-simulation\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+240.3999999999999488 671.8899999999999864 Td
+(Predictive modeling tool allowing registrars to simulate judge absences or) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 660.3899999999999864 Td
+(courtroom repairs, previewing affected cases and automated re-assignments.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 645.8899999999999864 Td
+(•  13. Backlog Simulator \(/backlog-simulator\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+241.5699999999999648 645.8899999999999864 Td
+(Monte Carlo style 6-month and 12-month pendency projection tool comparing) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 634.3899999999999864 Td
+(FIFO listing against NyayaSetu's priority-based listing.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 619.8899999999999864 Td
+(•  14. Governance & Regulation 9 \(/governance\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+252.9099999999999966 619.8899999999999864 Td
+(Regulatory compliance module measuring recommendation acceptance) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 608.3899999999999864 Td
+(rates, manual overrides, and Tier 1 turnaround metrics for high court audits.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 593.8899999999999864 Td
+(•  15. Registry Activity Log \(/activity-log\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+222.4899999999999238 593.8899999999999864 Td
+(Cryptographic-style audit trail logging every case creation, schedule confirmation,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 582.3899999999999864 Td
+(manual override, and setting change.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 567.8899999999999864 Td
+(•  16. Registry Reports \(/reports\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+188.6500000000000057 567.8899999999999864 Td
+(Analytical reporting on case category distributions, judge workloads, courtroom utilization) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 556.3899999999999864 Td
+(rates, and disposal velocity.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 541.8899999999999864 Td
+(•  17. Priority Settings \(/priority-settings\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+223.0299999999999443 541.8899999999999864 Td
+(Administrative configuration panel allowing court chiefs to calibrate factor weights) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 530.3899999999999864 Td
+(\(case age, limitation, POCSO urgency, judge workload ceiling\).) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 515.8899999999999864 Td
+(•  18. Admin Control Panel \(/admin\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+200.8899999999999864 515.8899999999999864 Td
+(Staff management console for issuing registrar accounts, linking judges to judicial) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 504.3899999999999864 Td
+(benches, and revoking credentials.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 489.8899999999999864 Td
+(•  19. Courtroom & Judge Registries \(/courtrooms, /judges\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+302.0500000000000114 489.8899999999999864 Td
+(Master asset management for physical courtroom chambers,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 478.3899999999999864 Td
+(seating capacities, and judge bench specializations.) Tj
+ET
+endstream
+endobj
+13 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 14 0 R
+>>
+endobj
+14 0 obj
+<<
+/Length 9046
+>>
+stream
+0.5 w
+0.84 0.87 0.9 RG
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+46. 805.8899999999999864 Td
+(NyayaSetu — Master Technical & System Documentation) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+354.8799999999999386 805.8899999999999864 Td
+(Indian Judiciary Smart Court Case Scheduling Platform) Tj
+ET
+0.84 0.87 0.9 RG
+0.5 w
+46. 799.8899999999999864 m
+549.2799999999999727 799.8899999999999864 l
+S
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 759.8899999999999864 Td
+(PART 8 — MAJOR FUNCTIONAL FEATURES) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 754.8899999999999864 m
+116. 754.8899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 740.8899999999999864 Td
+(1. Deterministic Scheduling Engine \(Zero Hallucination\): Hard constraints \(judge unavailability, room bookings, court holidays\)) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 729.3899999999999864 Td
+(are solved as binary filters. Only valid slots advance to soft preference ranking \(specialization, workload, earliness\).) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 711.8899999999999864 Td
+(2. Multi-Factor Statutory Priority Scoring: Calculates a 0–100 priority score based on legal statutes: POCSO/FTSC \(+30 pts\),) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 700.3899999999999864 Td
+(Senior Citizen litigants \(+15 pts\), 14th Finance Commission 5-yr property disputes \(+20 pts\), and statutory limitation deadlines.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 682.8899999999999864 Td
+(3. Batch Cause List Optimizer: Solves whole-day board scheduling by grouping matters into procedural stages: Motion) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 671.3899999999999864 Td
+(hearings, Admission hearings, Evidence & Witness examination, and Final Arguments.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 653.8899999999999864 Td
+(4. Real-Time Conflict Detection Scanner: Continuously audits the database to surface hidden clashes before hearings take) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 642.3899999999999864 Td
+(place, preventing courtroom standstills.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 624.8899999999999864 Td
+(5. What-If Impact Simulator: Empowers court administrators to handle sudden emergencies \(e.g. judicial leave\) by testing) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 613.3899999999999864 Td
+(replacement judges and verifying that reallocated hearings do not violate courtroom capacity.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 595.8899999999999864 Td
+(6. Public Multilingual Transparency: Provides citizens with real-time access to case status, cause list sequence, and arrival) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 584.3899999999999864 Td
+(instructions in vernacular languages without requiring court visits.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 550.8899999999999864 Td
+(PART 9 — COMPONENT ARCHITECTURE) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 545.8899999999999864 m
+116. 545.8899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 531.8899999999999864 Td
+(The frontend is constructed using a high-cohesion, component-driven layout:) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 514.3899999999999864 Td
+(•  AppSidebar \(src/components/app-sidebar.tsx\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+256.3300000000000409 514.3899999999999864 Td
+(Responsive navigation rail providing persona-scoped navigation links, live) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 502.8899999999999864 Td
+(conflict badges, and institutional branding.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 488.3899999999999864 Td
+(•  TopBar \(src/components/top-bar.tsx\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+215.9199999999999591 488.3899999999999864 Td
+(Header bar housing global search, notifications bell with unread badges, language) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 476.8899999999999864 Td
+(selector \(EN/HI\), and staff profile menu.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 462.3899999999999864 Td
+(•  CaseSchedulingPanel & RecommendationPanel: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+263.8000000000000114 462.3899999999999864 Td
+(Core operational panels rendering candidate slot cards, confidence) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 450.8899999999999864 Td
+(progress bars, and soft-factor breakdown accordions.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 436.3899999999999864 Td
+(•  DecisionReceiptCard \(src/components/decision-receipt-card.tsx\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+335.8899999999999864 436.3899999999999864 Td
+(Visual receipt component showing the hard) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 424.8899999999999864 Td
+(constraints passed, soft factor weights, and timestamped registrar confirmation.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 410.3899999999999864 Td
+(•  AssistantPanel \(src/components/assistant-panel.tsx\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+284.4099999999999682 410.3899999999999864 Td
+(Slide-out drawer housing the registry AI assistant with Markdown) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 398.8899999999999864 Td
+(rendering, suggested prompts, and live database query responses.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 368.3899999999999864 Td
+(PART 10 — DATA FLOW) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 363.3899999999999864 m
+116. 363.3899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 349.3899999999999864 Td
+(Concrete Data Flow Example — Scheduling a Case:) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 331.8899999999999864 Td
+(1. User selects Case 'CRL/2026/0104' on /smart-scheduling.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 314.3899999999999864 Td
+(2. TanStack Query evaluates casesQuery and schedulingDataQuery \(fetching judges, courtrooms, slots, availability\).) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 296.8899999999999864 Td
+(3. runSchedulingEngine\(\) executes in the browser client, testing 3 judges × 4 rooms × 8 slots = 96 permutations.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 279.3899999999999864 Td
+(4. Hard constraint checks eliminate 82 invalid permutations; soft preference scoring ranks the top 14 candidates.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 261.8899999999999864 Td
+(5. User reviews Candidate #1 \(Judge Hon. K. Sharma, Courtroom 2, 10:30 AM\) and clicks 'Confirm Listing'.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 244.3899999999999864 Td
+(6. TanStack Server Function recordDecision\(\) executes a POST request with JWT authentication.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 226.8899999999999864 Td
+(7. Supabase inserts a confirmed schedule row into public.schedules and creates an audit record in public.audit_logs.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 209.3899999999999864 Td
+(8. QueryClient invalidates schedulesQuery; the UI re-renders, displaying the confirmed decision receipt.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 175.8899999999999864 Td
+(PART 11 — API & BACKEND EXPLANATION) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 170.8899999999999864 m
+116. 170.8899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 156.8899999999999864 Td
+(NyayaSetu leverages isomorphic server functions powered by @tanstack/react-start. Key endpoints include:) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 139.3899999999999864 Td
+(•  askRegistryAssistant \(src/lib/assistant.functions.ts\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+279.9999999999999432 139.3899999999999864 Td
+(POST endpoint accepting { question: string }. Sanitizes input,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 127.8899999999999864 Td
+(enforces rate-limiting, queries live registry stats, and streams Gemini/Groq responses.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 113.3899999999999864 Td
+(•  lookupCaseStatus \(src/lib/case-status.functions.ts\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+277.4799999999999613 113.3899999999999864 Td
+(Public POST endpoint validating { caseNumber: string } and) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 101.8899999999999864 Td
+(returning public hearing dates, courtroom numbers, and daily cause-list positions.) Tj
+ET
+endstream
+endobj
+15 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 16 0 R
+>>
+endobj
+16 0 obj
+<<
+/Length 1806
+>>
+stream
+1.5 w
+0.67 0.47 0.14 RG
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+46. 805.8899999999999864 Td
+(NyayaSetu — Master Technical & System Documentation) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+354.8799999999999386 805.8899999999999864 Td
+(Indian Judiciary Smart Court Case Scheduling Platform) Tj
+ET
+0.84 0.87 0.9 RG
+0.5 w
+46. 799.8899999999999864 m
+549.2799999999999727 799.8899999999999864 l
+S
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 775.8899999999999864 Td
+(•  createFirstAdmin \(src/lib/setup-admin.functions.ts\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+277.3899999999999295 775.8899999999999864 Td
+(One-time bootstrapping POST endpoint creating the initial) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 764.3899999999999864 Td
+(administrative authority with email and password.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 749.8899999999999864 Td
+(•  createRegistryAccount \(src/lib/admin-accounts.functions.ts\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+316.9899999999999523 749.8899999999999864 Td
+(Admin-only POST endpoint creating registrar and bench) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 738.3899999999999864 Td
+(credentials and linking judges to user accounts.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 723.8899999999999864 Td
+(•  translateCaseStatus \(src/lib/case-status-translate.functions.ts\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+325.5399999999999068 723.8899999999999864 Td
+(Translates case particulars and legal proceedings into) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 712.3899999999999864 Td
+(Hindi and Marathi using AI language models.) Tj
+ET
+endstream
+endobj
+17 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 18 0 R
+>>
+endobj
+18 0 obj
+<<
+/Length 11514
+>>
+stream
+0.5 w
+0.84 0.87 0.9 RG
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+46. 805.8899999999999864 Td
+(NyayaSetu — Master Technical & System Documentation) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+354.8799999999999386 805.8899999999999864 Td
+(Indian Judiciary Smart Court Case Scheduling Platform) Tj
+ET
+0.84 0.87 0.9 RG
+0.5 w
+46. 799.8899999999999864 m
+549.2799999999999727 799.8899999999999864 l
+S
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 759.8899999999999864 Td
+(PART 12 — DATABASE & DATA STORAGE) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 754.8899999999999864 m
+116. 754.8899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 740.8899999999999864 Td
+(NyayaSetu utilizes PostgreSQL managed via Supabase. Core relational schema:) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+0.67 0.47 0.14 RG
+1.5 w
+0.09 0.16 0.31 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.09 0.16 0.31 rg
+46. 723.3899999999999864 105.572197871008143 -17.1999999999999993 re
+B
+BT
+/F2 8 Tf
+9.1999999999999993 TL
+1. g
+50. 712.5899999999999181 Td
+(Table Name) Tj
+ET
+0.09 0.16 0.31 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.09 0.16 0.31 rg
+151.572197871008143 723.3899999999999864 397.7078021289918297 -17.1999999999999993 re
+B
+BT
+/F2 8 Tf
+9.1999999999999993 TL
+1. g
+155.572197871008143 712.5899999999999181 Td
+(Primary Columns & Attributes) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+46. 706.1900000000000546 105.572197871008143 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 695.3899999999999864 Td
+(cases) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+151.572197871008143 706.1900000000000546 397.7078021289918297 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+155.572197871008143 695.3899999999999864 Td
+(id, case_number, category_id, filing_date, status, parties, priority_score, priority_tier) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+46. 688.9900000000000091 105.572197871008143 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 678.1900000000000546 Td
+(judges) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+151.572197871008143 688.9900000000000091 397.7078021289918297 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+155.572197871008143 678.1900000000000546 Td
+(id, name, specialisation, current_workload, user_id) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+46. 671.7899999999999636 105.572197871008143 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 660.9900000000000091 Td
+(courtrooms) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+151.572197871008143 671.7899999999999636 397.7078021289918297 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+155.572197871008143 660.9900000000000091 Td
+(id, name, capacity, type, current_allocation) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+46. 654.5900000000000318 105.572197871008143 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 643.7899999999999636 Td
+(hearing_slots) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+151.572197871008143 654.5900000000000318 397.7078021289918297 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+155.572197871008143 643.7899999999999636 Td
+(id, date, start_time, end_time) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+46. 637.3900000000001 105.572197871008143 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 626.5900000000000318 Td
+(schedules) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+151.572197871008143 637.3900000000001 397.7078021289918297 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+155.572197871008143 626.5900000000000318 Td
+(id, case_id, judge_id, courtroom_id, slot_id, status, cause_list_position) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+46. 620.1900000000000546 105.572197871008143 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 609.3900000000001 Td
+(case_categories) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+151.572197871008143 620.1900000000000546 397.7078021289918297 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+155.572197871008143 609.3900000000001 Td
+(id, name, typical_duration_minutes) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+46. 602.9900000000000091 105.572197871008143 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 592.1900000000000546 Td
+(priority_settings) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+151.572197871008143 602.9900000000000091 397.7078021289918297 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+155.572197871008143 592.1900000000000546 Td
+(id, weights \(jsonb\), max_judge_workload, limitation_threshold_days) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+46. 585.7900000000000773 105.572197871008143 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 574.9900000000000091 Td
+(audit_logs) Tj
+ET
+1. g
+0.84 0.87 0.9 RG
+0.5 w
+1. g
+151.572197871008143 585.7900000000000773 397.7078021289918297 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+155.572197871008143 574.9900000000000091 Td
+(id, user_id, action, entity_type, entity_id, details \(jsonb\), timestamp) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+46. 568.5900000000001455 105.572197871008143 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+50. 557.7900000000000773 Td
+(profiles & user_roles) Tj
+ET
+0.98 0.98 0.99 rg
+0.84 0.87 0.9 RG
+0.5 w
+0.98 0.98 0.99 rg
+151.572197871008143 568.5900000000001455 397.7078021289918297 -17.1999999999999993 re
+B
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.137 0.157 0.188 rg
+155.572197871008143 557.7900000000000773 Td
+(id, full_name, role \('admin' | 'registrar' | 'judge'\)) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+0.78 G
+0. w
+0.67 0.47 0.14 RG
+1.5 w
+0.67 0.47 0.14 RG
+1.5 w
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 539.3900000000001 Td
+(Row Level Security \(RLS\) is enabled across all tables. Staff can view registry tables, administrators have full write permissions,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 527.8900000000001 Td
+(and judicial officers are scoped to their bench records.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 494.3900000000001 Td
+(PART 13 — AUTHENTICATION & USER MANAGEMENT) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 489.3900000000001 m
+116. 489.3900000000001 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 475.3900000000001 Td
+(Authentication is managed via Supabase Auth with JSON Web Tokens \(JWT\):) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 457.8900000000001 Td
+(•  Public Registration: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+141.3999999999999773 457.8900000000001 Td
+(Disabled by design. Court personnel cannot self-register; credentials are provisioned by registry) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 446.3900000000001 Td
+(administrators.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 431.8900000000001 Td
+(•  Session Persistence: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+146.6200000000000045 431.8900000000001 Td
+(Client sessions persist securely in browser storage. State changes trigger onAuthStateChange,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 420.3900000000001 Td
+(synchronizing query cache invalidation.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 405.8900000000001 Td
+(•  Role-Based Access Control: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+177.1299999999999955 405.8900000000001 Td
+(Enforced via user_roles table and the has_role\(uid, role\) database function. Evaluated on) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 394.3900000000001 Td
+(both client routes and server function middleware.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 363.8900000000001 Td
+(PART 14 — UI/UX & JUDICIAL DESIGN SYSTEM) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 358.8900000000001 m
+116. 358.8900000000001 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 344.8900000000001 Td
+(Design Philosophy: A dignified, authoritative, paper-inspired visual aesthetic designed for high data density, long working) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 333.3900000000001 Td
+(hours, and zero eye fatigue.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 315.8900000000001 Td
+(•  Color Tokens \(OKLCH\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+155.8000000000000114 315.8900000000001 Td
+(Ink Navy \(oklch\(0.24 0.058 255\)\) for authority, Muted Brass \(oklch\(0.67 0.075 84\)\) for judicial) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 304.3900000000001 Td
+(accents, and Parchment \(oklch\(0.973 0.008 92\)\) for calm readability.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 289.8900000000001 Td
+(•  Typography: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+110.0799999999999983 289.8900000000001 Td
+(IBM Plex Sans paired with tabular figures \(tabular-nums\), ensuring case numbers, CNR numbers, and hearing) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 278.3900000000001 Td
+(times align perfectly across tables.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 263.8900000000001 Td
+(•  Accessibility: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+114.4000000000000057 263.8900000000001 Td
+(Adheres to WCAG 2.1 AA standards. High contrast ratios \(11.4:1 on primary text\), explicit form label bindings,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 252.3900000000001 Td
+(and visible keyboard focus rings.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 221.8900000000001 Td
+(PART 15 — DETAILED USER JOURNEYS) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 216.8900000000001 m
+116. 216.8900000000001 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 202.8900000000001 Td
+(Journey 1: Court Registrar Morning Workflow:) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 185.3900000000001 Td
+(1. Registrar signs in at /auth with official email. Dashboard displays 14 pending cases and 2 detected conflicts.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 167.8900000000001 Td
+(2. Registrar navigates to /conflicts, identifies a double-booked courtroom, and resolves it.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 150.3900000000001 Td
+(3. Registrar opens /smart-scheduling, runs the engine on newly filed POCSO matters, and accepts top recommendations.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 132.8900000000001 Td
+(4. Registrar navigates to /cause-list, reviews the daily board, fine-tunes slot order, and publishes the official PDF.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 115.3900000000001 Td
+(Journey 2: Judicial Officer Bench Workflow:) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 97.8900000000001 Td
+(1. Judge logs in and is automatically routed to /bench.) Tj
+ET
+endstream
+endobj
+19 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 20 0 R
+>>
+endobj
+20 0 obj
+<<
+/Length 2085
+>>
+stream
+1.5 w
+0.67 0.47 0.14 RG
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+46. 805.8899999999999864 Td
+(NyayaSetu — Master Technical & System Documentation) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+354.8799999999999386 805.8899999999999864 Td
+(Indian Judiciary Smart Court Case Scheduling Platform) Tj
+ET
+0.84 0.87 0.9 RG
+0.5 w
+46. 799.8899999999999864 m
+549.2799999999999727 799.8899999999999864 l
+S
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+46. 775.8899999999999864 Td
+(2. Judge reviews today's 25 listed cases, viewing the legal factors behind the listing order via 'Why This Order'.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 758.3899999999999864 Td
+(3. Judge uses the Custom Judicial Schedule modal to block out afternoon chamber hours for judgment writing.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 724.8899999999999864 Td
+(PART 16 — BUSINESS LOGIC & PRIORITY SCORING) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 719.8899999999999864 m
+116. 719.8899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 705.8899999999999864 Td
+(Deterministic Scoring Equations:) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 688.3899999999999864 Td
+(Priority Score P = min\(100, Sum\(Weight_i * Ratio_i\)\), where factors include: Case Age \(30%\), Mandated Fast-Track Category) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 676.8899999999999864 Td
+(\(30%\), Senior Citizen Litigant \(15%\), Limitation Urgency \(15%\), and Adjournment Count \(10%\).) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 659.3899999999999864 Td
+(Soft Preference Fit S = W_spec * SpecMatch + W_work * \(1 - WorkloadRatio\) + W_util * \(1 - RoomLoadRatio\) + W_early *) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 647.8899999999999864 Td
+(Earliness.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 630.3899999999999864 Td
+(Deterministic Confidence Score = 15 \(Base Hard Filter Clearance\) + 85 * Normalized Soft Fit.) Tj
+ET
+endstream
+endobj
+21 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 22 0 R
+>>
+endobj
+22 0 obj
+<<
+/Length 9252
+>>
+stream
+1.5 w
+0.67 0.47 0.14 RG
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+46. 805.8899999999999864 Td
+(NyayaSetu — Master Technical & System Documentation) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+354.8799999999999386 805.8899999999999864 Td
+(Indian Judiciary Smart Court Case Scheduling Platform) Tj
+ET
+0.84 0.87 0.9 RG
+0.5 w
+46. 799.8899999999999864 m
+549.2799999999999727 799.8899999999999864 l
+S
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 759.8899999999999864 Td
+(PART 17 — THIRD-PARTY SERVICES & INTEGRATIONS) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 754.8899999999999864 m
+116. 754.8899999999999864 l
+S
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 740.8899999999999864 Td
+(•  Supabase Cloud: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+129.8799999999999955 740.8899999999999864 Td
+(Provides PostgreSQL database hosting, authentication engine, and row-level authorization.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 726.3899999999999864 Td
+(•  Google Gemini API: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+141.1299999999999955 726.3899999999999864 Td
+(Powers conversational natural-language queries inside the Registry Assistant panel.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 711.8899999999999864 Td
+(•  Groq Cloud: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+109.1800000000000068 711.8899999999999864 Td
+(Ultra-fast Llama-3 inference serving as a secondary failover engine for the AI assistant.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 681.3899999999999864 Td
+(PART 18 — CONFIGURATION & ENVIRONMENT) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 676.3899999999999864 m
+116. 676.3899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 662.3899999999999864 Td
+(Configuration files define fullstack operation without exposing private secrets:) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 644.8899999999999864 Td
+(•  vite.config.ts: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+114.9400000000000119 644.8899999999999864 Td
+(Configures Vite plugins \(@tanstack/react-start/plugin/vite, nitro/vite, tailwindcss\) and SSR server entry points.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 630.3899999999999864 Td
+(•  tsconfig.json: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+115.4800000000000182 630.3899999999999864 Td
+(Enforces strict TypeScript compilation, ESNext module resolution, and path aliases \(@/* -> ./src/*\).) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 615.8899999999999864 Td
+(•  .env & Environment Variables: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+185.5000000000000284 615.8899999999999864 Td
+(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, SUPABASE_SERVICE_ROLE_KEY,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 604.3899999999999864 Td
+(GEMINI_API_KEY, and GROQ_API_KEY.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 573.8899999999999864 Td
+(PART 19 — DEPLOYMENT ARCHITECTURE) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 568.8899999999999864 m
+116. 568.8899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 554.8899999999999864 Td
+(NyayaSetu is deployed as a universal edge service on Cloudflare Workers utilizing Nitro:) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 537.3899999999999864 Td
+(•  Build Pipeline: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+119.0800000000000125 537.3899999999999864 Td
+(npm run build executes vite build followed by node scripts/patch-ssr-circular.mjs, generating .output/server/) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 525.8899999999999864 Td
+(and .output/public/.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 511.3899999999999864 Td
+(•  Edge Hosting: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+117.460000000000008 511.3899999999999864 Td
+(Nitro compiles server handlers into Cloudflare Worker format, enabling sub-50ms cold starts across global) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 499.8899999999999864 Td
+(edge nodes.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 485.3899999999999864 Td
+(•  Static Assets: ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+115.75 485.3899999999999864 Td
+(Public assets \(fonts, icons, compiled JS/CSS\) are served via Cloudflare edge cache with immutable cache) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 473.8899999999999864 Td
+(headers.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 443.3899999999999864 Td
+(PART 20 — HOW THE PROJECT WORKS INTERNALLY) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 438.3899999999999864 m
+116. 438.3899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 424.3899999999999864 Td
+(Detailed Internal Execution Trace: Running Smart Scheduling:) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 406.8899999999999864 Td
+(1. User clicks 'Run Scheduling Engine' on src/routes/_authenticated/smart-scheduling.tsx.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 389.3899999999999864 Td
+(2. Event handler triggers runSchedulingEngine\(targetCase, engineData\).) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 371.8899999999999864 Td
+(3. Function loops through slots. For each slot, it queries checkCourtHoliday\(slot.date\). If true, increments holidayClosure) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 360.3899999999999864 Td
+(rejection count.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 342.8899999999999864 Td
+(4. Checks isEntityUnavailable\(\) against judges and courtrooms. If unavailable, increments judgeUnavailable count.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 325.3899999999999864 Td
+(5. Checks existing active schedules. If a booking exists for that judge or room on that date and time, increments booked count.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 307.8899999999999864 Td
+(6. Surviving candidates are evaluated by scoreCombo\(\). Calculates specialisationMatch\(judge, category\), judge workload ratio,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 296.3899999999999864 Td
+(and courtroom utilization ratio.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 278.8899999999999864 Td
+(7. Output object EngineResult containing ranked candidates, rejection counts, and blockedCandidate fallback is returned.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 261.3899999999999864 Td
+(8. React component sets result state; UI displays the top candidate with confidence bar and factor breakdown.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 227.8899999999999864 Td
+(PART 21 — CORE CODE SYMBOLS & ARCHITECTURE) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 222.8899999999999864 m
+116. 222.8899999999999864 l
+S
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 208.8899999999999864 Td
+(•  runSchedulingEngine\(\) \(src/lib/scheduling.ts\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+253.539999999999992 208.8899999999999864 Td
+(Deterministic constraint satisfaction solver. Evaluates 7 hard constraints) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 197.3899999999999864 Td
+(and 4 soft preference dimensions.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 182.8899999999999864 Td
+(•  recomputeCasePriority\(\) \(src/lib/priority.ts\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+242.289999999999992 182.8899999999999864 Td
+(Calculates mathematical priority scores and assigns Tier 1, Tier 2, or Tier 3) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 171.3899999999999864 Td
+(status to cases.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 156.8899999999999864 Td
+(•  scanSystemConflicts\(\) \(src/lib/conflicts.ts\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+240.7599999999999625 156.8899999999999864 Td
+(Audits live database schedules to identify booking clashes and workload) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 145.3899999999999864 Td
+(breaches.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 130.8899999999999864 Td
+(•  queryLLM\(\) \(src/lib/ai.server.ts\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+193.1500000000000057 130.8899999999999864 Td
+(Dual-engine AI interface routing queries across Gemini 3.5 Flash and Groq LLaMA 3.3.) Tj
+ET
+BT
+/F2 9 Tf
+10.3499999999999996 TL
+0.09 0.165 0.306 rg
+46. 116.3899999999999864 Td
+(•  useCurrentStaff\(\) \(src/hooks/use-current-staff.ts\): ) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+267.9399999999999409 116.3899999999999864 Td
+(Custom React hook providing reactive authenticated staff role, judge) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+58. 104.8899999999999864 Td
+(link, and permission sets.) Tj
+ET
+endstream
+endobj
+23 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/MediaBox [0 0 595.2799999999999727 841.8899999999999864]
+/Contents 24 0 R
+>>
+endobj
+24 0 obj
+<<
+/Length 6061
+>>
+stream
+1.5 w
+0.67 0.47 0.14 RG
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+46. 805.8899999999999864 Td
+(NyayaSetu — Master Technical & System Documentation) Tj
+ET
+BT
+/F1 8 Tf
+9.1999999999999993 TL
+0.392 0.431 0.49 rg
+354.8799999999999386 805.8899999999999864 Td
+(Indian Judiciary Smart Court Case Scheduling Platform) Tj
+ET
+0.84 0.87 0.9 RG
+0.5 w
+46. 799.8899999999999864 m
+549.2799999999999727 799.8899999999999864 l
+S
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 759.8899999999999864 Td
+(PART 22 — ARCHITECTURAL EVOLUTION & CHOICES) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 754.8899999999999864 m
+116. 754.8899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 740.8899999999999864 Td
+(1. Why Deterministic Engine over Pure LLM: Early prototypes explored using LLMs to schedule cases. This was rejected) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 729.3899999999999864 Td
+(because judicial scheduling requires zero hallucinations, mathematical proof of no double-booking, and compliance with court) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 717.8899999999999864 Td
+(procedural codes.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 700.3899999999999864 Td
+(2. Why TanStack Start over Next.js: Selected for superior type-safe router contracts, isomorphic server functions, and native) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 688.8899999999999864 Td
+(integration with TanStack Query and Nitro edge compiling.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 655.3899999999999864 Td
+(PART 23 — STRENGTHS OF THE PROJECT) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 650.3899999999999864 m
+116. 650.3899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 636.3899999999999864 Td
+(• Absolute Explainability: Every listing decision produces an explicit receipt documenting statutory weights.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 618.8899999999999864 Td
+(• Strict Constitutional Adherence: Protects judicial independence by keeping judges in control of their benches.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 601.3899999999999864 Td
+(• Real-World Legal Grounding: Models real Indian legal statutes \(BNS, POCSO, Senior Citizens Act, Limitation Act\).) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 583.8899999999999864 Td
+(• Flawless Type Safety: Zero compiler errors across 100+ source files under strict TypeScript.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 550.3899999999999864 Td
+(PART 24 — CURRENT LIMITATIONS) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 545.3899999999999864 m
+116. 545.3899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 531.3899999999999864 Td
+(• Lack of Automated Test Suite: Currently lacks Vitest or Playwright test suites.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 513.8899999999999864 Td
+(• Single Court Complex Model: Currently optimized for a single district court complex rather than multi-court federations.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 496.3899999999999864 Td
+(• CIS 3.0 API Dependency: Requires production API integration with the official eCourts Case Information System \(CIS\).) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 462.8899999999999864 Td
+(PART 25 — FUTURE ROADMAP) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 457.8899999999999864 m
+116. 457.8899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 443.8899999999999864 Td
+(Short-Term \(1–3 Months\): Integrate Vitest unit testing, configure automated CI/CD pipelines, and patch edge rate-limiting with) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 432.3899999999999864 Td
+(Upstash Redis.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 414.8899999999999864 Td
+(Medium-Term \(3–6 Months\): Direct integration with eCourts CIS 3.0 APIs, lawyer schedule synchronization across district) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 403.3899999999999864 Td
+(benches, and automated SMS/WhatsApp hearing alerts.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 385.8899999999999864 Td
+(Long-Term \(6–12 Months\): Nationwide NJDG interoperability, state-wide high court analytics dashboards, and automated) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 374.3899999999999864 Td
+(translation across all 22 official Indian languages.) Tj
+ET
+BT
+/F2 14 Tf
+16.0999999999999979 TL
+0.09 0.165 0.306 rg
+46. 340.8899999999999864 Td
+(PART 26 — COMPLETE EXECUTIVE SUMMARY) Tj
+ET
+0.67 0.47 0.14 RG
+1.5 w
+46. 335.8899999999999864 m
+116. 335.8899999999999864 l
+S
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 321.8899999999999864 Td
+(NyayaSetu \(Court Scheduler Pro\) represents a paradigm shift in judicial administration technology. By combining rigorous,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 310.3899999999999864 Td
+(deterministic constraint-satisfaction algorithms with human-in-the-loop oversight and accessible, multi-lingual citizen portals,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 298.8899999999999864 Td
+(NyayaSetu solves the root operational cause of court delays in India.) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 281.3899999999999864 Td
+(Engineered on React 19, TanStack Start, Nitro, and Supabase PostgreSQL, the system eliminates courtroom double-bookings,) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 269.8899999999999864 Td
+(balances judicial workloads, and provides explainable, statutory priority ranking. It bridges the gap between complex legal) Tj
+ET
+BT
+/F1 9 Tf
+10.3499999999999996 TL
+0.137 0.157 0.188 rg
+46. 258.3899999999999864 Td
+(administration and citizen access to justice, serving as a scalable, production-ready foundation for the future of digital justice.) Tj
+ET
+endstream
+endobj
+1 0 obj
+<</Type /Pages
+/Kids [3 0 R 5 0 R 7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R 19 0 R 21 0 R 23 0 R ]
+/Count 11
+>>
+endobj
+25 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+26 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+27 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+28 0 obj
+<<
+/Type /Font
+/BaseFont /Helvetica-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+29 0 obj
+<<
+/Type /Font
+/BaseFont /Courier
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+30 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+31 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-Oblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+32 0 obj
+<<
+/Type /Font
+/BaseFont /Courier-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+33 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Roman
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+34 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+35 0 obj
+<<
+/Type /Font
+/BaseFont /Times-Italic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+36 0 obj
+<<
+/Type /Font
+/BaseFont /Times-BoldItalic
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+37 0 obj
+<<
+/Type /Font
+/BaseFont /ZapfDingbats
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+38 0 obj
+<<
+/Type /Font
+/BaseFont /Symbol
+/Subtype /Type1
+/FirstChar 32
+/LastChar 255
+>>
+endobj
+2 0 obj
+<<
+/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
+/Font <<
+/F1 25 0 R
+/F2 26 0 R
+/F3 27 0 R
+/F4 28 0 R
+/F5 29 0 R
+/F6 30 0 R
+/F7 31 0 R
+/F8 32 0 R
+/F9 33 0 R
+/F10 34 0 R
+/F11 35 0 R
+/F12 36 0 R
+/F13 37 0 R
+/F14 38 0 R
+>>
+/XObject <<
+>>
+>>
+endobj
+39 0 obj
+<<
+/Producer (jsPDF 4.2.1)
+/CreationDate (D:20260905193927+05'30')
+>>
+endobj
+40 0 obj
+<<
+/Type /Catalog
+/Pages 1 0 R
+/OpenAction [3 0 R /FitH null]
+/PageLayout /OneColumn
+>>
+endobj
+xref
+0 41
+0000000000 65535 f 
+0000086923 00000 n 
+0000088813 00000 n 
+0000000015 00000 n 
+0000000152 00000 n 
+0000011556 00000 n 
+0000011693 00000 n 
+0000021760 00000 n 
+0000021897 00000 n 
+0000028275 00000 n 
+0000028413 00000 n 
+0000039700 00000 n 
+0000039839 00000 n 
+0000046006 00000 n 
+0000046145 00000 n 
+0000055244 00000 n 
+0000055383 00000 n 
+0000057242 00000 n 
+0000057381 00000 n 
+0000068949 00000 n 
+0000069088 00000 n 
+0000071226 00000 n 
+0000071365 00000 n 
+0000080670 00000 n 
+0000080809 00000 n 
+0000087048 00000 n 
+0000087174 00000 n 
+0000087305 00000 n 
+0000087439 00000 n 
+0000087577 00000 n 
+0000087701 00000 n 
+0000087830 00000 n 
+0000087962 00000 n 
+0000088098 00000 n 
+0000088226 00000 n 
+0000088353 00000 n 
+0000088482 00000 n 
+0000088615 00000 n 
+0000088717 00000 n 
+0000089066 00000 n 
+0000089152 00000 n 
+trailer
+<<
+/Size 41
+/Root 40 0 R
+/Info 39 0 R
+/ID [ <E899461D958D4313F209760A497F1342> <E899461D958D4313F209760A497F1342> ]
+>>
+startxref
+89256
+%%EOF

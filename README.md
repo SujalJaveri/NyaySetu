@@ -96,7 +96,7 @@ Generates balanced daily cause lists organized into judicial sitting stages:
 ---
 
 ### 10. 💬 AI Registry Copilot (NLP Q&A)
-- Natural language query assistant powered by multi-tier fallback (**Gemini 3.5 Flash → Groq LLaMA 3.3 → OpenAI**).
+- Natural language query assistant powered by resilient dual-tier engine (**Google Gemini 3.5 Flash → Groq LLaMA 3.3**).
 - Answers registry questions regarding caseload, judge capacity, conflict resolution, and procedural rules.
 
 ---

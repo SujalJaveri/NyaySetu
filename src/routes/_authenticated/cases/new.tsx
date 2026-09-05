@@ -687,7 +687,7 @@ function RegisterCasePage() {
 
   /* ---------------- FORM VALIDATION ---------------- */
 
-  const validateForm = (): boolean => {
+  const validateForm = (): { isValid: boolean; errors: Record<string, string> } => {
     const errors: Record<string, string> = {};
 
     if (!filingDate) errors["filingDate"] = "Filing date is required.";
@@ -723,18 +723,19 @@ function RegisterCasePage() {
     });
 
     setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
+    return { isValid: Object.keys(errors).length === 0, errors };
   };
 
   /* ---------------- REGISTRATION MUTATION ---------------- */
 
   const create = useMutation({
     mutationFn: async () => {
-      if (!validateForm()) {
-        const errorKeys = Object.keys(validationErrors);
+      const { isValid, errors } = validateForm();
+      if (!isValid) {
+        const errorKeys = Object.keys(errors);
         const firstKey = errorKeys[0];
         const errorMsg = firstKey
-          ? validationErrors[firstKey]
+          ? errors[firstKey]
           : "Please fill in all required fields accurately.";
         throw new Error(errorMsg);
       }
