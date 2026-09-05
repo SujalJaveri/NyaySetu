@@ -60,14 +60,14 @@ export async function queryLLM(messages: ChatMessage[]): Promise<string | null> 
   const groqKey = getEnvVar("GROQ_API_KEY");
   const openaiKey = getEnvVar("OPENAI_API_KEY") || getEnvVar("AI_GATEWAY_API_KEY");
 
-  // 1. Google Gemini API (Primary — Powered by Gemini 3.5 Flash)
+  // 1. Google Gemini API (Primary — Fast Low-Latency Flash Models)
   if (geminiKey) {
     const candidateModels = [
-      getEnvVar("GEMINI_MODEL") || "gemini-2.0-flash",
-      "gemini-2.0-flash",
-      "gemini-1.5-flash",
-      "gemini-2.5-flash",
-      "gemini-2.0-flash-lite",
+      getEnvVar("GEMINI_MODEL") || "gemini-flash-lite-latest",
+      "gemini-flash-lite-latest",
+      "gemini-3.5-flash-lite",
+      "gemini-flash-latest",
+      "gemini-3.5-flash",
     ].filter(Boolean) as string[];
 
     const systemInstruction = messages.find((m) => m.role === "system")?.content;
@@ -95,7 +95,7 @@ export async function queryLLM(messages: ChatMessage[]): Promise<string | null> 
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
-          signal: AbortSignal.timeout(8000),
+          signal: AbortSignal.timeout(3500),
         });
 
         if (res.ok) {
@@ -120,12 +120,14 @@ export async function queryLLM(messages: ChatMessage[]): Promise<string | null> 
     }
   }
 
-  // 2. Groq Ultra-Fast Backup (High Performance Fallback)
+  // 2. Groq Ultra-Fast Backup (High Performance Fallback — 500ms response)
   if (groqKey) {
     const groqModels = [
+      "openai/gpt-oss-20b",
+      "openai/gpt-oss-120b",
+      "groq/compound-mini",
+      "qwen/qwen3.6-27b",
       "llama-3.3-70b-versatile",
-      "llama-3.1-8b-instant",
-      "mixtral-8x7b-32768",
     ];
 
     for (const model of groqModels) {
@@ -141,7 +143,7 @@ export async function queryLLM(messages: ChatMessage[]): Promise<string | null> 
             messages,
             max_tokens: 512,
           }),
-          signal: AbortSignal.timeout(10000),
+          signal: AbortSignal.timeout(5000),
         });
 
         if (res.ok) {

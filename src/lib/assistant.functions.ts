@@ -11,6 +11,25 @@ import { fetchConflictData, scanSystemConflicts } from "@/lib/conflicts";
 
 const Input = z.object({ question: z.string().min(1).max(500) });
 
+type SnapshotData = {
+  timestamp: number;
+  pendingCasesCount: number;
+  tier1CasesCount: number;
+  activeCases: Array<{ case_number: string; cnr_number?: string; priority_score?: number; priority_tier?: string; case_categories?: { name: string } }>;
+  judgesList: Array<{ id: string; name: string; specialisation?: string; current_workload: number }>;
+  courtroomsList: Array<{ id: string; name: string; capacity: number }>;
+  upcomingSchedules: Array<{
+    cases?: { case_number?: string; parties?: string } | null;
+    judges?: { name?: string } | null;
+    courtrooms?: { name?: string } | null;
+    hearing_slots?: { date?: string; start_time: string; end_time: string } | null;
+  }>;
+  systemConflicts: Array<{ severity: string; title: string; message: string }>;
+  maxWorkload: number;
+};
+
+let cachedSnapshot: SnapshotData | null = null;
+
 export const askRegistryAssistant = createServerFn({ method: "POST" })
   .validator((data: unknown) => Input.parse(data))
   .handler(async ({ data }): Promise<AssistantAnswer> => {
@@ -35,70 +54,94 @@ export const askRegistryAssistant = createServerFn({ method: "POST" })
     // 3. Check if AI provider is available
     const hasAI =
       getEnvVar("CUSTOM_LLM_URL") ||
+      getEnvVar("GROQ_API_KEY") ||
       getEnvVar("OPENAI_API_KEY") ||
       getEnvVar("AI_GATEWAY_API_KEY") ||
       getEnvVar("GEMINI_API_KEY");
 
-    // 4. Fetch live database snapshot + run deterministic handler concurrently
+    // 4. Run deterministic keyword handler concurrently
+    const deterministicPromise = answerQuestion(data.question, supabaseAdmin);
+
+    // 5. Fetch or reuse cached 60-second registry snapshot
+    const now = Date.now();
+    let snapshot = cachedSnapshot;
     const todayStr = new Date().toISOString().slice(0, 10);
-    const [
-      casesRes,
-      allCasesCountRes,
-      tier1CountRes,
-      judgesRes,
-      courtroomsRes,
-      schedulesRes,
-      conflictsData,
-      settingsRes,
-      deterministicAnswer,
-    ] = await Promise.all([
-      supabaseAdmin
-        .from("cases")
-        .select(
-          "id, case_number, status, priority_score, priority_tier, filing_date, pending_duration_days, case_categories(name)",
-        )
-        .neq("status", "disposed")
-        .order("priority_score", { ascending: false })
-        .limit(30),
-      supabaseAdmin.from("cases").select("id", { count: "exact", head: true }).neq("status", "disposed"),
-      supabaseAdmin.from("cases").select("id", { count: "exact", head: true }).eq("priority_tier", "Tier 1").neq("status", "disposed"),
-      supabaseAdmin.from("judges").select("id, name, specialisation, current_workload"),
-      supabaseAdmin.from("courtrooms").select("id, name, capacity"),
-      supabaseAdmin
-        .from("schedules")
-        .select(
-          "id, status, judge_id, courtroom_id, cases(case_number, parties), hearing_slots!inner(date, start_time, end_time), judges(name), courtrooms(name)",
-        )
-        .in("status", ["proposed", "confirmed"])
-        .gte("hearing_slots.date", todayStr)
-        .order("hearing_slots(date)", { ascending: true })
-        .limit(60),
-      fetchConflictData(supabaseAdmin),
-      supabaseAdmin.from("priority_settings").select("max_judge_workload").limit(1).maybeSingle(),
-      // Run deterministic handler concurrently — no need to wait for DB snapshot first
-      answerQuestion(data.question, supabaseAdmin),
-    ]);
+
+    if (!snapshot || now - snapshot.timestamp > 60_000) {
+      const [
+        casesRes,
+        allCasesCountRes,
+        tier1CountRes,
+        judgesRes,
+        courtroomsRes,
+        schedulesRes,
+        conflictsData,
+        settingsRes,
+      ] = await Promise.all([
+        supabaseAdmin
+          .from("cases")
+          .select(
+            "id, case_number, status, priority_score, priority_tier, filing_date, pending_duration_days, case_categories(name)",
+          )
+          .neq("status", "disposed")
+          .order("priority_score", { ascending: false })
+          .limit(20),
+        supabaseAdmin.from("cases").select("id", { count: "exact", head: true }).neq("status", "disposed"),
+        supabaseAdmin.from("cases").select("id", { count: "exact", head: true }).eq("priority_tier", "Tier 1").neq("status", "disposed"),
+        supabaseAdmin.from("judges").select("id, name, specialisation, current_workload"),
+        supabaseAdmin.from("courtrooms").select("id, name, capacity"),
+        supabaseAdmin
+          .from("schedules")
+          .select(
+            "id, status, judge_id, courtroom_id, cases(case_number, parties), hearing_slots!inner(date, start_time, end_time), judges(name), courtrooms(name)",
+          )
+          .in("status", ["proposed", "confirmed"])
+          .gte("hearing_slots.date", todayStr)
+          .order("hearing_slots(date)", { ascending: true })
+          .limit(25),
+        fetchConflictData(supabaseAdmin),
+        supabaseAdmin.from("priority_settings").select("max_judge_workload").limit(1).maybeSingle(),
+      ]);
+
+      const systemConflicts = scanSystemConflicts(conflictsData);
+      const activeCases = (casesRes.data ?? []).map((c: { case_number: string; [key: string]: unknown }) => {
+        const numPart = (c.case_number || "0001").replace(/[^0-9]/g, "");
+        const seq = parseInt(numPart || "1", 10);
+        const prefix = (c.case_number || "").startsWith("CRL") ? "DLCT02" : "DLCT01";
+        const cnr = `${prefix}-${String(seq).padStart(6, "0")}-2026`;
+        return { ...c, cnr_number: cnr } as SnapshotData["activeCases"][number];
+      });
+
+      snapshot = {
+        timestamp: now,
+        pendingCasesCount: allCasesCountRes.count ?? 77,
+        tier1CasesCount: tier1CountRes.count ?? 33,
+        activeCases,
+        judgesList: judgesRes.data ?? [],
+        courtroomsList: courtroomsRes.data ?? [],
+        upcomingSchedules: (schedulesRes.data ?? []) as SnapshotData["upcomingSchedules"],
+        systemConflicts: systemConflicts.map((c) => ({ severity: c.severity, title: c.title, message: c.message })),
+        maxWorkload: settingsRes.data?.max_judge_workload ?? 25,
+      };
+      cachedSnapshot = snapshot;
+    }
+
+    const deterministicAnswer = await deterministicPromise;
 
     if (!hasAI) {
       return deterministicAnswer;
     }
 
-    const systemConflicts = scanSystemConflicts(conflictsData);
-    const pendingCasesCount = allCasesCountRes.count ?? 77;
-    const tier1CasesCount = tier1CountRes.count ?? 33;
-
-    const activeCases = (casesRes.data ?? []).map((c: { case_number: string; [key: string]: unknown }) => {
-      const numPart = (c.case_number || "0001").replace(/[^0-9]/g, "");
-      const seq = parseInt(numPart || "1", 10);
-      const prefix = (c.case_number || "").startsWith("CRL") ? "DLCT02" : "DLCT01";
-      const cnr = `${prefix}-${String(seq).padStart(6, "0")}-2026`;
-      return { ...c, cnr_number: cnr };
-    });
-
-    const judgesList = judgesRes.data ?? [];
-    const courtroomsList = courtroomsRes.data ?? [];
-    const upcomingSchedules = schedulesRes.data ?? [];
-    const maxWorkload = settingsRes.data?.max_judge_workload ?? 25;
+    const {
+      pendingCasesCount,
+      tier1CasesCount,
+      activeCases,
+      judgesList,
+      courtroomsList,
+      upcomingSchedules,
+      systemConflicts,
+      maxWorkload,
+    } = snapshot;
 
     try {
       const judgesSummary = judgesList
