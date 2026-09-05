@@ -14,7 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCurrentStaff } from "@/hooks/use-current-staff";
 import { prioritySettingsQuery } from "@/lib/priority";
 import { causeListQuery, formatSlotTime } from "@/lib/cause-list";
-import { formatSlot, isActive, schedulesQuery, MAX_JUDGE_WORKLOAD } from "@/lib/registry";
+import { formatSlot, isActive, judgesQuery, schedulesQuery, MAX_JUDGE_WORKLOAD } from "@/lib/registry";
 import { checkCourtHoliday } from "@/lib/holidays";
 import { casesQuery } from "@/lib/cases";
 import { PriorityBadge } from "@/components/priority-badge";
@@ -56,11 +56,19 @@ function BenchPage() {
 
   const settings = useQuery(prioritySettingsQuery);
   const schedules = useQuery(schedulesQuery);
+  const judges = useQuery(judgesQuery);
   const listing = useQuery(causeListQuery(date, settings.data ?? null));
   const cases = useQuery(casesQuery);
   const [pendingSearch, setPendingSearch] = useState("");
+  const [selectedJudgeId, setSelectedJudgeId] = useState<string>("");
 
-  const judgeId = staff.data?.judgeId ?? null;
+  const isAdmin = staff.data?.role === "admin";
+  const userJudgeId = staff.data?.judgeId ?? null;
+
+  // If the user is linked directly to a judge account, use that.
+  // If administrator or previewing, use the selected judge or default to the first judge.
+  const effectiveJudgeId = userJudgeId || selectedJudgeId || (judges.data?.[0]?.id ?? null);
+  const activeJudge = judges.data?.find((j) => j.id === effectiveJudgeId) ?? null;
 
   const pendingCases = useMemo(() => {
     return (cases.data ?? [])
@@ -77,8 +85,8 @@ function BenchPage() {
   }, [cases.data, pendingSearch]);
 
   const mine = useMemo(
-    () => (schedules.data ?? []).filter((s) => !judgeId || s.judge_id === judgeId),
-    [schedules.data, judgeId],
+    () => (schedules.data ?? []).filter((s) => !effectiveJudgeId || s.judge_id === effectiveJudgeId),
+    [schedules.data, effectiveJudgeId],
   );
 
   const active = mine.filter((s) => isActive(s.status));
@@ -97,12 +105,12 @@ function BenchPage() {
   const dayEntries = useMemo(
     () =>
       (listing.data ?? [])
-        .filter((e) => !judgeId || e.judgeId === judgeId)
+        .filter((e) => !effectiveJudgeId || e.judgeId === effectiveJudgeId)
         .sort(
           (a, b) =>
             (a.position ?? 999) - (b.position ?? 999) || a.startTime.localeCompare(b.startTime),
         ),
-    [listing.data, judgeId],
+    [listing.data, effectiveJudgeId],
   );
 
   const workloadPct = Math.min(100, Math.round((active.length / MAX_JUDGE_WORKLOAD) * 100));
@@ -114,13 +122,53 @@ function BenchPage() {
       <PageHeader
         title="My Bench"
         description={
-          staff.data?.judgeName
+          userJudgeId && staff.data?.judgeName
             ? `Listings, cause list and workload for ${staff.data.judgeName}.`
-            : "Listings, cause list and workload for your bench."
+            : activeJudge
+              ? `Administrator View: Listings, cause list and workload for ${activeJudge.name} (${activeJudge.specialisation}).`
+              : "Listings, cause list and workload for your bench."
         }
       />
 
-      {!judgeId && (
+      {isAdmin && !userJudgeId && (
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-primary/30 bg-primary/5 p-4">
+          <div className="flex items-center gap-3">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <Scale className="size-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-foreground text-sm">Administrator Bench Inspection</span>
+                <Badge variant="outline" className="border-primary/40 bg-primary/10 text-primary text-[10px]">
+                  Admin Preview
+                </Badge>
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Switch between judicial benches to preview any judge's live cause list, workload, and calendar.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Label htmlFor="judge-switcher" className="text-xs text-muted-foreground whitespace-nowrap">
+              Active Bench:
+            </Label>
+            <select
+              id="judge-switcher"
+              value={effectiveJudgeId ?? ""}
+              onChange={(e) => setSelectedJudgeId(e.target.value)}
+              className="h-9 rounded-md border border-input bg-background px-3 py-1 text-xs shadow-xs focus:ring-1 focus:ring-ring font-medium"
+            >
+              {judges.data?.map((j) => (
+                <option key={j.id} value={j.id}>
+                  {j.name} ({j.specialisation})
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
+
+      {!isAdmin && !userJudgeId && (
         <Card className="border-accent/40 bg-accent/40">
           <CardContent className="flex items-start gap-3 p-4 text-sm">
             <Info className="mt-0.5 size-4 shrink-0" />
@@ -346,7 +394,7 @@ function BenchPage() {
                     <div className="shrink-0 flex items-center gap-2">
                       <CustomJudicialScheduleModal
                         caseRow={c}
-                        preselectedJudgeId={judgeId ?? undefined}
+                        preselectedJudgeId={effectiveJudgeId ?? undefined}
                         triggerButton={
                           <Button size="sm" className="gap-1.5 text-xs">
                             <Scale className="size-3.5" />
