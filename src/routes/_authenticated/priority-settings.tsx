@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ShieldAlert } from "lucide-react";
@@ -467,17 +467,81 @@ function SchedulingWeightsCard({
   const cases = useQuery(casesQuery);
   const [sampleId, setSampleId] = useState("");
 
-  const pending = (cases.data ?? []).filter((c: CaseRow) =>
-    ["filed", "adjourned"].includes(c.status),
+  // Local state for immediate 60fps/120fps slider responsiveness
+  const [localWeights, setLocalWeights] = useState<SchedulingWeights>(weights);
+
+  // Sync if incoming weights change externally (e.g. initial fetch)
+  useEffect(() => {
+    setLocalWeights(weights);
+  }, [
+    weights.specialisation,
+    weights.workload,
+    weights.priority,
+    weights.utilisation,
+  ]);
+
+  // Debounce notification to parent form so dragging doesn't re-render the entire settings page on every frame
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const notifyParent = useCallback(
+    (next: SchedulingWeights) => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(() => {
+        onChange(next);
+      }, 150);
+    },
+    [onChange],
   );
-  const sample = pending.find((c) => c.id === sampleId) ?? pending[0] ?? null;
 
-  const preview =
-    sample && engineData.data
-      ? runSchedulingEngine(sample, { ...engineData.data, weights }).candidates.slice(0, 3)
-      : [];
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
 
-  const total = weights.specialisation + weights.workload + weights.priority + weights.utilisation;
+  const handleValueChange = (field: keyof SchedulingWeights, val: number) => {
+    const next = { ...localWeights, [field]: val };
+    setLocalWeights(next);
+    notifyParent(next);
+  };
+
+  const handleValueCommit = (field: keyof SchedulingWeights, val: number) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    const next = { ...localWeights, [field]: val };
+    setLocalWeights(next);
+    onChange(next);
+  };
+
+  // useDeferredValue keeps slider interaction silky smooth while recalculating preview in the background
+  const deferredWeights = useDeferredValue(localWeights);
+  const isRecalculating = deferredWeights !== localWeights;
+
+  const pending = useMemo(
+    () =>
+      (cases.data ?? []).filter((c: CaseRow) =>
+        ["filed", "adjourned"].includes(c.status),
+      ),
+    [cases.data],
+  );
+
+  const sample = useMemo(
+    () => pending.find((c) => c.id === sampleId) ?? pending[0] ?? null,
+    [pending, sampleId],
+  );
+
+  const preview = useMemo(() => {
+    if (!sample || !engineData.data) return [];
+    return runSchedulingEngine(sample, {
+      ...engineData.data,
+      weights: deferredWeights,
+    }).candidates.slice(0, 3);
+  }, [sample, engineData.data, deferredWeights]);
+
+  const total =
+    localWeights.specialisation +
+    localWeights.workload +
+    localWeights.priority +
+    localWeights.utilisation;
 
   return (
     <Card>
@@ -491,16 +555,17 @@ function SchedulingWeightsCard({
               <div className="flex items-baseline justify-between">
                 <Label>{field.label}</Label>
                 <span className="text-sm tabular-nums text-muted-foreground">
-                  {weights[field.key]} pts
+                  {localWeights[field.key]} pts
                 </span>
               </div>
               <Slider
-                value={[weights[field.key]]}
+                value={[localWeights[field.key]]}
                 min={0}
                 max={60}
                 step={1}
                 disabled={disabled}
-                onValueChange={([v]) => onChange({ ...weights, [field.key]: v })}
+                onValueChange={([v]) => handleValueChange(field.key, v ?? 0)}
+                onValueCommit={([v]) => handleValueCommit(field.key, v ?? 0)}
               />
               <p className="text-xs text-muted-foreground">{field.help}</p>
             </div>
@@ -538,7 +603,11 @@ function SchedulingWeightsCard({
               No valid combination for {sample.case_number} — every option fails a hard constraint.
             </p>
           ) : (
-            <ol className="space-y-3">
+            <ol
+              className={`space-y-3 transition-opacity duration-150 ${
+                isRecalculating ? "opacity-60" : "opacity-100"
+              }`}
+            >
               {preview.map((c, i) => (
                 <li key={c.key} className="rounded-md border border-border bg-card px-3 py-2">
                   <div className="flex items-baseline justify-between gap-2">
@@ -556,8 +625,9 @@ function SchedulingWeightsCard({
             </ol>
           )}
           <p className="text-xs text-muted-foreground">
-            Re-ranked instantly in this preview. Save to apply the weights across Smart Scheduling,
-            case listing and What-If Simulation.
+            {isRecalculating
+              ? "Recalculating preview ranking…"
+              : "Re-ranked instantly in this preview. Save to apply the weights across Smart Scheduling, case listing and What-If Simulation."}
           </p>
         </div>
       </CardContent>

@@ -208,6 +208,64 @@ export function runSchedulingEngine(target: CaseRow, data: EngineData): EngineRe
       roomBookings.set(s.courtroom_id, (roomBookings.get(s.courtroom_id) ?? 0) + 1);
   const busiestRoom = Math.max(1, ...[...roomBookings.values(), 1]);
 
+  // 1. Availability lookup set: entity_type:entity_id:slot_id
+  const unavailableLookup = new Set<string>();
+  for (const row of data.availability) {
+    if (row.status === "unavailable") {
+      unavailableLookup.add(`${row.entity_type}:${row.entity_id}:${row.slot_id}`);
+    }
+  }
+
+  // 2. Precompute active occupied slot ids
+  const takenSlots = new Set<string>();
+  for (const s of active) {
+    if (s.slot_id && s.cases?.id !== target.id) {
+      takenSlots.add(s.slot_id);
+    }
+  }
+
+  // 3. Pre-index active schedules by date with integer minute ranges
+  type ActiveInterval = {
+    judge_id: string | null;
+    courtroom_id: string | null;
+    startMin: number;
+    endMin: number;
+  };
+  const activeIntervalsByDate = new Map<string, ActiveInterval[]>();
+  for (const s of active) {
+    if (!s.hearing_slots) continue;
+    const date = s.hearing_slots.date;
+    let list = activeIntervalsByDate.get(date);
+    if (!list) {
+      list = [];
+      activeIntervalsByDate.set(date, list);
+    }
+    list.push({
+      judge_id: s.judge_id,
+      courtroom_id: s.courtroom_id,
+      startMin: toMinutes(s.hearing_slots.start_time),
+      endMin: toMinutes(s.hearing_slots.end_time),
+    });
+  }
+
+  // 4. Precompute judge soft-factor matches and workload ratios
+  const judgeMatches = new Map<string, number>();
+  const judgeWorkloadRatios = new Map<string, number>();
+  for (const judge of data.judges) {
+    judgeMatches.set(judge.id, specialisationMatch(judge, categoryName));
+    judgeWorkloadRatios.set(
+      judge.id,
+      1 - Math.min(1, judge.current_workload / MAX_JUDGE_WORKLOAD),
+    );
+  }
+
+  // 5. Precompute courtroom utilisation
+  const courtroomUtilisations = new Map<string, number>();
+  for (const courtroom of data.courtrooms) {
+    const roomLoad = roomBookings.get(courtroom.id) ?? 0;
+    courtroomUtilisations.set(courtroom.id, 1 - roomLoad / busiestRoom);
+  }
+
   const candidates: Candidate[] = [];
   let blocked: BlockedCandidate | null = null;
   let evaluated = 0;
@@ -219,11 +277,14 @@ export function runSchedulingEngine(target: CaseRow, data: EngineData): EngineRe
     slot: Slot,
     slotIndex: number,
   ): SoftFactor[] => {
-    const match = specialisationMatch(judge, categoryName);
-    const workloadRatio = 1 - Math.min(1, judge.current_workload / MAX_JUDGE_WORKLOAD);
+    const match = judgeMatches.get(judge.id) ?? specialisationMatch(judge, categoryName);
+    const workloadRatio =
+      judgeWorkloadRatios.get(judge.id) ??
+      1 - Math.min(1, judge.current_workload / MAX_JUDGE_WORKLOAD);
     const earliness = 1 - slotIndex / lastIndex;
     const roomLoad = roomBookings.get(courtroom.id) ?? 0;
-    const utilisation = 1 - roomLoad / busiestRoom;
+    const utilisation =
+      courtroomUtilisations.get(courtroom.id) ?? (1 - roomLoad / busiestRoom);
 
     return [
       {
@@ -256,7 +317,7 @@ export function runSchedulingEngine(target: CaseRow, data: EngineData): EngineRe
       {
         key: "utilisation",
         label: "Courtroom utilisation",
-        detail: `${roomBookings.get(courtroom.id) ?? 0} existing bookings in ${courtroom.name}`,
+        detail: `${roomLoad} existing bookings in ${courtroom.name}`,
         weight: weights.utilisation,
         points: round1(weights.utilisation * utilisation),
       },
@@ -284,25 +345,50 @@ export function runSchedulingEngine(target: CaseRow, data: EngineData): EngineRe
       return;
     }
 
+    const slotStartMin = toMinutes(slot.start_time);
+    const slotEndMin = toMinutes(slot.end_time);
+    const durationMin = slotEndMin - slotStartMin;
+
     // HARD CONSTRAINT 4 — the estimated hearing must fit inside the slot length.
-    if (duration > slotMinutes(slot)) {
+    if (duration > durationMin) {
       rejections.durationOverflow += data.judges.length * data.courtrooms.length;
       return;
     }
 
-    const slotTaken = active.some((s) => s.slot_id === slot.id && s.cases?.id !== target.id);
+    const slotTaken = takenSlots.has(slot.id);
+    const dayIntervals = activeIntervalsByDate.get(slot.date) ?? [];
+
+    // Precalculate courtroom status for this slot (availability and schedule clash)
+    const slotCourtroomStatus = data.courtrooms.map((courtroom) => {
+      const isUnavailable = unavailableLookup.has(`courtroom:${courtroom.id}:${slot.id}`);
+      const isBooked = dayIntervals.some(
+        (inv) =>
+          inv.courtroom_id === courtroom.id &&
+          inv.startMin < slotEndMin &&
+          slotStartMin < inv.endMin,
+      );
+      return {
+        courtroom,
+        isUnavailable,
+        isBooked,
+      };
+    });
 
     for (const judge of data.judges) {
       // HARD CONSTRAINT 5 — judge workload must stay within the configured threshold.
       if (judge.current_workload + 1 > data.maxJudgeWorkload) continue;
+
       // HARD CONSTRAINT 1 — judge availability.
-      const judgeFree = !isEntityUnavailable(data.availability, "judge", judge.id, slot);
+      const judgeFree = !unavailableLookup.has(`judge:${judge.id}:${slot.id}`);
+
       // HARD CONSTRAINT 3a — judge not already sitting in an overlapping hearing.
-      const judgeClash = active.some(
-        (s) => s.judge_id === judge.id && s.hearing_slots && overlaps(s.hearing_slots, slot),
+      const judgeClash = dayIntervals.some(
+        (inv) =>
+          inv.judge_id === judge.id && inv.startMin < slotEndMin && slotStartMin < inv.endMin,
       );
 
-      for (const courtroom of data.courtrooms) {
+      for (const sc of slotCourtroomStatus) {
+        const courtroom = sc.courtroom;
         evaluated += 1;
 
         if (!judgeFree) {
@@ -320,7 +406,7 @@ export function runSchedulingEngine(target: CaseRow, data: EngineData): EngineRe
           continue;
         }
         // HARD CONSTRAINT 2 — courtroom availability.
-        if (isEntityUnavailable(data.availability, "courtroom", courtroom.id, slot)) {
+        if (sc.isUnavailable) {
           rejections.courtroomUnavailable += 1;
           noteBlocked(judge, courtroom, slot, slotIndex, [
             `${courtroom.name} is marked unavailable for ${formatSlotLabel(slot)}.`,
@@ -328,12 +414,7 @@ export function runSchedulingEngine(target: CaseRow, data: EngineData): EngineRe
           continue;
         }
         // HARD CONSTRAINT 3b — courtroom not already occupied at an overlapping time.
-        if (
-          active.some(
-            (s) =>
-              s.courtroom_id === courtroom.id && s.hearing_slots && overlaps(s.hearing_slots, slot),
-          )
-        ) {
+        if (sc.isBooked) {
           rejections.courtroomBooked += 1;
           noteBlocked(judge, courtroom, slot, slotIndex, [
             `${courtroom.name} is already booked for an overlapping hearing at ${formatSlotLabel(slot)}.`,

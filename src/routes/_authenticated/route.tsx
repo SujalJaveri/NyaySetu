@@ -11,23 +11,45 @@ import { supabase } from "@/integrations/supabase/client";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { TopBar } from "@/components/top-bar";
+import { AssistantPanel } from "@/components/assistant-panel";
 import { useCurrentStaff } from "@/hooks/use-current-staff";
 import { LanguageProvider } from "@/lib/i18n";
+import { getOfflineStaffSession } from "@/lib/offline-auth";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) throw redirect({ to: "/auth" });
-    return { user: session.user };
+    let session = null;
+    try {
+      const res = await supabase.auth.getSession();
+      session = res.data.session;
+    } catch {
+      // Supabase network request failed or device is offline
+    }
+
+    if (session) {
+      return { user: session.user };
+    }
+
+    const offlineUser = getOfflineStaffSession();
+    if (offlineUser) {
+      return {
+        user: {
+          id: offlineUser.id,
+          email: offlineUser.email,
+          user_metadata: { full_name: offlineUser.fullName },
+        },
+      };
+    }
+
+    throw redirect({ to: "/auth" });
   },
   component: AuthenticatedLayout,
 });
 
 function AuthenticatedLayout() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
+  const { data: staff } = useCurrentStaff();
   // Tablet widths start with the rail collapsed so content keeps a usable measure.
   const defaultOpen = typeof window === "undefined" ? true : window.innerWidth >= 1024;
   return (
@@ -44,6 +66,7 @@ function AuthenticatedLayout() {
               </div>
             </main>
           </div>
+          {staff?.role !== "judge" && <AssistantPanel />}
         </div>
       </SidebarProvider>
     </LanguageProvider>

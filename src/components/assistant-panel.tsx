@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { FileSearch, Loader2, MessageSquareText, SendHorizonal } from "lucide-react";
+import { FileSearch, Loader2, MessageSquareText, SendHorizonal, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -93,9 +93,29 @@ export function AssistantPanel() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Registry Assistant">
-          <MessageSquareText className="size-4" />
-        </Button>
+        <button
+          type="button"
+          aria-label="Open AI Registry Copilot"
+          className={cn(
+            "fixed bottom-6 right-6 z-40",
+            "group flex items-center gap-2.5 rounded-full px-4 py-3 sm:px-4.5 sm:py-3.5",
+            "bg-primary text-primary-foreground font-semibold text-xs sm:text-sm",
+            "shadow-xl shadow-primary/25 border border-primary/20",
+            "hover:shadow-2xl hover:shadow-primary/35 hover:-translate-y-0.5 active:translate-y-0",
+            "transition-all duration-200 cursor-pointer select-none",
+            "focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+            open && "opacity-0 pointer-events-none",
+          )}
+        >
+          <div className="relative flex items-center justify-center">
+            <Sparkles className="size-4 text-amber-300 animate-pulse group-hover:rotate-12 transition-transform duration-300" />
+            <span className="absolute -top-1 -right-1 flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+          </div>
+          <span className="tracking-wide">AI Copilot</span>
+        </button>
       </SheetTrigger>
       <SheetContent
         side="right"

@@ -1,12 +1,19 @@
 import { useState } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { Loader2, Gavel, ClipboardList, ArrowLeft } from "lucide-react";
+import { Loader2, Gavel, ClipboardList, ArrowLeft, WifiOff, ShieldCheck } from "lucide-react";
+import { toast } from "sonner";
 
 import { BrandMark } from "@/components/brand-mark";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
+import { useNetworkStatus } from "@/lib/network-status";
+import {
+  authenticateOffline,
+  cacheStaffCredentialsLocally,
+  getOfflineStaffVault,
+} from "@/lib/offline-auth";
 
 type PortalRole = "judge" | "registrar";
 
@@ -58,6 +65,7 @@ function AuthPage() {
   const search = Route.useSearch();
   const role: PortalRole = search.role ?? "registrar";
   const copy = roleCopy[role];
+  const { isOnline } = useNetworkStatus();
 
   const RoleIcon = copy.icon;
   const [email, setEmail] = useState("");
@@ -69,29 +77,107 @@ function AuthPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    const { data, error: signInError } = await supabase.auth.signInWithPassword({
-      email: email.trim(),
-      password,
-    });
-    setLoading(false);
-    if (signInError || !data.user) {
-      setError("Invalid credentials. Contact your administrator if the issue persists.");
+
+    const cleanEmail = email.trim();
+
+    // 1. If currently offline, authenticate directly via the local cryptographic vault
+    if (!isOnline) {
+      const offlineRes = await authenticateOffline(cleanEmail, password);
+      setLoading(false);
+
+      if (offlineRes.success && offlineRes.account) {
+        toast.success("Offline Authentication Successful", {
+          description: `Logged in as ${offlineRes.account.fullName} (${offlineRes.account.role.toUpperCase()}) from local secure vault.`,
+          icon: <ShieldCheck className="size-4 text-amber-500" />,
+        });
+
+        const isJudge = offlineRes.account.role === "judge";
+        const isAdmin = offlineRes.account.role === "admin";
+        const wantsJudge = role === "judge";
+
+        if (isJudge || (isAdmin && wantsJudge)) {
+          navigate({ to: "/bench", replace: true });
+        } else {
+          navigate({ to: "/dashboard", replace: true });
+        }
+        return;
+      }
+
+      setError(offlineRes.error || "Offline login failed. Verify your email and password.");
       return;
     }
 
-    const { data: roles } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", data.user.id);
-    const isJudge = roles?.some((r) => r.role === "judge");
-    const isAdmin = roles?.some((r) => r.role === "admin");
-    const wantsJudge = role === "judge";
+    // 2. If online, attempt standard Supabase login
+    try {
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: cleanEmail,
+        password,
+      });
 
-    // If the account has the judge role OR is an administrator specifically accessing the Judge portal -> /bench
-    if (isJudge || (isAdmin && wantsJudge)) {
-      navigate({ to: "/bench", replace: true });
-    } else {
-      navigate({ to: "/dashboard", replace: true });
+      if (signInError || !data.user) {
+        // In case of a sudden network hiccup, fallback to offline vault check
+        if (signInError?.message?.includes("fetch") || signInError?.message?.includes("network")) {
+          const fallbackRes = await authenticateOffline(cleanEmail, password);
+          if (fallbackRes.success && fallbackRes.account) {
+            setLoading(false);
+            toast.warning("Network Unreachable — Logged in Offline", {
+              description: `Signed in as ${fallbackRes.account.fullName} using local cached credentials.`,
+            });
+            navigate({ to: fallbackRes.account.role === "judge" ? "/bench" : "/dashboard", replace: true });
+            return;
+          }
+        }
+
+        setLoading(false);
+        setError("Invalid credentials. Contact your administrator if the issue persists.");
+        return;
+      }
+
+      // Online login succeeded: retrieve roles & bench details
+      const [{ data: roles }, { data: profile }, { data: bench }] = await Promise.all([
+        supabase.from("user_roles").select("role").eq("user_id", data.user.id),
+        supabase.from("profiles").select("full_name").eq("id", data.user.id).maybeSingle(),
+        supabase.from("judges").select("id, name").eq("user_id", data.user.id).maybeSingle(),
+      ]);
+
+      const isJudge = roles?.some((r) => r.role === "judge");
+      const isAdmin = roles?.some((r) => r.role === "admin");
+      const computedRole: "admin" | "registrar" | "judge" = isAdmin
+        ? "admin"
+        : isJudge
+          ? "judge"
+          : "registrar";
+
+      // Cache salted password hash and profile locally so user can log in tomorrow without internet
+      await cacheStaffCredentialsLocally(
+        {
+          id: data.user.id,
+          email: cleanEmail,
+          fullName: profile?.full_name || cleanEmail.split("@")[0] || "Staff",
+          role: computedRole,
+          judgeId: bench?.id || null,
+          judgeName: bench?.name || null,
+        },
+        password,
+      );
+
+      setLoading(false);
+
+      const wantsJudge = role === "judge";
+      if (isJudge || (isAdmin && wantsJudge)) {
+        navigate({ to: "/bench", replace: true });
+      } else {
+        navigate({ to: "/dashboard", replace: true });
+      }
+    } catch (err) {
+      console.warn("Sign in encountered exception, trying offline vault fallback", err);
+      const fallbackRes = await authenticateOffline(cleanEmail, password);
+      setLoading(false);
+      if (fallbackRes.success && fallbackRes.account) {
+        navigate({ to: fallbackRes.account.role === "judge" ? "/bench" : "/dashboard", replace: true });
+        return;
+      }
+      setError("Unable to connect to court authentication. Please check credentials or network.");
     }
   }
 
@@ -159,6 +245,15 @@ function AuthPage() {
               </Link>
             ))}
           </div>
+
+          {!isOnline && (
+            <div className="mt-4 flex items-start gap-2 rounded-md border border-amber-500/30 bg-amber-500/10 p-2.5 text-xs text-amber-800 dark:text-amber-300">
+              <ShieldCheck className="size-4 shrink-0 text-amber-600 mt-0.5" />
+              <div>
+                <strong className="font-semibold">Offline Court Login:</strong> You can sign in without internet using your device's locally cached credentials.
+              </div>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             <div className="space-y-2">

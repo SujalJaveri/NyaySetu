@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>NyayaSetu - Court Registry Offline</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #090d16;
+        color: #f1f5f9;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        user-select: none;
+      }
+      .card {
+        background: #131b2e;
+        border: 1px solid #1e293b;
+        border-radius: 16px;
+        padding: 44px 36px;
+        max-width: 500px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(245, 158, 11, 0.12);
+        color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.28);
+        border-radius: 9999px;
+        padding: 5px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 20px;
+      }
+      h1 {
+        font-size: 22px;
+        font-weight: 700;
+        margin: 0 0 10px 0;
+        color: #f8fafc;
+        letter-spacing: -0.02em;
+      }
+      p {
+        font-size: 13.5px;
+        color: #94a3b8;
+        line-height: 1.6;
+        margin: 0 0 26px 0;
+      }
+      .btn {
+        background: #2563eb;
+        color: #ffffff;
+        border: none;
+        padding: 11px 26px;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+      }
+      .btn:hover {
+        background: #1d4ed8;
+      }
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .hint {
+        font-size: 11.5px;
+        color: #64748b;
+        margin-top: 22px;
+        margin-bottom: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="badge">⚖️ NyayaSetu Court Registry</div>
+      <h1>Connecting to Live Registry...</h1>
+      <p>
+        Cannot reach <strong>nyaysetu.sujal309206.workers.dev</strong> right now.
+        Please check your court Wi-Fi or internet connection.
+      </p>
+
+      <button class="btn" id="retryBtn" onclick="triggerRetry()">
+        <span>Retry Connection</span>
+      </button>
+
+      <p class="hint">The application will automatically connect as soon as internet is detected.</p>
+    </div>
+
+    <script>
+      function triggerRetry() {
+        const btn = document.getElementById("retryBtn");
+        btn.innerHTML = "<span>Connecting...</span>";
+        btn.disabled = true;
+        if (window.nyayasetuDesktop && window.nyayasetuDesktop.retryConnection) {
+          window.nyayasetuDesktop.retryConnection();
+        } else {
+          window.location.reload();
+        }
+      }
+
+      window.addEventListener("online", () => {
+        triggerRetry();
+      });
+    </script>
+  </body>
+</html>

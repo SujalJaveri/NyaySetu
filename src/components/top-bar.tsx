@@ -17,8 +17,8 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useCurrentStaff, roleLabel } from "@/hooks/use-current-staff";
 import { NotificationsBell } from "@/components/notifications-bell";
-import { AssistantPanel } from "@/components/assistant-panel";
 import { useLanguage } from "@/lib/i18n";
+import { NetworkBadge } from "@/components/network-badge";
 
 export function TopBar() {
   const { data: staff } = useCurrentStaff();
@@ -54,12 +54,8 @@ export function TopBar() {
       </div>
 
       <div className="ml-auto flex items-center gap-1 sm:gap-2">
-        {staff?.role !== "judge" && (
-          <>
-            <AssistantPanel />
-            <NotificationsBell />
-          </>
-        )}
+        <NetworkBadge />
+        {staff?.role !== "judge" && <NotificationsBell />}
 
         {/* Language toggle */}
         <button

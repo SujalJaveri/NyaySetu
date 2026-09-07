@@ -10,6 +10,11 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+dist-electron
+release
+*.exe
+*.asar
+*.blockmap
 .output
 .vinxi
 .tanstack/**

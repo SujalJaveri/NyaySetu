@@ -23,6 +23,11 @@ export default defineConfig(({ mode }) => {
       "process.env.OPENAI_API_KEY": JSON.stringify(env["OPENAI_API_KEY"] || ""),
       "process.env.GROQ_API_KEY": JSON.stringify(env["GROQ_API_KEY"] || ""),
     },
+    server: {
+      watch: {
+        ignored: ["**/dist-electron/**", "**/.output/**", "**/dist/**"],
+      },
+    },
     plugins: [
       tsconfigPaths(),
       tailwindcss(),
