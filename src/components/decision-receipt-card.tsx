@@ -61,10 +61,10 @@ export function DecisionReceiptCard({
       )}
     >
       {/* Header */}
-      <div className="border-b border-border bg-muted/40 px-5 py-3.5 flex flex-wrap items-center justify-between gap-3">
-        <div className="space-y-0.5">
+      <div className="border-b border-border bg-muted/40 px-4 sm:px-5 py-3 sm:py-3.5 flex flex-wrap items-center justify-between gap-3">
+        <div className="space-y-0.5 min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
-            <ShieldCheck className="size-3.5 text-primary" />
+            <ShieldCheck className="size-3.5 text-primary shrink-0" />
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               Deterministic Decision Receipt
             </p>
@@ -72,6 +72,11 @@ export function DecisionReceiptCard({
           <p className="text-sm font-bold text-foreground">
             {caseRow.case_number} · <span className="font-normal text-muted-foreground">{caseRow.case_categories?.name ?? "Uncategorised"}</span>
           </p>
+          {caseRow.parties && (
+            <p className="text-xs text-muted-foreground sm:hidden leading-snug">
+              {caseRow.parties}
+            </p>
+          )}
         </div>
         <div className="text-right shrink-0">
           <p className="text-2xl font-bold text-primary tabular-nums leading-none">
@@ -84,7 +89,7 @@ export function DecisionReceiptCard({
       </div>
 
       {/* Assignment strip */}
-      <div className="border-b border-border/70 bg-card/60 px-5 py-2.5 text-xs flex flex-wrap items-center justify-between gap-x-6 gap-y-1.5">
+      <div className="border-b border-border/70 bg-card/60 px-4 sm:px-5 py-2.5 text-xs flex flex-wrap items-center justify-between gap-x-6 gap-y-1.5">
         <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
           <span>
             <span className="text-muted-foreground">Presiding Bench:</span>{" "}

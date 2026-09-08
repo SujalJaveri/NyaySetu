@@ -137,7 +137,7 @@ export function RecommendationPanel({
               <span className="hidden sm:inline">Scheduling recommendation · top ranked</span>
             </Badge>
             <CardTitle className="text-base sm:text-lg truncate">{top.judge.name}</CardTitle>
-            <p className="mt-1 text-xs sm:text-sm text-muted-foreground truncate">
+            <p className="mt-1 text-xs sm:text-sm text-muted-foreground sm:truncate">
               {top.courtroom.name} · {formatSlotLabel(top.slot)}
             </p>
           </div>
@@ -145,6 +145,19 @@ export function RecommendationPanel({
             <p className="text-2xl font-bold text-foreground leading-none">{top.score}</p>
             <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">fit score / 100</p>
           </div>
+        </div>
+        {/* Case context for mobile view */}
+        <div className="sm:hidden rounded-md border border-border/70 bg-muted/30 p-2.5 text-xs space-y-1">
+          <div className="flex items-center justify-between gap-2">
+            <span className="font-bold text-foreground">{caseRow.case_number}</span>
+            <span className="text-[11px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded font-mono">
+              {caseRow.estimated_duration_minutes} min est.
+            </span>
+          </div>
+          <p className="text-[11px] text-muted-foreground leading-snug">
+            <span className="text-foreground font-medium">{caseRow.parties || "Parties on record"}</span>
+            {caseRow.case_categories?.name ? ` · ${caseRow.case_categories.name}` : ""}
+          </p>
         </div>
         <div className="flex items-start gap-2 rounded-md border border-border bg-muted/40 p-2.5 sm:p-3 text-xs text-muted-foreground">
           <UserCheck className="mt-0.5 size-4 shrink-0 text-primary" />

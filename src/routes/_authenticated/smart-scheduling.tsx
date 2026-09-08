@@ -214,16 +214,29 @@ function Page() {
               </Select>
 
               {selected && (
-                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 pt-1 text-xs text-muted-foreground">
-                  <PriorityBadge score={selected.priority_score} />
-                  <span className="inline-flex items-center gap-1 font-medium text-foreground bg-muted px-2 py-0.5 rounded">
-                    <Clock className="size-3 text-muted-foreground" />
-                    {selected.estimated_duration_minutes} min duration
-                  </span>
-                  <span className="inline-flex items-center rounded bg-muted/60 px-2 py-0.5 text-[11px] font-medium text-foreground">
-                    {selected.previous_adjournments} adjournment{selected.previous_adjournments !== 1 ? "s" : ""}
-                  </span>
-                  <span className="truncate max-w-full sm:max-w-md font-medium text-foreground">{selected.parties}</span>
+                <div className="rounded-md border border-border/60 bg-muted/20 p-2.5 sm:p-0 sm:border-0 sm:bg-transparent space-y-2 sm:space-y-0 pt-1">
+                  <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-xs text-muted-foreground">
+                    <PriorityBadge score={selected.priority_score} />
+                    <span className="inline-flex items-center gap-1 font-medium text-foreground bg-muted px-2 py-0.5 rounded text-[11px] sm:text-xs">
+                      <Clock className="size-3 text-muted-foreground" />
+                      {selected.estimated_duration_minutes} min duration
+                    </span>
+                    <span className="inline-flex items-center rounded bg-muted/60 px-2 py-0.5 text-[11px] font-medium text-foreground">
+                      {selected.previous_adjournments} adjournment{selected.previous_adjournments !== 1 ? "s" : ""}
+                    </span>
+                    <span className="hidden sm:inline truncate max-w-md font-medium text-foreground">{selected.parties}</span>
+                  </div>
+                  {/* Full Case Context visible on Mobile View */}
+                  <div className="sm:hidden text-xs space-y-1 pt-1 border-t border-border/40">
+                    <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                      <span>Category: <strong className="text-foreground">{selected.case_categories?.name ?? "Uncategorised"}</strong></span>
+                      <span className="font-mono">CNR: {selected.case_number}</span>
+                    </div>
+                    <p className="text-xs font-medium text-foreground leading-snug">
+                      <span className="text-muted-foreground font-normal">Parties: </span>
+                      {selected.parties || "Parties on record"}
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
@@ -461,7 +474,7 @@ function CandidateCard({
             </Badge>
           )}
           <CardTitle className="text-base truncate">{candidate.judge.name}</CardTitle>
-          <p className="mt-1 text-xs text-muted-foreground truncate">
+          <p className="mt-1 text-xs text-muted-foreground sm:truncate">
             {candidate.courtroom.name} · {formatSlotLabel(candidate.slot)}
           </p>
         </div>
