@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { AlertTriangle, Check, Loader2, Pencil, Sparkles, UserCheck, X } from "lucide-react";
+import { AlertTriangle, Check, Loader2, Pencil, Scale, Sparkles, UserCheck, X } from "lucide-react";
 import { explainSchedulingRecommendation } from "@/lib/explain-candidate.functions";
 
 import { Badge } from "@/components/ui/badge";
@@ -129,21 +129,24 @@ export function RecommendationPanel({
     <Card
       className={cn("registry-enter shadow-panel", outcome ? "border-border" : "border-primary/40")}
     >
-      <CardHeader className="space-y-3">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <Badge className="mb-2">Scheduling recommendation · top ranked</Badge>
-            <CardTitle className="text-base">{top.judge.name}</CardTitle>
-            <p className="mt-1 text-sm text-muted-foreground">
+      <CardHeader className="p-4 sm:p-6 space-y-3">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <Badge className="mb-2 text-[11px] sm:text-xs">
+              <span className="sm:hidden">Top Recommendation</span>
+              <span className="hidden sm:inline">Scheduling recommendation · top ranked</span>
+            </Badge>
+            <CardTitle className="text-base sm:text-lg truncate">{top.judge.name}</CardTitle>
+            <p className="mt-1 text-xs sm:text-sm text-muted-foreground truncate">
               {top.courtroom.name} · {formatSlotLabel(top.slot)}
             </p>
           </div>
-          <div className="text-right">
-            <p className="text-2xl font-semibold text-foreground">{top.score}</p>
-            <p className="text-xs text-muted-foreground">fit score / 100</p>
+          <div className="text-right shrink-0">
+            <p className="text-2xl font-bold text-foreground leading-none">{top.score}</p>
+            <p className="text-[10px] sm:text-xs text-muted-foreground mt-1">fit score / 100</p>
           </div>
         </div>
-        <div className="flex items-start gap-2 rounded-md border border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+        <div className="flex items-start gap-2 rounded-md border border-border bg-muted/40 p-2.5 sm:p-3 text-xs text-muted-foreground">
           <UserCheck className="mt-0.5 size-4 shrink-0 text-primary" />
           <span>
             <strong className="font-medium text-foreground">Decision support only.</strong> This is
@@ -154,18 +157,18 @@ export function RecommendationPanel({
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-5">
+      <CardContent className="p-4 sm:p-6 pt-0 space-y-4 sm:space-y-5">
         {/* AI Explain Recommendation */}
-        <div className="rounded-md border border-border bg-muted/30 p-3 space-y-2">
-          <div className="flex items-center justify-between">
+        <div className="rounded-md border border-border bg-muted/30 p-2.5 sm:p-3 space-y-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
-              <Sparkles className="size-3.5 text-gold animate-pulse" />
+              <Sparkles className="size-3.5 text-gold animate-pulse shrink-0" />
               AI Decision Support
             </span>
             <Button
               variant="outline"
               size="sm"
-              className="h-7 text-[11px] px-2.5"
+              className="h-7 text-[11px] px-2.5 shrink-0"
               onClick={handleAiExplain}
               disabled={loadingAi}
             >
@@ -203,16 +206,16 @@ export function RecommendationPanel({
         <div className="space-y-3 border-t border-border pt-4">
           {top.factors.map((f) => (
             <div key={f.key}>
-              <div className="flex items-baseline justify-between text-sm">
-                <span className="text-foreground">{f.label}</span>
-                <span className="text-muted-foreground">
+              <div className="flex items-baseline justify-between text-xs sm:text-sm">
+                <span className="text-foreground font-medium">{f.label}</span>
+                <span className="text-muted-foreground font-mono tabular-nums">
                   +{f.points} / {f.weight}
                 </span>
               </div>
               <Progress value={(f.points / f.weight) * 100} className="mt-1 h-1.5" />
             </div>
           ))}
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground leading-relaxed">
             Hard constraints passed — {caseRow.estimated_duration_minutes} min fits the{" "}
             {slotMinutes(top.slot)} min slot.
           </p>
@@ -239,7 +242,7 @@ export function RecommendationPanel({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="text-xs"
+                    className="text-xs w-full sm:w-auto"
                     onClick={() => {
                       setOutcome(null);
                       setRejectFlow(true);
@@ -260,7 +263,7 @@ export function RecommendationPanel({
             {blocked.length > 0 && (
               <div className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-3">
                 <p className="flex items-center gap-2 text-sm font-semibold text-destructive">
-                  <AlertTriangle className="size-4" />
+                  <AlertTriangle className="size-4 shrink-0" />
                   Action blocked — hard constraint violated
                 </p>
                 <ul className="mt-2 space-y-1 text-sm text-destructive">
@@ -279,10 +282,11 @@ export function RecommendationPanel({
                 message={`Your role (${staff.data ? roleLabel[staff.data.role] : "unknown"}) cannot accept, modify or reject a scheduling recommendation. Contact an administrator.`}
               />
             )}
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
               <Button
                 onClick={() => decide("accepted", top)}
                 disabled={busy !== null || !canDecide}
+                className="w-full sm:w-auto h-9 text-xs font-medium"
               >
                 {busy === "accepted" ? (
                   <Loader2 className="size-4 animate-spin" />
@@ -298,6 +302,7 @@ export function RecommendationPanel({
                   setRejectFlow(false);
                 }}
                 disabled={busy !== null || !canDecide || alternatives.length === 0}
+                className="w-full sm:w-auto h-9 text-xs font-medium"
               >
                 <Pencil className="size-4" />
                 Modify
@@ -305,6 +310,7 @@ export function RecommendationPanel({
               <Button
                 variant="outline"
                 className={cn(
+                  "w-full sm:w-auto h-9 text-xs font-medium",
                   rejectFlow && "border-destructive/60 bg-destructive/10 text-destructive",
                 )}
                 onClick={handleRejectClick}
@@ -319,6 +325,13 @@ export function RecommendationPanel({
               </Button>
               <CustomJudicialScheduleModal
                 caseRow={caseRow}
+                triggerButton={
+                  <Button variant="outline" className="w-full sm:w-auto h-9 gap-1.5 text-xs font-medium">
+                    <Scale className="size-3.5 text-primary shrink-0" />
+                    <span className="sm:hidden">Directive</span>
+                    <span className="hidden sm:inline">Custom / Directive</span>
+                  </Button>
+                }
                 onScheduled={() => {
                   setOutcome(null);
                 }}
@@ -327,11 +340,11 @@ export function RecommendationPanel({
 
             {/* Rejection Flow: Pick alternative OR confirm full rejection */}
             {rejectFlow && alternatives.length > 0 && (
-              <div className="rounded-md border border-destructive/30 bg-destructive/5 p-4 space-y-3">
+              <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 sm:p-4 space-y-3">
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <p className="text-sm font-semibold text-foreground flex items-center gap-1.5">
-                      <X className="size-4 text-destructive" />
+                      <X className="size-4 text-destructive shrink-0" />
                       Top suggestion rejected — Choose alternative option
                     </p>
                     <p className="text-xs text-muted-foreground mt-0.5">
@@ -353,18 +366,18 @@ export function RecommendationPanel({
                       )}
                       onClick={() => setPickedKey(c.key)}
                     >
-                      <RadioGroupItem value={c.key} id={`reject-${c.key}`} className="mt-0.5" />
+                      <RadioGroupItem value={c.key} id={`reject-${c.key}`} className="mt-0.5 shrink-0" />
                       <Label
                         htmlFor={`reject-${c.key}`}
-                        className="cursor-pointer text-sm font-normal leading-snug w-full"
+                        className="cursor-pointer text-sm font-normal leading-snug w-full min-w-0"
                       >
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium text-foreground">{c.judge.name}</span>
-                          <span className="text-xs font-semibold text-primary">
+                        <div className="flex flex-wrap items-center justify-between gap-1">
+                          <span className="font-medium text-foreground truncate">{c.judge.name}</span>
+                          <span className="text-xs font-semibold text-primary shrink-0">
                             fit score {c.score}/100
                           </span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-0.5">
+                        <p className="text-xs text-muted-foreground mt-0.5 truncate">
                           {c.courtroom.name} · {formatSlotLabel(c.slot)}
                         </p>
                       </Label>
@@ -372,9 +385,10 @@ export function RecommendationPanel({
                   ))}
                 </RadioGroup>
 
-                <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 pt-2 border-t border-border">
                   <Button
                     size="sm"
+                    className="w-full sm:w-auto"
                     disabled={busy !== null || !canDecide || !pickedKey}
                     onClick={() => {
                       const chosen = alternatives.find((c) => c.key === pickedKey);
@@ -391,7 +405,7 @@ export function RecommendationPanel({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                    className="w-full sm:w-auto text-destructive hover:bg-destructive/10 hover:text-destructive"
                     disabled={busy !== null || !canDecide}
                     onClick={() => decide("rejected", top)}
                   >
@@ -402,7 +416,7 @@ export function RecommendationPanel({
                     )}
                     Confirm Rejection (Leave Unscheduled)
                   </Button>
-                  <Button variant="ghost" size="sm" onClick={() => setRejectFlow(false)}>
+                  <Button variant="ghost" size="sm" className="w-full sm:w-auto" onClick={() => setRejectFlow(false)}>
                     Cancel
                   </Button>
                 </div>
@@ -427,18 +441,18 @@ export function RecommendationPanel({
                       )}
                       onClick={() => setPickedKey(c.key)}
                     >
-                      <RadioGroupItem value={c.key} id={`modify-${c.key}`} className="mt-0.5" />
+                      <RadioGroupItem value={c.key} id={`modify-${c.key}`} className="mt-0.5 shrink-0" />
                       <Label
                         htmlFor={`modify-${c.key}`}
-                        className="cursor-pointer text-sm font-normal leading-snug w-full"
+                        className="cursor-pointer text-sm font-normal leading-snug w-full min-w-0"
                       >
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium text-foreground">{c.judge.name}</span>
-                          <span className="text-xs font-semibold text-primary">
+                        <div className="flex flex-wrap items-center justify-between gap-1">
+                          <span className="font-medium text-foreground truncate">{c.judge.name}</span>
+                          <span className="text-xs font-semibold text-primary shrink-0">
                             fit score {c.score}/100
                           </span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-0.5">
+                        <p className="text-xs text-muted-foreground mt-0.5 truncate">
                           {c.courtroom.name} · {formatSlotLabel(c.slot)}
                         </p>
                       </Label>
@@ -446,7 +460,7 @@ export function RecommendationPanel({
                   ))}
                 </RadioGroup>
                 <Button
-                  className="mt-1"
+                  className="mt-1 w-full sm:w-auto"
                   size="sm"
                   disabled={busy !== null || !canDecide || !pickedKey}
                   onClick={() => {

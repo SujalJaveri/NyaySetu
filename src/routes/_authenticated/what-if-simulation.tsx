@@ -263,7 +263,7 @@ function Page() {
   const chosenCount = result ? result.affected.filter((a) => choices[a.scheduleId]).length : 0;
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-8 sm:py-10">
+    <div className="mx-auto w-full max-w-7xl px-4 py-7 sm:px-8 sm:py-9 space-y-6">
       <PageHeader
         eyebrow="Planning"
         title="What-If Simulation"
@@ -274,9 +274,10 @@ function Page() {
             size="sm"
             onClick={loadDemo}
             disabled={!engineData.data || running}
+            className="w-full sm:w-auto gap-1.5 text-xs shadow-sm"
             title="Pre-fill the first judge who has active hearings as a demo scenario"
           >
-            <FlaskConical className="size-4" />
+            <FlaskConical className="size-3.5 text-primary" />
             Load Demo
           </Button>
         }
@@ -294,116 +295,150 @@ function Page() {
         />
       )}
 
-      <Card className="mt-8 shadow-panel">
-        <CardHeader>
+      {/* Scenario Parameters Card */}
+      <Card className="registry-enter shadow-panel border-border">
+        <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
-            <FlaskConical className="size-4 text-primary" />
-            Scenario
+            <FlaskConical className="size-4 text-primary shrink-0" />
+            Scenario Parameters
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label>Condition</Label>
-              <Select
-                value={conditionType}
-                onValueChange={(v: "judge-unavailable" | "courtroom-closure") => {
-                  setConditionType(v);
-                  discard();
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="judge-unavailable">
-                    Judge emergency leave / absence on a date
-                  </SelectItem>
-                  <SelectItem value="courtroom-closure">
-                    Courtroom emergency infrastructure closure
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {conditionType === "judge-unavailable" ? (
+          <div className="grid gap-5 md:grid-cols-2">
+            <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="sim-judge">Judge</Label>
+                <Label htmlFor="sim-condition">Condition</Label>
                 <Select
-                  value={judgeId}
-                  onValueChange={(v) => {
-                    setJudgeId(v);
+                  value={conditionType}
+                  onValueChange={(v: "judge-unavailable" | "courtroom-closure") => {
+                    setConditionType(v);
                     discard();
                   }}
                 >
-                  <SelectTrigger id="sim-judge">
-                    <SelectValue placeholder="Select a judge" />
+                  <SelectTrigger id="sim-condition" className="w-full h-10">
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {judges.map((j) => (
-                      <SelectItem key={j.id} value={j.id}>
-                        {j.name} · {j.specialisation || "General"}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value="judge-unavailable">
+                      Judge emergency leave / absence on a date
+                    </SelectItem>
+                    <SelectItem value="courtroom-closure">
+                      Courtroom emergency infrastructure closure
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
-            ) : (
-              <div className="space-y-2">
-                <Label htmlFor="sim-courtroom">Courtroom</Label>
-                <Select
-                  value={courtroomId}
-                  onValueChange={(v) => {
-                    setCourtroomId(v);
-                    discard();
-                  }}
-                >
-                  <SelectTrigger id="sim-courtroom">
-                    <SelectValue placeholder="Select a courtroom" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {courtrooms.map((c) => (
-                      <SelectItem key={c.id} value={c.id}>
-                        {c.name} · Capacity: {c.capacity}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
 
-            <div className="space-y-2">
-              <Label htmlFor="sim-date">
-                {conditionType === "judge-unavailable" ? "Unavailable on" : "Closed on"}
-              </Label>
-              <Input
-                id="sim-date"
-                type="date"
-                value={date}
-                onChange={(e) => {
-                  setDate(e.target.value);
-                  discard();
-                }}
-              />
+              {conditionType === "judge-unavailable" ? (
+                <div className="space-y-2">
+                  <Label htmlFor="sim-judge">Judge</Label>
+                  <Select
+                    value={judgeId}
+                    onValueChange={(v) => {
+                      setJudgeId(v);
+                      discard();
+                    }}
+                  >
+                    <SelectTrigger id="sim-judge" className="w-full h-10">
+                      <SelectValue placeholder="Select a judge" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {judges.map((j) => (
+                        <SelectItem key={j.id} value={j.id}>
+                          {j.name} · {j.specialisation || "General"}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <Label htmlFor="sim-courtroom">Courtroom</Label>
+                  <Select
+                    value={courtroomId}
+                    onValueChange={(v) => {
+                      setCourtroomId(v);
+                      discard();
+                    }}
+                  >
+                    <SelectTrigger id="sim-courtroom" className="w-full h-10">
+                      <SelectValue placeholder="Select a courtroom" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {courtrooms.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.name} · Capacity: {c.capacity}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
             </div>
 
-            <div className="space-y-2">
-              <Label>Dates with active sittings</Label>
-              <div className="flex flex-wrap gap-2">
-                {conditionType === "judge-unavailable" ? (
-                  judgeDates.length === 0 ? (
-                    <p className="text-xs text-muted-foreground">
-                      {judgeId
-                        ? "This judge has no active hearings scheduled."
-                        : "Select a judge to see their sitting dates."}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="sim-date">
+                  {conditionType === "judge-unavailable" ? "Unavailable on" : "Closed on"}
+                </Label>
+                <Input
+                  id="sim-date"
+                  type="date"
+                  value={date}
+                  onChange={(e) => {
+                    setDate(e.target.value);
+                    discard();
+                  }}
+                  className="w-full h-10"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs text-muted-foreground">Quick-select active sitting dates</Label>
+                  <span className="text-[11px] font-mono text-muted-foreground">
+                    {conditionType === "judge-unavailable" ? `${judgeDates.length} date(s)` : `${roomDates.length} date(s)`}
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto pr-1">
+                  {conditionType === "judge-unavailable" ? (
+                    judgeDates.length === 0 ? (
+                      <p className="text-xs text-muted-foreground py-1">
+                        {judgeId
+                          ? "This judge has no active hearings scheduled."
+                          : "Select a judge above to see their sitting dates."}
+                      </p>
+                    ) : (
+                      judgeDates.map((d) => (
+                        <Button
+                          key={d}
+                          type="button"
+                          size="sm"
+                          variant={date === d ? "default" : "outline"}
+                          className="h-8 text-xs font-mono"
+                          onClick={() => {
+                            setDate(d);
+                            discard();
+                          }}
+                        >
+                          {formatDate(d)}
+                        </Button>
+                      ))
+                    )
+                  ) : roomDates.length === 0 ? (
+                    <p className="text-xs text-muted-foreground py-1">
+                      {courtroomId
+                        ? "This courtroom has no active hearings scheduled."
+                        : "Select a courtroom above to see active dates."}
                     </p>
                   ) : (
-                    judgeDates.map((d) => (
+                    roomDates.map((d) => (
                       <Button
                         key={d}
                         type="button"
                         size="sm"
                         variant={date === d ? "default" : "outline"}
+                        className="h-8 text-xs font-mono"
                         onClick={() => {
                           setDate(d);
                           discard();
@@ -412,34 +447,13 @@ function Page() {
                         {formatDate(d)}
                       </Button>
                     ))
-                  )
-                ) : roomDates.length === 0 ? (
-                  <p className="text-xs text-muted-foreground">
-                    {courtroomId
-                      ? "This courtroom has no active hearings scheduled."
-                      : "Select a courtroom to see active dates."}
-                  </p>
-                ) : (
-                  roomDates.map((d) => (
-                    <Button
-                      key={d}
-                      type="button"
-                      size="sm"
-                      variant={date === d ? "default" : "outline"}
-                      onClick={() => {
-                        setDate(d);
-                        discard();
-                      }}
-                    >
-                      {formatDate(d)}
-                    </Button>
-                  ))
-                )}
+                  )}
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-2 border-t border-border">
             <Button
               onClick={run}
               disabled={
@@ -450,16 +464,18 @@ function Page() {
                 engineData.isLoading ||
                 cases.isLoading
               }
+              size="lg"
+              className="h-10 w-full sm:w-auto gap-2 font-medium"
             >
               {running ? (
                 <Loader2 className="size-4 animate-spin" />
               ) : (
                 <FlaskConical className="size-4" />
               )}
-              Run What-If Simulation
+              {running ? "Simulating Constraints…" : "Run What-If Simulation"}
             </Button>
             {(result || running) && (
-              <Button variant="outline" onClick={discard}>
+              <Button variant="outline" size="lg" onClick={discard} className="h-10 w-full sm:w-auto gap-2 font-medium">
                 <RotateCcw className="size-4" />
                 Discard Simulation
               </Button>
@@ -468,50 +484,67 @@ function Page() {
         </CardContent>
       </Card>
 
+      {/* Execution Steps Tracker */}
       {step >= 0 && (
-        <Card className="mt-6 shadow-panel">
-          <CardContent className="space-y-3 py-5">
-            {STEPS.map((s, i) => {
-              const done = step > i;
-              const active = step === i;
-              const Icon = s.icon;
-              return (
-                <div
-                  key={s.key}
-                  className={cn(
-                    "flex items-center gap-3 rounded-md border px-3 py-2 text-sm transition-all duration-300",
-                    done && "border-primary/30 bg-primary/5 text-foreground",
-                    active && "border-primary bg-primary/10 text-foreground shadow-sm",
-                    !done && !active && "border-border text-muted-foreground opacity-60",
-                  )}
-                >
-                  {done ? (
-                    <CheckCircle2 className="size-4 text-primary" />
-                  ) : active ? (
-                    <Loader2 className="size-4 animate-spin text-primary" />
-                  ) : (
-                    <Icon className="size-4" />
-                  )}
-                  <span>{s.label}</span>
-                </div>
-              );
-            })}
+        <Card className="registry-enter shadow-panel border-border">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+              <FlaskConical className="size-4 text-primary shrink-0" />
+              <span>{step < STEPS.length ? "Executing What-If Continuity Checks…" : "Simulation Pipeline Complete"}</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+              {STEPS.map((s, i) => {
+                const done = step > i;
+                const active = step === i;
+                const Icon = s.icon;
+                return (
+                  <div
+                    key={s.key}
+                    className={cn(
+                      "flex items-center gap-2.5 rounded-md border p-3 text-xs transition-all",
+                      done
+                        ? "border-primary/30 bg-primary/5 text-foreground"
+                        : active
+                          ? "border-primary bg-primary/10 text-foreground ring-1 ring-primary/30"
+                          : "border-border bg-card text-muted-foreground opacity-60",
+                    )}
+                  >
+                    {done ? (
+                      <CheckCircle2 className="size-4 text-primary shrink-0" />
+                    ) : active ? (
+                      <Loader2 className="size-4 animate-spin text-primary shrink-0" />
+                    ) : (
+                      <Icon className="size-4 shrink-0" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold truncate">{s.label}</p>
+                      <p className="text-[10px] text-muted-foreground">
+                        {done ? "Verified" : active ? "Evaluating…" : "Queued"}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </CardContent>
         </Card>
       )}
 
+      {/* Impact Summary & Affected Hearings */}
       {result && (
-        <div className="mt-6 space-y-6">
-          <Card className="border-primary/40 shadow-panel">
+        <div className="space-y-6">
+          <Card className="registry-enter border-primary/40 shadow-panel">
             <CardContent className="flex flex-col gap-4 py-5 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-eyebrow mb-1">Impact summary — simulated only</p>
+              <div className="space-y-1">
+                <p className="text-eyebrow">Impact summary — simulated only</p>
                 <p className="text-lg font-semibold text-foreground">
                   {result.affected.length} hearing{result.affected.length === 1 ? "" : "s"}{" "}
                   affected, {result.totalAlternatives} alternative
                   {result.totalAlternatives === 1 ? "" : "s"} found
                 </p>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="text-xs text-muted-foreground leading-relaxed max-w-2xl">
                   {"judge" in result ? result.judge.name : result.courtroom.name} marked{" "}
                   {"judge" in result ? "unavailable" : "closed"} on {formatDate(result.date)}.{" "}
                   {result.unresolved > 0
@@ -519,19 +552,20 @@ function Page() {
                     : "Every affected hearing has at least one valid alternative."}
                 </p>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto shrink-0">
                 <Button
                   onClick={apply}
                   disabled={applying || !canApply || chosenCount === 0 || applied !== null}
+                  className="w-full sm:w-auto gap-1.5"
                 >
                   {applying ? (
                     <Loader2 className="size-4 animate-spin" />
                   ) : (
                     <CheckCircle2 className="size-4" />
                   )}
-                  Apply changes
+                  Apply Changes ({chosenCount})
                 </Button>
-                <Button variant="outline" onClick={discard} disabled={applying}>
+                <Button variant="outline" onClick={discard} disabled={applying} className="w-full sm:w-auto gap-1.5">
                   <RotateCcw className="size-4" />
                   Discard Simulation
                 </Button>
@@ -547,7 +581,7 @@ function Page() {
 
           {applied !== null && (
             <div className="flex items-start gap-3 rounded-md border border-primary/40 bg-primary/5 px-4 py-3 text-sm">
-              <CheckCircle2 className="mt-0.5 size-4 text-primary" />
+              <CheckCircle2 className="mt-0.5 size-4 text-primary shrink-0" />
               <p>
                 What-If Simulation committed —{" "}
                 {"judge" in result ? result.judge.name : result.courtroom.name} is now marked{" "}
@@ -558,7 +592,7 @@ function Page() {
           )}
 
           {result.affected.length === 0 && (
-            <Card className="shadow-panel">
+            <Card className="registry-enter shadow-panel">
               <CardContent className="py-10 text-center text-sm text-muted-foreground">
                 No active hearings sit{" "}
                 {"judge" in result
@@ -570,27 +604,33 @@ function Page() {
           )}
 
           {result.affected.map((hearing) => (
-            <Card key={hearing.scheduleId} className="shadow-panel">
-              <CardHeader className="gap-2">
-                <div className="flex flex-wrap items-center gap-2">
-                  <CardTitle className="text-base">{hearing.caseRow.case_number}</CardTitle>
-                  <PriorityBadge score={hearing.caseRow.priority_score} />
-                  <Badge variant="outline">
-                    {hearing.caseRow.case_categories?.name ?? "Uncategorised"}
-                  </Badge>
+            <Card key={hearing.scheduleId} className="registry-enter shadow-panel">
+              <CardHeader className="pb-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <CardTitle className="text-base">{hearing.caseRow.case_number}</CardTitle>
+                    <PriorityBadge score={hearing.caseRow.priority_score} />
+                    <Badge variant="outline">
+                      {hearing.caseRow.case_categories?.name ?? "Uncategorised"}
+                    </Badge>
+                  </div>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  Currently {formatSlotLabel(hearing.slot)} · {hearing.judge.name} ·{" "}
-                  {hearing.courtroom?.name ?? "No courtroom"} ·{" "}
-                  {hearing.caseRow.estimated_duration_minutes} min
-                </p>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground pt-1">
+                  <span>Currently: <strong className="text-foreground">{formatSlotLabel(hearing.slot)}</strong></span>
+                  <span className="hidden sm:inline">·</span>
+                  <span>{hearing.judge.name}</span>
+                  <span className="hidden sm:inline">·</span>
+                  <span>{hearing.courtroom?.name ?? "No courtroom"}</span>
+                  <span className="hidden sm:inline">·</span>
+                  <span className="font-mono">{hearing.caseRow.estimated_duration_minutes} min duration</span>
+                </div>
               </CardHeader>
               <Separator />
-              <CardContent className="pt-5">
+              <CardContent className="pt-4">
                 {hearing.alternatives.length === 0 ? (
                   <div className="flex items-start gap-3 rounded-md border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm">
-                    <AlertTriangle className="mt-0.5 size-4 text-destructive" />
-                    <p>
+                    <AlertTriangle className="mt-0.5 size-4 text-destructive shrink-0" />
+                    <p className="text-xs leading-relaxed">
                       No valid alternative found — every other judge, courtroom and slot combination
                       fails at least one hard constraint. This hearing would need to be adjourned.
                     </p>
@@ -608,7 +648,7 @@ function Page() {
                         key={candidate.key}
                         htmlFor={`${hearing.scheduleId}-${candidate.key}`}
                         className={cn(
-                          "flex cursor-pointer items-start gap-3 rounded-md border px-4 py-3 transition-colors",
+                          "flex cursor-pointer items-start gap-3 rounded-md border p-3.5 sm:p-4 transition-colors",
                           choices[hearing.scheduleId] === candidate.key
                             ? "border-primary bg-primary/5"
                             : "border-border hover:bg-muted/50",
@@ -617,33 +657,35 @@ function Page() {
                         <RadioGroupItem
                           id={`${hearing.scheduleId}-${candidate.key}`}
                           value={candidate.key}
-                          className="mt-1"
+                          className="mt-1 shrink-0"
                         />
                         <div className="min-w-0 flex-1">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-sm font-medium text-foreground">
-                              {index === 0 ? "Best alternative" : `Alternative ${index + 1}`}
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <span className="text-sm font-semibold text-foreground">
+                              {index === 0 ? "Best Alternative" : `Alternative Option ${index + 1}`}
                             </span>
-                            <Badge variant="secondary">Fit {candidate.score}/100</Badge>
+                            <Badge variant={index === 0 ? "default" : "secondary"} className="text-xs font-mono">
+                              Fit {candidate.score}/100
+                            </Badge>
                           </div>
-                          <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+                          <p className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm text-muted-foreground">
                             <span className="inline-flex items-center gap-1">
-                              <Gavel className="size-3.5" /> {candidate.judge.name}
+                              <Gavel className="size-3.5 text-primary" /> {candidate.judge.name}
                             </span>
                             <span className="inline-flex items-center gap-1">
-                              <MapPin className="size-3.5" /> {candidate.courtroom.name}
+                              <MapPin className="size-3.5 text-primary" /> {candidate.courtroom.name}
                             </span>
-                            <span className="inline-flex items-center gap-1">
-                              <Timer className="size-3.5" /> {formatSlotLabel(candidate.slot)}
+                            <span className="inline-flex items-center gap-1 font-mono">
+                              <Timer className="size-3.5 text-primary" /> {formatSlotLabel(candidate.slot)}
                             </span>
                           </p>
-                          <p className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                          <div className="mt-2.5 flex flex-wrap gap-1.5 text-xs text-muted-foreground">
                             {candidate.factors.map((f) => (
-                              <span key={f.key}>
-                                {f.label}: <span className="text-foreground">+{f.points}</span>
+                              <span key={f.key} className="inline-flex items-center rounded bg-muted/60 px-2 py-0.5 text-[11px]">
+                                {f.label}: <strong className="ml-1 text-foreground font-mono">+{f.points}</strong>
                               </span>
                             ))}
-                          </p>
+                          </div>
                           <ReasoningList
                             candidate={candidate}
                             caseRow={hearing.caseRow}
@@ -661,7 +703,7 @@ function Page() {
           ))}
 
           <p className="flex items-center gap-2 text-xs text-muted-foreground">
-            <ShieldCheck className="size-3.5" />
+            <ShieldCheck className="size-3.5 shrink-0" />
             Simulated results are held in memory only. Apply Changes commits the unavailability and
             the selected reassignments; Discard Simulation leaves the live schedule untouched.
           </p>

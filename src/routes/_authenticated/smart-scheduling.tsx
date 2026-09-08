@@ -150,13 +150,13 @@ function Page() {
         title="Smart Scheduling"
         description="Multi-constraint solver for pending court matters. Hard constraints strictly filter invalid slots; soft preferences rank the optimal listings."
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             <Button
               variant="outline"
               size="sm"
               onClick={loadDemo}
               disabled={!pending.length || !engineData.data || running}
-              className="gap-1.5 text-xs shadow-sm"
+              className="w-full sm:w-auto gap-1.5 text-xs shadow-sm"
               title="Pre-select the highest-priority pending case and run the engine"
             >
               <FlaskConical className="size-3.5 text-primary" />
@@ -181,19 +181,19 @@ function Page() {
       {/* Case Selector Card */}
       <Card className="registry-enter shadow-panel border-border">
         <CardHeader className="pb-3">
-          <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <CardTitle className="text-base flex items-center gap-2">
-              <FileText className="size-4 text-primary" />
+              <FileText className="size-4 text-primary shrink-0" />
               Select Pending Case for Listing
             </CardTitle>
-            <Badge variant="outline" className="text-xs font-mono">
+            <Badge variant="outline" className="text-xs font-mono self-start sm:self-auto shrink-0">
               {pending.length} Unscheduled Case{pending.length !== 1 ? "s" : ""}
             </Badge>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-start">
-            <div className="space-y-2">
+            <div className="space-y-2 min-w-0">
               <Select
                 value={caseId}
                 onValueChange={setCaseId}
@@ -214,16 +214,16 @@ function Page() {
               </Select>
 
               {selected && (
-                <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5 pt-1 text-xs text-muted-foreground">
                   <PriorityBadge score={selected.priority_score} />
                   <span className="inline-flex items-center gap-1 font-medium text-foreground bg-muted px-2 py-0.5 rounded">
                     <Clock className="size-3 text-muted-foreground" />
                     {selected.estimated_duration_minutes} min duration
                   </span>
-                  <span>·</span>
-                  <span>{selected.previous_adjournments} previous adjournment{selected.previous_adjournments !== 1 ? "s" : ""}</span>
-                  <span>·</span>
-                  <span className="truncate max-w-md font-medium text-foreground">{selected.parties}</span>
+                  <span className="inline-flex items-center rounded bg-muted/60 px-2 py-0.5 text-[11px] font-medium text-foreground">
+                    {selected.previous_adjournments} adjournment{selected.previous_adjournments !== 1 ? "s" : ""}
+                  </span>
+                  <span className="truncate max-w-full sm:max-w-md font-medium text-foreground">{selected.parties}</span>
                 </div>
               )}
             </div>
@@ -232,7 +232,7 @@ function Page() {
               onClick={run}
               disabled={!selected || running || engineData.isLoading}
               size="lg"
-              className="h-10 sm:w-56 gap-2 shrink-0 font-medium"
+              className="h-10 w-full sm:w-56 gap-2 shrink-0 font-medium"
             >
               {running ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4 fill-current" />}
               {running ? "Solving Constraints…" : "Run Scheduling Engine"}
@@ -245,13 +245,13 @@ function Page() {
       {(running || result) && (
         <Card className="registry-enter shadow-panel border-border">
           <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <CardTitle className="text-sm font-semibold flex items-center gap-2">
-                <Sparkles className="size-4 text-primary" />
-                {running ? "Evaluating Combinations against Hard & Soft Constraints…" : "Constraint Solver Analysis Complete"}
+                <Sparkles className="size-4 text-primary shrink-0" />
+                <span>{running ? "Evaluating Combinations against Hard & Soft Constraints…" : "Constraint Solver Analysis Complete"}</span>
               </CardTitle>
               {result && (
-                <Badge variant="secondary" className="text-xs font-mono">
+                <Badge variant="secondary" className="text-xs font-mono self-start sm:self-auto shrink-0">
                   {result.valid} Valid Listing{result.valid !== 1 ? "s" : ""} Found
                 </Badge>
               )}
@@ -294,21 +294,21 @@ function Page() {
             </div>
 
             {result && ranCase && (
-              <div className="rounded-md border border-border bg-muted/30 p-3 text-xs text-muted-foreground flex flex-wrap items-center justify-between gap-2">
-                <span>
+              <div className="rounded-md border border-border bg-muted/30 p-3 text-xs text-muted-foreground flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5">
+                <p className="leading-relaxed">
                   Evaluated <strong className="text-foreground">{result.evaluated.toLocaleString()}</strong> Judge × Courtroom × Slot combinations for <span className="font-semibold text-foreground">{ranCase.case_number}</span>.
-                </span>
-                <div className="flex flex-wrap gap-2 text-[11px]">
-                  <span className="bg-background px-2 py-0.5 rounded border border-border">
+                </p>
+                <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-1.5 sm:gap-2 text-[11px] shrink-0">
+                  <span className="bg-background px-2 py-0.5 rounded border border-border text-center sm:text-left">
                     Judge Busy: {result.rejections.judgeUnavailable + result.rejections.judgeBooked}
                   </span>
-                  <span className="bg-background px-2 py-0.5 rounded border border-border">
+                  <span className="bg-background px-2 py-0.5 rounded border border-border text-center sm:text-left">
                     Room Busy: {result.rejections.courtroomUnavailable + result.rejections.courtroomBooked}
                   </span>
-                  <span className="bg-background px-2 py-0.5 rounded border border-border">
+                  <span className="bg-background px-2 py-0.5 rounded border border-border text-center sm:text-left">
                     Slot Clash: {result.rejections.slotOccupied}
                   </span>
-                  <span className="bg-background px-2 py-0.5 rounded border border-border">
+                  <span className="bg-background px-2 py-0.5 rounded border border-border text-center sm:text-left">
                     Duration Overflow: {result.rejections.durationOverflow}
                   </span>
                 </div>
@@ -337,13 +337,13 @@ function Page() {
         <div className="space-y-6 pt-2">
           {/* AI Explainability Decision Receipt */}
           <div className="space-y-2">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2">
               <span className="text-xs font-bold uppercase tracking-widest text-primary flex items-center gap-1.5">
-                <Scale className="size-3.5" />
+                <Scale className="size-3.5 shrink-0" />
                 Explainable Decision Receipt
               </span>
-              <span className="h-px flex-1 bg-border" />
-              <span className="text-[10px] text-muted-foreground">
+              <span className="hidden sm:block h-px flex-1 bg-border" />
+              <span className="text-[11px] sm:text-[10px] text-muted-foreground">
                 All 6 Hard Constraints Cleared · 4 Soft Preferences Scored
               </span>
             </div>
@@ -452,7 +452,7 @@ function CandidateCard({
       )}
     >
       <CardHeader className="flex-row items-start justify-between gap-3 space-y-0 pb-3">
-        <div>
+        <div className="min-w-0 flex-1">
           {recommended ? (
             <Badge className="mb-2">Scheduling recommendation · top ranked</Badge>
           ) : (
@@ -460,14 +460,14 @@ function CandidateCard({
               Alternative Option {rank}
             </Badge>
           )}
-          <CardTitle className="text-base">{candidate.judge.name}</CardTitle>
-          <p className="mt-1 text-xs text-muted-foreground">
+          <CardTitle className="text-base truncate">{candidate.judge.name}</CardTitle>
+          <p className="mt-1 text-xs text-muted-foreground truncate">
             {candidate.courtroom.name} · {formatSlotLabel(candidate.slot)}
           </p>
         </div>
-        <div className="text-right">
-          <p className="text-2xl font-bold text-foreground tabular-nums">{candidate.score}</p>
-          <p className="text-[10px] text-muted-foreground uppercase tracking-wide">fit score / 100</p>
+        <div className="text-right shrink-0">
+          <p className="text-2xl font-bold text-foreground tabular-nums leading-none">{candidate.score}</p>
+          <p className="text-[10px] text-muted-foreground uppercase tracking-wide mt-1">fit score / 100</p>
         </div>
       </CardHeader>
       <CardContent className="space-y-4 pt-1">
