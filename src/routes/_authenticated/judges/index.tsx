@@ -224,7 +224,7 @@ function JudgesPage() {
         }
       />
 
-      <div className="mt-6 flex items-center gap-2">
+      <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-2">
         <div className="relative w-full max-w-sm">
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -235,7 +235,7 @@ function JudgesPage() {
             aria-label="Search judges"
           />
         </div>
-        <span className="text-sm text-muted-foreground">{rows.length} listed</span>
+        <span className="text-sm text-muted-foreground whitespace-nowrap">{rows.length} listed</span>
       </div>
 
       <div className="mt-4 overflow-hidden rounded-lg border border-border bg-card shadow-panel">

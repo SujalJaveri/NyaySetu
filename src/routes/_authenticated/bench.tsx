@@ -148,15 +148,15 @@ function BenchPage() {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Label htmlFor="judge-switcher" className="text-xs text-muted-foreground whitespace-nowrap">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <Label htmlFor="judge-switcher" className="text-xs text-muted-foreground whitespace-nowrap shrink-0">
               Active Bench:
             </Label>
             <select
               id="judge-switcher"
               value={effectiveJudgeId ?? ""}
               onChange={(e) => setSelectedJudgeId(e.target.value)}
-              className="h-9 rounded-md border border-input bg-background px-3 py-1 text-xs shadow-xs focus:ring-1 focus:ring-ring font-medium"
+              className="h-9 w-full sm:w-auto max-w-full rounded-md border border-input bg-background px-3 py-1 text-xs shadow-xs focus:ring-1 focus:ring-ring font-medium"
             >
               {judges.data?.map((j) => (
                 <option key={j.id} value={j.id}>
@@ -230,18 +230,18 @@ function BenchPage() {
         </TabsList>
 
         <TabsContent value="cause-list" className="mt-4 space-y-4">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div className="space-y-1">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+            <div className="space-y-1 w-full sm:w-auto">
               <Label htmlFor="bench-date">Hearing date</Label>
               <Input
                 id="bench-date"
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-[180px]"
+                className="w-full sm:w-[180px]"
               />
             </div>
-            <p className="flex items-center gap-2 pb-2 text-xs text-muted-foreground">
+            <p className="flex items-center gap-2 pb-1 sm:pb-2 text-xs text-muted-foreground">
               <Lock className="size-3.5" /> Read-only — the order is settled by the registrar.
             </p>
           </div>

@@ -58,10 +58,10 @@ function AuthenticatedLayout() {
         <div className="flex min-h-screen w-full bg-background">
           <AppSidebar />
           <BenchScopeGuard />
-          <div className="flex min-w-0 flex-1 flex-col">
+          <div className="flex min-w-0 flex-1 flex-col overflow-x-clip">
             <TopBar />
-            <main className="flex-1">
-              <div key={pathname} className="registry-enter">
+            <main className="flex-1 min-w-0 w-full">
+              <div key={pathname} className="registry-enter min-w-0 w-full">
                 <Outlet />
               </div>
             </main>

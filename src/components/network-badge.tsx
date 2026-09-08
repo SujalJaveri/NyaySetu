@@ -116,7 +116,7 @@ export function NetworkBadge() {
         </button>
       </PopoverTrigger>
 
-      <PopoverContent align="end" className="w-80 p-0 shadow-lg border-border">
+      <PopoverContent align="end" className="w-80 max-w-[calc(100vw-1.5rem)] p-0 shadow-lg border-border">
         <div className="border-b border-border p-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">

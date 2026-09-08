@@ -21,7 +21,7 @@ import { useLanguage, type TranslationKey } from "@/lib/i18n";
 
 export function AppSidebar() {
   const { state, isMobile, setOpenMobile } = useSidebar();
-  const collapsed = state === "collapsed";
+  const collapsed = state === "collapsed" && !isMobile;
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const staff = useCurrentStaff();
   const { t } = useLanguage();

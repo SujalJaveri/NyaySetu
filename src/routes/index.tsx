@@ -112,12 +112,12 @@ function PortalPage() {
   return (
     <main className="min-h-screen bg-background">
       <header className="border-b border-primary/20 bg-primary text-primary-foreground">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
-          <div className="flex min-w-0 items-center gap-3">
-            <BrandMark className="size-11 bg-white p-0.5 shadow-xs" showLabel />
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-8 sm:py-4">
+          <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+            <BrandMark className="size-9 bg-white p-0.5 shadow-xs shrink-0 sm:size-11" showLabel />
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold">NyayaSetu</p>
-              <p className="text-xs text-primary-foreground/70">AI powered court scheduling</p>
+              <p className="truncate text-xs text-primary-foreground/70">AI powered court scheduling</p>
             </div>
           </div>
           <div className="hidden items-center gap-2 border-l border-primary-foreground/20 pl-4 text-xs text-primary-foreground/70 sm:flex">
@@ -128,26 +128,26 @@ function PortalPage() {
       </header>
 
       <section className="registry-enter border-b border-border bg-card">
-        <div className="mx-auto grid max-w-6xl gap-8 px-5 py-10 sm:px-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+        <div className="mx-auto grid max-w-6xl gap-6 px-4 py-7 sm:gap-8 sm:px-8 sm:py-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
           <div>
             <p className="text-eyebrow">NyayaSetu digital registry portal</p>
-            <h1 className="mt-3 max-w-3xl text-3xl leading-tight font-semibold text-foreground sm:text-5xl">
+            <h1 className="mt-2.5 text-2xl leading-tight font-semibold text-foreground sm:mt-3 sm:text-5xl">
               Schedule hearings with clear priority, capacity and audit control.
             </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:mt-4 sm:text-base sm:leading-7">
               A court operations workspace for registrars, judges and litigants. It helps the
               registry list cases, prevent avoidable conflicts and keep every assisted decision
               traceable.
             </p>
           </div>
-          <div className="registry-interactive border border-border bg-background p-5 rounded-xl">
+          <div className="registry-interactive border border-border bg-background p-3.5 sm:p-5 rounded-xl">
             <BrandMark
-              className="mx-auto h-48 w-full max-w-sm bg-white p-3 sm:h-56 rounded-lg"
+              className="mx-auto h-36 w-full max-w-sm bg-white p-2 rounded-lg sm:h-56 sm:p-3"
               imageClassName="drop-shadow-xs"
               showLabel
             />
           </div>
-          <div className="grid gap-3 border-l-0 border-border text-sm sm:grid-cols-3 lg:col-span-2 lg:grid-cols-3">
+          <div className="grid gap-2 text-sm sm:gap-3 sm:grid-cols-3 lg:col-span-2 lg:grid-cols-3">
             {[
               ["01", "Priority scoring"],
               ["02", "Conflict-safe listing"],
@@ -166,11 +166,11 @@ function PortalPage() {
         </div>
       </section>
 
-      <section className="registry-enter mx-auto max-w-6xl px-5 py-10 sm:px-8">
+      <section className="registry-enter mx-auto max-w-6xl px-4 py-7 sm:px-8 sm:py-10">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-eyebrow">Choose workspace</p>
-            <h2 className="mt-2 text-2xl font-semibold text-foreground">Continue by role</h2>
+            <h2 className="mt-1.5 text-xl font-semibold text-foreground sm:mt-2 sm:text-2xl">Continue by role</h2>
           </div>
           <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
             Judges and registry staff sign in with court-issued accounts. Litigants can view hearing

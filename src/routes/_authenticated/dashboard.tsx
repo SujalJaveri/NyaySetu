@@ -112,22 +112,23 @@ function StatCard({
 }) {
   const body = (
     <Card className={cn("registry-interactive h-full", className)}>
-      <CardContent className="flex items-start justify-between gap-4 p-5">
+      <CardContent className="flex items-start justify-between gap-3 p-4 sm:gap-4 sm:p-5">
         <div className="min-w-0">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground sm:text-xs truncate">
             {label}
           </p>
-          <p className="mt-2 text-3xl font-semibold tabular-nums text-foreground">{value}</p>
-          {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
+          <p className="mt-1.5 text-2xl font-semibold tabular-nums text-foreground sm:mt-2 sm:text-3xl">{value}</p>
+          {hint && <p className="mt-1 text-[11px] text-muted-foreground sm:text-xs line-clamp-1">{hint}</p>}
         </div>
         <span
-          className={
+          className={cn(
+            "flex size-8 shrink-0 items-center justify-center rounded-sm sm:size-9",
             tone === "alert"
-              ? "flex size-9 shrink-0 items-center justify-center rounded-sm bg-destructive/10 text-destructive"
+              ? "bg-destructive/10 text-destructive"
               : tone === "gold"
-                ? "flex size-9 shrink-0 items-center justify-center rounded-sm bg-accent text-accent-foreground"
-                : "flex size-9 shrink-0 items-center justify-center rounded-sm bg-secondary text-secondary-foreground"
-          }
+                ? "bg-accent text-accent-foreground"
+                : "bg-secondary text-secondary-foreground",
+          )}
         >
           <Icon className="size-4" />
         </span>
@@ -175,12 +176,12 @@ function ImpactStat({
 }) {
   const displayed = useCountUp(value);
   return (
-    <div className="flex flex-col items-center gap-1 text-center">
-      <span className={cn("flex size-9 items-center justify-center rounded-sm", accent)}>
-        <Icon className="size-4" />
+    <div className="flex flex-col items-center gap-1 text-center p-2 rounded-md bg-card/40 sm:bg-transparent sm:p-0">
+      <span className={cn("flex size-8 shrink-0 items-center justify-center rounded-sm sm:size-9", accent)}>
+        <Icon className="size-3.5 sm:size-4" />
       </span>
-      <p className="text-2xl font-bold tabular-nums text-foreground">{displayed}</p>
-      <p className="text-xs text-muted-foreground leading-snug">{label}</p>
+      <p className="text-xl font-bold tabular-nums text-foreground sm:text-2xl">{displayed}</p>
+      <p className="text-[11px] leading-snug text-muted-foreground sm:text-xs">{label}</p>
     </div>
   );
 }
@@ -200,19 +201,19 @@ function ImpactBanner({
 }) {
   return (
     <Card className="registry-enter border border-primary/20 bg-gradient-to-br from-primary/5 to-primary/[0.02]">
-      <CardContent className="py-4 px-5">
-        <div className="flex items-center gap-2 mb-4">
-          <Zap className="size-4 text-primary" />
-          <p className="text-xs font-bold uppercase tracking-widest text-primary">NyayaSetu Impact</p>
+      <CardContent className="py-3 px-3.5 sm:py-4 sm:px-5">
+        <div className="flex items-center gap-2 mb-3 sm:mb-4">
+          <Zap className="size-4 text-primary shrink-0" />
+          <p className="text-[11px] font-bold uppercase tracking-wider text-primary sm:text-xs sm:tracking-widest">NyayaSetu Impact</p>
           <span className="h-px flex-1 bg-primary/20" />
-          <p className="text-[10px] text-muted-foreground">Live data from this registry</p>
+          <p className="hidden text-[10px] text-muted-foreground xs:block">Live data from this registry</p>
         </div>
         {loading ? (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-4 sm:grid-cols-4">
             {[0, 1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-4 sm:grid-cols-4">
             <ImpactStat
               label="Conflicts Detected & Prevented"
               value={conflictsDetected}
@@ -341,11 +342,11 @@ function CourtReadiness({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-5">
           {checks.map((check) => (
             <div
               key={check.label}
-              className="registry-interactive border border-border bg-card px-3 py-3"
+              className="registry-interactive border border-border bg-card px-2.5 py-2.5 sm:px-3 sm:py-3"
             >
               <p className="text-[11px] font-semibold text-muted-foreground uppercase">
                 {check.label}

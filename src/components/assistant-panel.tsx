@@ -97,8 +97,8 @@ export function AssistantPanel() {
           type="button"
           aria-label="Open AI Registry Copilot"
           className={cn(
-            "fixed bottom-6 right-6 z-40",
-            "group flex items-center gap-2.5 rounded-full px-4 py-3 sm:px-4.5 sm:py-3.5",
+            "fixed bottom-4 right-4 z-40 sm:bottom-6 sm:right-6",
+            "group flex items-center gap-2.5 rounded-full px-3.5 py-2.5 sm:px-4.5 sm:py-3.5",
             "bg-primary text-primary-foreground font-semibold text-xs sm:text-sm",
             "shadow-xl shadow-primary/25 border border-primary/20",
             "hover:shadow-2xl hover:shadow-primary/35 hover:-translate-y-0.5 active:translate-y-0",

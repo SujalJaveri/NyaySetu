@@ -153,6 +153,12 @@
     border-color: var(--color-border);
   }
 
+  html,
+  body {
+    overflow-x: clip;
+    max-width: 100vw;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);

@@ -209,15 +209,15 @@ function CaseStatusPage() {
     <div className="min-h-screen bg-muted/30 pb-16">
       {/* Top Banner */}
       <header className="border-b-4 border-accent bg-primary text-primary-foreground">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-5 py-6">
-          <div className="flex items-center gap-4">
-            <BrandMark className="size-14 bg-white p-0.5 shadow-xs" showLabel />
+        <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4 sm:px-5 sm:py-6">
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <BrandMark className="size-12 bg-white p-0.5 shadow-xs shrink-0 sm:size-14" showLabel />
             <div className="min-w-0">
-              <p className="text-xs font-medium tracking-[0.14em] text-primary-foreground/70 uppercase">
+              <p className="text-[11px] font-medium tracking-[0.14em] text-primary-foreground/70 uppercase sm:text-xs">
                 NyayaSetu Public Portal • District & Taluka Courts
               </p>
-              <h1 className="text-2xl font-bold sm:text-3xl tracking-tight">Check Case Status</h1>
-              <p className="text-sm text-primary-foreground/80">
+              <h1 className="text-xl font-bold tracking-tight sm:text-3xl">Check Case Status</h1>
+              <p className="text-xs text-primary-foreground/80 sm:text-sm">
                 Official public enquiry service for litigants, advocates, and citizens. No login required.
               </p>
             </div>
@@ -225,17 +225,17 @@ function CaseStatusPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-4xl px-5 py-8">
+      <main className="mx-auto max-w-4xl px-4 py-6 sm:px-5 sm:py-8">
         {/* Search Box Card */}
         <section
           aria-labelledby="enquiry-heading"
-          className="rounded-xl border bg-card p-6 shadow-sm ring-1 ring-border/50"
+          className="rounded-xl border bg-card p-4 sm:p-6 shadow-sm ring-1 ring-border/50"
         >
-          <div className="flex items-center justify-between gap-2">
-            <h2 id="enquiry-heading" className="text-lg font-semibold text-foreground">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <h2 id="enquiry-heading" className="text-base sm:text-lg font-semibold text-foreground">
               Search by Case Number or Keyword
             </h2>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+            <span className="self-start sm:self-auto inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
               <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Live CIS Synchronized
             </span>
@@ -324,10 +324,10 @@ function CaseStatusPage() {
               className="rounded-xl border bg-card shadow-sm overflow-hidden"
             >
               {/* Header */}
-              <div className="border-b bg-muted/30 px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+              <div className="border-b bg-muted/30 px-4 py-3.5 sm:px-6 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <div className="flex items-center gap-2.5">
-                    <h2 id="result-heading" className="text-xl font-bold font-mono text-foreground">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h2 id="result-heading" className="text-lg sm:text-xl font-bold font-mono text-foreground">
                       {result.caseNumber}
                     </h2>
                     <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary border border-primary/20">
@@ -343,7 +343,7 @@ function CaseStatusPage() {
                   variant="outline"
                   size="sm"
                   onClick={handlePrint}
-                  className="gap-2 text-xs font-medium"
+                  className="w-full sm:w-auto gap-2 text-xs font-medium shrink-0"
                 >
                   <Printer className="size-3.5" />
                   Print / Save Pass
@@ -352,11 +352,11 @@ function CaseStatusPage() {
 
               {/* Next Hearing Highlight Banner (if scheduled) */}
               {result.nextHearing ? (
-                <div className="bg-primary/5 border-b border-primary/15 px-6 py-4">
+                <div className="bg-primary/5 border-b border-primary/15 px-4 py-3.5 sm:px-6 sm:py-4">
                   <p className="text-xs font-semibold uppercase tracking-wider text-primary">
                     Next Listed Hearing
                   </p>
-                  <div className="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                     <div className="flex items-start gap-2.5">
                       <Calendar className="size-4 text-primary shrink-0 mt-0.5" />
                       <div>
@@ -551,9 +551,9 @@ function CaseStatusPage() {
 
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="grid gap-1 px-6 py-3.5 sm:grid-cols-3 sm:gap-4 hover:bg-muted/10 transition-colors">
+    <div className="grid gap-0.5 px-4 py-2.5 sm:grid-cols-3 sm:gap-4 sm:px-6 sm:py-3.5 hover:bg-muted/10 transition-colors">
       <dt className="text-xs font-medium text-muted-foreground">{label}</dt>
-      <dd className="text-sm font-semibold text-foreground sm:col-span-2">{value}</dd>
+      <dd className="text-sm font-semibold text-foreground sm:col-span-2 break-words">{value}</dd>
     </div>
   );
 }

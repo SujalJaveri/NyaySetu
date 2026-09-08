@@ -108,7 +108,7 @@ export function NotificationsBell() {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-[22rem] p-0 sm:w-[26rem]">
+      <PopoverContent align="end" className="w-[22rem] max-w-[calc(100vw-1.5rem)] p-0 sm:w-[26rem]">
         <div className="flex items-center justify-between gap-2 px-4 py-3">
           <div>
             <p className="text-sm font-semibold text-foreground">Notifications</p>

@@ -53,14 +53,20 @@ export function TopBar() {
         </div>
       </div>
 
-      <div className="ml-auto flex items-center gap-1 sm:gap-2">
+      {/* Mobile brand mark & title */}
+      <div className="flex min-w-0 items-center gap-1.5 sm:hidden">
+        <BrandMark className="size-6 bg-white p-0.5 shadow-xs shrink-0" />
+        <span className="truncate text-xs font-semibold text-foreground">NyayaSetu</span>
+      </div>
+
+      <div className="ml-auto flex items-center gap-1 shrink-0 sm:gap-2">
         <NetworkBadge />
         {staff?.role !== "judge" && <NotificationsBell />}
 
         {/* Language toggle */}
         <button
           onClick={() => setLang(lang === "en" ? "hi" : "en")}
-          className="flex items-center gap-1 rounded-sm px-2 py-1 text-xs font-semibold transition-colors hover:bg-muted text-muted-foreground hover:text-foreground"
+          className="flex items-center gap-1 rounded-sm px-1.5 py-1 text-xs font-semibold transition-colors hover:bg-muted text-muted-foreground hover:text-foreground shrink-0 sm:px-2"
           title={lang === "en" ? "Switch to Hindi" : "Switch to English"}
         >
           <Languages className="size-3.5" />
@@ -69,8 +75,8 @@ export function TopBar() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 rounded-sm px-1.5 py-1 transition-colors hover:bg-muted">
-              <span className="flex size-8 items-center justify-center rounded-sm bg-primary text-xs font-semibold text-primary-foreground">
+            <button className="flex items-center gap-2 rounded-sm px-1 py-1 transition-colors hover:bg-muted shrink-0 sm:px-1.5">
+              <span className="flex size-7.5 items-center justify-center rounded-sm bg-primary text-xs font-semibold text-primary-foreground sm:size-8">
                 {initials}
               </span>
               <span className="hidden text-left leading-tight sm:block">
